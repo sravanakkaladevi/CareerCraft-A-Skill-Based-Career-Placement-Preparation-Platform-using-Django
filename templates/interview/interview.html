@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:#f4f6fb;min-height:100vh;}
@@ -21,8 +22,7 @@ body{background:#f4f6fb;min-height:100vh;}
 .sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
 .sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
 .sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
-.sb-logout{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;}
-.sb-logout:hover{color:#fff;}
+{% include 'partials/sidebar_logout_button_css.html' %}
 .main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
 .topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
@@ -38,7 +38,10 @@ body{background:#f4f6fb;min-height:100vh;}
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
 .cat-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;text-decoration:none;display:block;transition:.2s;}
 .cat-card:hover{border-color:#185FA5;background:#f8faff;transform:translateY(-2px);}
-.cat-icon{font-size:28px;margin-bottom:10px;}
+.cat-icon{height:52px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:#185FA5;}
+.cat-icon i{font-size:40px;line-height:1;}
+.cat-icon svg{width:40px;height:40px;display:block;}
+.cat-fallback{font-size:34px;font-weight:700;letter-spacing:-1px;}
 .cat-name{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px;}
 .cat-count{font-size:11px;color:#94a3b8;}
 .cat-diff{display:flex;gap:4px;justify-content:center;margin-top:8px;}
@@ -88,7 +91,7 @@ body{background:#f4f6fb;min-height:100vh;}
         <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon">⚙</span> Admin Panel</a>
         {% endif %}
         <div class="sb-bottom">
-            <a href="/accounts/logout/" class="sb-logout"><span class="sb-icon">↩</span> Logout</a>
+            {% include 'partials/sidebar_logout_button.html' %}
         </div>
     </div>
 
@@ -108,7 +111,7 @@ body{background:#f4f6fb;min-height:100vh;}
                         <div class="hero-stat-label">Tests taken</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-num">7</div>
+                        <div class="hero-stat-num">{{ categories|length }}</div>
                         <div class="hero-stat-label">Categories</div>
                     </div>
                 </div>
@@ -118,7 +121,7 @@ body{background:#f4f6fb;min-height:100vh;}
             <div class="cat-grid">
                 {% for cat in categories %}
                 <div class="cat-card">
-                    <div class="cat-icon">{{ cat.display_icon }}</div>
+                    <div class="cat-icon">{{ cat.display_icon|safe }}</div>
                     <div class="cat-name">{{ cat.name }}</div>
                     <div class="cat-count">{{ cat.question_count }} questions</div>
                     {% if cat.question_count >= 5 %}
@@ -138,7 +141,7 @@ body{background:#f4f6fb;min-height:100vh;}
             <div class="results-card">
                 {% for result in recent_results %}
                 <div class="result-item">
-                    <div>{{ result.category.display_icon }}</div>
+                    <div class="cat-icon" style="height:34px;margin-bottom:0;width:34px;">{{ result.category.display_icon|safe }}</div>
                     <div class="result-cat">{{ result.category.name }}</div>
                     <div class="result-score {% if result.percentage >= 80 %}green{% elif result.percentage >= 60 %}blue{% elif result.percentage >= 40 %}amber{% else %}red{% endif %}">
                         {{ result.score }}/{{ result.total }} — {{ result.percentage }}%
@@ -152,4 +155,8 @@ body{background:#f4f6fb;min-height:100vh;}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include 'partials/sidebar_logout_button_js.html' %}
 {% endblock %}

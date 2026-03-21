@@ -21,8 +21,7 @@ body{background:#f4f6fb;}
 .sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
 .sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
 .sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
-.sb-logout{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;}
-.sb-logout:hover{color:#fff;}
+{% include 'partials/sidebar_logout_button_css.html' %}
 .main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
 .topbar{display:flex;align-items:center;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
 .topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
@@ -75,7 +74,7 @@ body{background:#f4f6fb;}
         <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon">⚙</span> Admin Panel</a>
         {% endif %}
         <div class="sb-bottom">
-            <a href="/accounts/logout/" class="sb-logout"><span class="sb-icon">↩</span> Logout</a>
+            {% include 'partials/sidebar_logout_button.html' %}
         </div>
     </div>
 
@@ -156,4 +155,8 @@ body{background:#f4f6fb;}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include 'partials/sidebar_logout_button_js.html' %}
 {% endblock %}
