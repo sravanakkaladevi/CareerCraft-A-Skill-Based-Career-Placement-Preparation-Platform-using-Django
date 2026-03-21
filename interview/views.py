@@ -47,19 +47,42 @@ def quiz_question(request, question_no):
     total = len(question_ids)
     if question_no < 1 or question_no > total:
         return redirect('quiz_result')
-    if request.method == 'POST':
-        selected = request.POST.get('answer', '')
-        answers = request.session.get('quiz_answers', {})
-        answers[str(question_no)] = selected
-        request.session['quiz_answers'] = answers
-        request.session.modified = True
-        if question_no < total:
-            return redirect('quiz_question', question_no=question_no+1)
-        else:
-            return redirect('quiz_result')
     question = get_object_or_404(Question, id=question_ids[question_no-1])
     answers = request.session.get('quiz_answers', {})
     saved_answer = answers.get(str(question_no), '')
+
+    if request.method == 'POST':
+        action = request.POST.get('action', 'answer')
+        if action == 'continue':
+            if question_no < total:
+                return redirect('quiz_question', question_no=question_no+1)
+            return redirect('quiz_result')
+
+        selected = request.POST.get('answer', '')
+        answers[str(question_no)] = selected
+        request.session['quiz_answers'] = answers
+        request.session.modified = True
+        saved_answer = selected
+
+        if selected:
+            is_correct = selected.upper() == question.correct_option.upper()
+            feedback_context = {
+                'question': question,
+                'question_no': question_no,
+                'total': total,
+                'progress': int((question_no / total) * 100),
+                'saved_answer': saved_answer,
+                'category_id': category_id,
+                'show_feedback': True,
+                'is_correct': is_correct,
+                'correct_option': question.correct_option,
+            }
+            return render(request, 'interview/quiz.html', feedback_context)
+
+        if question_no < total:
+            return redirect('quiz_question', question_no=question_no+1)
+        return redirect('quiz_result')
+
     return render(request, 'interview/quiz.html', {
         'question': question,
         'question_no': question_no,
@@ -67,6 +90,7 @@ def quiz_question(request, question_no):
         'progress': int((question_no / total) * 100),
         'saved_answer': saved_answer,
         'category_id': category_id,
+        'show_feedback': False,
     })
 
 

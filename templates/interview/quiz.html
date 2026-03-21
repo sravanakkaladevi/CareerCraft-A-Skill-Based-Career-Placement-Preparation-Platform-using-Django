@@ -28,8 +28,12 @@ body{background:#f4f6fb;min-height:100vh;display:flex;align-items:flex-start;jus
 .option-label:hover{border-color:#185FA5;background:#f8faff;}
 .option-label input[type=radio]{display:none;}
 .option-label.selected{border-color:#185FA5;background:#E6F1FB;}
+.option-label.correct-choice{border-color:#16a34a;background:#EAF3DE;}
+.option-label.wrong-choice{border-color:#dc2626;background:#FCEBEB;}
 .option-key{width:28px;height:28px;border-radius:50%;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#64748b;flex-shrink:0;}
 .option-label.selected .option-key{background:#185FA5;border-color:#185FA5;color:#fff;}
+.option-label.correct-choice .option-key{background:#16a34a;border-color:#16a34a;color:#fff;}
+.option-label.wrong-choice .option-key{background:#dc2626;border-color:#dc2626;color:#fff;}
 .option-text{font-size:14px;color:#1e293b;}
 .quiz-footer{display:flex;justify-content:space-between;align-items:center;}
 .quiz-actions{display:flex;gap:10px;align-items:center;}
@@ -39,6 +43,13 @@ body{background:#f4f6fb;min-height:100vh;display:flex;align-items:flex-start;jus
 .btn-skip:hover{color:#64748b;}
 .btn-exit{background:#fff5f5;color:#dc2626;border:1px solid #fecaca;padding:11px 20px;border-radius:8px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block;}
 .btn-exit:hover{background:#fee2e2;}
+.feedback-box{margin-top:18px;border-radius:12px;padding:16px 18px;}
+.feedback-box.correct{background:#EAF3DE;border:1px solid #bbf7d0;}
+.feedback-box.wrong{background:#FEF2F2;border:1px solid #fecaca;}
+.feedback-title{font-size:15px;font-weight:600;margin-bottom:8px;}
+.feedback-box.correct .feedback-title{color:#166534;}
+.feedback-box.wrong .feedback-title{color:#b91c1c;}
+.feedback-text{font-size:13px;color:#475569;line-height:1.7;}
 .q-nav{display:flex;gap:4px;flex-wrap:wrap;margin-top:16px;}
 .q-dot{width:28px;height:28px;border-radius:6px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#64748b;}
 .q-dot.answered{background:#185FA5;color:#fff;}
@@ -73,36 +84,55 @@ body{background:#f4f6fb;min-height:100vh;display:flex;align-items:flex-start;jus
         <form method="POST" id="quizForm">
             {% csrf_token %}
             <div class="options">
-                <label class="option-label {% if saved_answer == 'A' %}selected{% endif %}" id="opt-A">
-                    <input type="radio" name="answer" value="A" {% if saved_answer == 'A' %}checked{% endif %} onchange="selectOpt('A')">
+                <label class="option-label {% if saved_answer == 'A' %}selected{% endif %}{% if show_feedback and correct_option == 'A' %} correct-choice{% elif show_feedback and saved_answer == 'A' and correct_option != 'A' %} wrong-choice{% endif %}" id="opt-A">
+                    <input type="radio" name="answer" value="A" {% if saved_answer == 'A' %}checked{% endif %} {% if show_feedback %}disabled{% endif %} onchange="selectOpt('A')">
                     <div class="option-key">A</div>
                     <div class="option-text">{{ question.option_a }}</div>
                 </label>
-                <label class="option-label {% if saved_answer == 'B' %}selected{% endif %}" id="opt-B">
-                    <input type="radio" name="answer" value="B" {% if saved_answer == 'B' %}checked{% endif %} onchange="selectOpt('B')">
+                <label class="option-label {% if saved_answer == 'B' %}selected{% endif %}{% if show_feedback and correct_option == 'B' %} correct-choice{% elif show_feedback and saved_answer == 'B' and correct_option != 'B' %} wrong-choice{% endif %}" id="opt-B">
+                    <input type="radio" name="answer" value="B" {% if saved_answer == 'B' %}checked{% endif %} {% if show_feedback %}disabled{% endif %} onchange="selectOpt('B')">
                     <div class="option-key">B</div>
                     <div class="option-text">{{ question.option_b }}</div>
                 </label>
-                <label class="option-label {% if saved_answer == 'C' %}selected{% endif %}" id="opt-C">
-                    <input type="radio" name="answer" value="C" {% if saved_answer == 'C' %}checked{% endif %} onchange="selectOpt('C')">
+                <label class="option-label {% if saved_answer == 'C' %}selected{% endif %}{% if show_feedback and correct_option == 'C' %} correct-choice{% elif show_feedback and saved_answer == 'C' and correct_option != 'C' %} wrong-choice{% endif %}" id="opt-C">
+                    <input type="radio" name="answer" value="C" {% if saved_answer == 'C' %}checked{% endif %} {% if show_feedback %}disabled{% endif %} onchange="selectOpt('C')">
                     <div class="option-key">C</div>
                     <div class="option-text">{{ question.option_c }}</div>
                 </label>
-                <label class="option-label {% if saved_answer == 'D' %}selected{% endif %}" id="opt-D">
-                    <input type="radio" name="answer" value="D" {% if saved_answer == 'D' %}checked{% endif %} onchange="selectOpt('D')">
+                <label class="option-label {% if saved_answer == 'D' %}selected{% endif %}{% if show_feedback and correct_option == 'D' %} correct-choice{% elif show_feedback and saved_answer == 'D' and correct_option != 'D' %} wrong-choice{% endif %}" id="opt-D">
+                    <input type="radio" name="answer" value="D" {% if saved_answer == 'D' %}checked{% endif %} {% if show_feedback %}disabled{% endif %} onchange="selectOpt('D')">
                     <div class="option-key">D</div>
                     <div class="option-text">{{ question.option_d }}</div>
                 </label>
             </div>
 
+            {% if show_feedback %}
+            <div class="feedback-box {% if is_correct %}correct{% else %}wrong{% endif %}">
+                <div class="feedback-title">{% if is_correct %}Right Answer{% else %}Wrong Answer{% endif %}</div>
+                <div class="feedback-text">
+                    Your answer: <strong>{{ saved_answer }}</strong><br>
+                    Correct answer: <strong>{{ correct_option }}</strong><br>
+                    Explanation: {{ question.explanation|default:"No explanation available for this question yet." }}
+                </div>
+            </div>
+            {% endif %}
+
             <div class="quiz-footer">
                 <div class="quiz-actions">
                     <a href="/interview/exit/" class="btn-exit">Exit Quiz</a>
+                    {% if not show_feedback %}
                     <button type="button" class="btn-skip" onclick="skipQuestion()">Skip</button>
+                    {% endif %}
                 </div>
-                <button type="submit" class="btn-next">
-                    {% if question_no == total %}Submit Test{% else %}Next ->{% endif %}
+                {% if show_feedback %}
+                <button type="submit" class="btn-next" name="action" value="continue">
+                    {% if question_no == total %}Finish Quiz{% else %}Continue ->{% endif %}
                 </button>
+                {% else %}
+                <button type="submit" class="btn-next">
+                    {% if question_no == total %}Submit Test{% else %}Check Answer{% endif %}
+                </button>
+                {% endif %}
             </div>
         </form>
     </div>
