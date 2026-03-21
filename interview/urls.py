@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.interview_home, name='interview_home'),
     path('start/<int:category_id>/', views.start_test, name='start_test'),
     path('question/<int:question_no>/', views.quiz_question, name='quiz_question'),
+    path('exit/', views.exit_quiz, name='exit_quiz'),
     path('result/', views.quiz_result, name='quiz_result'),
 ]

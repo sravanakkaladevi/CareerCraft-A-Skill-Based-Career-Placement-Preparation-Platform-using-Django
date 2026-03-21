@@ -71,22 +71,31 @@ def quiz_question(request, question_no):
 
 
 @login_required
+def exit_quiz(request):
+    for key in ['quiz_questions', 'quiz_category', 'quiz_answers']:
+        request.session.pop(key, None)
+    return redirect('interview_home')
+
+
+@login_required
 def quiz_result(request):
     question_ids = request.session.get('quiz_questions', [])
     category_id = request.session.get('quiz_category')
     answers = request.session.get('quiz_answers', {})
-    if not question_ids:
+    if not question_ids or not category_id:
         return redirect('interview_home')
+
     questions = Question.objects.filter(id__in=question_ids)
     q_map = {q.id: q for q in questions}
     results = []
     score = 0
+
     for i, qid in enumerate(question_ids, 1):
         q = q_map.get(qid)
         if not q:
             continue
         user_ans = answers.get(str(i), '')
-        is_correct = user_ans.upper() == q.correct_option.upper()
+        is_correct = user_ans.upper() == q.correct_option.upper() if user_ans else False
         if is_correct:
             score += 1
         results.append({
@@ -95,11 +104,13 @@ def quiz_result(request):
             'is_correct': is_correct,
             'correct_option': q.correct_option,
         })
+
     total = len(question_ids)
     wrong_count = total - score
     percentage = int((score / total) * 100) if total else 0
     category = get_object_or_404(Category, id=category_id)
     category.display_icon = _display_icon(category.icon, category.name)
+
     MockResult.objects.create(
         user=request.user,
         category=category,
@@ -107,8 +118,11 @@ def quiz_result(request):
         total=total,
         percentage=percentage,
     )
+
+    # Clear session AFTER saving result
     for key in ['quiz_questions', 'quiz_category', 'quiz_answers']:
         request.session.pop(key, None)
+
     if percentage >= 80:
         grade = 'Excellent'
         grade_color = 'green'
@@ -121,6 +135,7 @@ def quiz_result(request):
     else:
         grade = 'Needs Work'
         grade_color = 'red'
+
     return render(request, 'interview/result.html', {
         'score': score,
         'total': total,
