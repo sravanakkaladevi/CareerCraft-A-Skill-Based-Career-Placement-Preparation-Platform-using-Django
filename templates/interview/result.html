@@ -133,7 +133,7 @@ body{background:#f4f6fb;min-height:100vh;}
                     <div class="stat-label">Correct answers</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-num red">{{ total|add:"-"|add:score }}</div>
+                    <div class="stat-num red">{{ wrong_count }}</div>
                     <div class="stat-label">Wrong answers</div>
                 </div>
                 <div class="stat">
@@ -146,8 +146,7 @@ body{background:#f4f6fb;min-height:100vh;}
 
             {% for r in results %}
             <div class="q-review">
-                {% for opt, text in r.question.option_a|zip_options:r.question %}
-{% endfor %}
+                <div class="q-review-header" onclick="toggleReview({{ forloop.counter }})">
                     <div class="q-status {% if r.is_correct %}correct{% elif r.user_answer %}wrong{% else %}skipped{% endif %}">
                         {% if r.is_correct %}✓{% elif r.user_answer %}✗{% else %}—{% endif %}
                     </div>

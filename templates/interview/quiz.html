@@ -1,141 +1,217 @@
 {% extends 'base.html' %}
-{% block title %}Question {{ question_no }}{% endblock %}
+{% block title %}Result — {{ category.name }}{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f6fb;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
-.quiz-wrapper{width:100%;max-width:680px;}
-.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.quiz-logo{font-size:15px;font-weight:600;color:#185FA5;}
-.quiz-logo span{color:#0C447C;}
-.timer-box{background:#fff;border:0.5px solid #e2e8f0;border-radius:8px;padding:8px 16px;display:flex;align-items:center;gap:8px;}
-.timer-icon{font-size:14px;}
-.timer-text{font-size:14px;font-weight:600;color:#1e293b;min-width:50px;}
-.timer-warn{color:#dc2626;}
-.progress-section{margin-bottom:20px;}
-.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:6px;}
-.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;}
-.progress-fill{height:6px;background:#185FA5;border-radius:3px;transition:width .3s;}
-.quiz-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:14px;padding:28px;}
-.q-number{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
-.q-text{font-size:16px;font-weight:500;color:#1e293b;line-height:1.6;margin-bottom:24px;}
-.options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
-.option-label{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:.15s;}
-.option-label:hover{border-color:#185FA5;background:#f8faff;}
-.option-label input{display:none;}
-.option-selected{border-color:#185FA5;background:#E6F1FB;}
-.option-key{width:28px;height:28px;border-radius:50%;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#64748b;flex-shrink:0;}
-.option-key-active{background:#185FA5;border-color:#185FA5;color:#fff;}
-.option-text{font-size:14px;color:#1e293b;}
-.quiz-footer{display:flex;justify-content:space-between;align-items:center;}
-.btn-next{background:#185FA5;color:#fff;border:none;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:.2s;}
-.btn-next:hover{background:#0C447C;}
-.btn-skip{background:transparent;color:#94a3b8;border:0.5px solid #e2e8f0;padding:11px 20px;border-radius:8px;font-size:13px;cursor:pointer;}
-.btn-skip:hover{color:#64748b;}
-.q-nav{display:flex;gap:4px;flex-wrap:wrap;margin-top:16px;}
-.q-dot{width:28px;height:28px;border-radius:6px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#64748b;}
-.q-dot-answered{background:#185FA5;color:#fff;}
-.q-dot-current{background:#0C447C;color:#fff;}
+body{background:#f4f6fb;min-height:100vh;}
+.app{display:flex;min-height:100vh;}
+.sidebar{width:230px;background:#185FA5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:fixed;top:0;left:0;z-index:100;}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sb-logo-text{font-size:17px;font-weight:600;color:#fff;}
+.sb-logo-text span{color:#B5D4F4;}
+.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:#0C447C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#B5D4F4;flex-shrink:0;text-transform:uppercase;}
+.sb-username{font-size:13px;color:#fff;font-weight:500;}
+.sb-role{font-size:10px;color:rgba(255,255,255,0.45);}
+.sb-section{padding:14px 20px 6px;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;border-left:3px solid transparent;transition:.15s;}
+.sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
+.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
+.sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
+.sb-logout{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;}
+.sb-logout:hover{color:#fff;}
+.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
+.topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
+.content{padding:24px 28px;}
+.score-banner{border-radius:14px;padding:28px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}
+.score-banner.green{background:#EAF3DE;border:0.5px solid #3B6D11;}
+.score-banner.blue{background:#E6F1FB;border:0.5px solid #185FA5;}
+.score-banner.amber{background:#FAEEDA;border:0.5px solid #d97706;}
+.score-banner.red{background:#FCEBEB;border:0.5px solid #dc2626;}
+.score-left h2{font-size:22px;font-weight:600;margin-bottom:4px;}
+.score-banner.green .score-left h2{color:#16a34a;}
+.score-banner.blue .score-left h2{color:#185FA5;}
+.score-banner.amber .score-left h2{color:#d97706;}
+.score-banner.red .score-left h2{color:#dc2626;}
+.score-left p{font-size:13px;color:#475569;}
+.score-circle{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.score-banner.green .score-circle{background:#fff;border:3px solid #16a34a;}
+.score-banner.blue .score-circle{background:#fff;border:3px solid #185FA5;}
+.score-banner.amber .score-circle{background:#fff;border:3px solid #d97706;}
+.score-banner.red .score-circle{background:#fff;border:3px solid #dc2626;}
+.score-pct{font-size:22px;font-weight:700;}
+.score-banner.green .score-pct{color:#16a34a;}
+.score-banner.blue .score-pct{color:#185FA5;}
+.score-banner.amber .score-pct{color:#d97706;}
+.score-banner.red .score-pct{color:#dc2626;}
+.score-label{font-size:9px;color:#94a3b8;text-transform:uppercase;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.stat{background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;padding:16px;text-align:center;}
+.stat-num{font-size:24px;font-weight:600;color:#1e293b;}
+.stat-num.green{color:#16a34a;}
+.stat-num.red{color:#dc2626;}
+.stat-label{font-size:11px;color:#94a3b8;margin-top:4px;}
+.section-title{font-size:14px;font-weight:600;color:#1e293b;margin-bottom:14px;}
+.q-review{margin-bottom:12px;background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+.q-review-header{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;cursor:pointer;}
+.q-status{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px;}
+.q-status.correct{background:#EAF3DE;color:#16a34a;}
+.q-status.wrong{background:#FCEBEB;color:#dc2626;}
+.q-status.skipped{background:#f1f5f9;color:#94a3b8;}
+.q-review-text{font-size:13px;color:#1e293b;flex:1;line-height:1.5;}
+.q-toggle{font-size:11px;color:#94a3b8;flex-shrink:0;margin-top:3px;}
+.q-review-body{padding:0 16px 16px;border-top:0.5px solid #f1f5f9;}
+.q-options-review{display:flex;flex-direction:column;gap:6px;margin:12px 0 10px;}
+.q-opt{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border-radius:6px;font-size:12px;line-height:1.5;}
+.q-opt.correct-ans{background:#EAF3DE;color:#16a34a;font-weight:500;}
+.q-opt.wrong-ans{background:#FCEBEB;color:#dc2626;}
+.q-opt.neutral{background:#f8faff;color:#475569;}
+.q-opt-key{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;border:1px solid currentColor;margin-top:1px;}
+.answer-summary{font-size:12px;color:#64748b;margin-bottom:8px;}
+.answer-summary strong{color:#1e293b;}
+.explanation{background:#f8faff;border:0.5px solid #E6F1FB;border-radius:6px;padding:10px 12px;font-size:12px;color:#475569;line-height:1.6;}
+.explanation strong{color:#0C447C;}
+.action-btns{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-blue{background:#185FA5;color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;text-decoration:none;display:inline-block;}
+.btn-blue:hover{background:#0C447C;}
+.btn-outline{background:transparent;color:#185FA5;border:0.5px solid #185FA5;padding:11px 24px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;text-decoration:none;display:inline-block;}
+.btn-outline:hover{background:#E6F1FB;}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="quiz-wrapper">
-    <div class="quiz-header">
-        <div class="quiz-logo">Career<span>Craft</span> — Mock Interview</div>
-        <div class="timer-box">
-            <span class="timer-icon">⏱</span>
-            <span class="timer-text" id="timer">30:00</span>
+<div class="app">
+    <div class="sidebar">
+        <div class="sb-logo">
+            <div class="sb-logo-text">Career<span>Craft</span></div>
+            <div class="sb-logo-sub">Placement Prep Platform</div>
+        </div>
+        <div class="sb-user">
+            <div class="sb-avatar">{{ request.user.username|first }}</div>
+            <div>
+                <div class="sb-username">{{ request.user.username }}</div>
+                <div class="sb-role">Student</div>
+            </div>
+        </div>
+        <div class="sb-section">Main Menu</div>
+        <a href="/dashboard/" class="sb-link"><span class="sb-icon">▣</span> Dashboard</a>
+        <a href="/resume/" class="sb-link"><span class="sb-icon">📄</span> Resume Builder</a>
+        <a href="/resume/ats/" class="sb-link"><span class="sb-icon">🔍</span> ATS Analyzer</a>
+        <a href="/interview/" class="sb-link active"><span class="sb-icon">🎯</span> Mock Interview</a>
+        <a href="/assessment/" class="sb-link"><span class="sb-icon">📊</span> Skill Assessment</a>
+        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon">🗺</span> Roadmap</a>
+        <div class="sb-section">Account</div>
+        <a href="/accounts/profile/" class="sb-link"><span class="sb-icon">👤</span> Profile</a>
+        {% if request.user.is_superuser %}
+        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon">⚙</span> Admin Panel</a>
+        {% endif %}
+        <div class="sb-bottom">
+            <a href="/accounts/logout/" class="sb-logout"><span class="sb-icon">↩</span> Logout</a>
         </div>
     </div>
 
-    <div class="progress-section">
-        <div class="progress-meta">
-            <span>Question {{ question_no }} of {{ total }}</span>
-            <span>{{ progress }}% complete</span>
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-title">{{ category.name }} — Result</div>
         </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:{{ progress }}%;"></div>
-        </div>
-    </div>
+        <div class="content">
 
-    <div class="quiz-card">
-        <div class="q-number">Question {{ question_no }}</div>
-        <div class="q-text">{{ question.question_text }}</div>
-
-        <form method="POST" id="quizForm">
-            {% csrf_token %}
-            <div class="options">
-                <label class="option-label {% if saved_answer == 'A' %}option-selected{% endif %}" id="opt-A">
-                    <input type="radio" name="answer" value="A" {% if saved_answer == 'A' %}checked{% endif %} onchange="selectOpt('A')">
-                    <div class="option-key {% if saved_answer == 'A' %}option-key-active{% endif %}" id="key-A">A</div>
-                    <div class="option-text">{{ question.option_a }}</div>
-                </label>
-                <label class="option-label {% if saved_answer == 'B' %}option-selected{% endif %}" id="opt-B">
-                    <input type="radio" name="answer" value="B" {% if saved_answer == 'B' %}checked{% endif %} onchange="selectOpt('B')">
-                    <div class="option-key {% if saved_answer == 'B' %}option-key-active{% endif %}" id="key-B">B</div>
-                    <div class="option-text">{{ question.option_b }}</div>
-                </label>
-                <label class="option-label {% if saved_answer == 'C' %}option-selected{% endif %}" id="opt-C">
-                    <input type="radio" name="answer" value="C" {% if saved_answer == 'C' %}checked{% endif %} onchange="selectOpt('C')">
-                    <div class="option-key {% if saved_answer == 'C' %}option-key-active{% endif %}" id="key-C">C</div>
-                    <div class="option-text">{{ question.option_c }}</div>
-                </label>
-                <label class="option-label {% if saved_answer == 'D' %}option-selected{% endif %}" id="opt-D">
-                    <input type="radio" name="answer" value="D" {% if saved_answer == 'D' %}checked{% endif %} onchange="selectOpt('D')">
-                    <div class="option-key {% if saved_answer == 'D' %}option-key-active{% endif %}" id="key-D">D</div>
-                    <div class="option-text">{{ question.option_d }}</div>
-                </label>
+            <div class="score-banner {{ grade_color }}">
+                <div class="score-left">
+                    <h2>{{ grade }}!</h2>
+                    <p>You scored {{ score }} out of {{ total }} in {{ category.name }}</p>
+                </div>
+                <div class="score-circle">
+                    <div class="score-pct">{{ percentage }}%</div>
+                    <div class="score-label">Score</div>
+                </div>
             </div>
 
-            <div class="quiz-footer">
-                <button type="button" class="btn-skip" onclick="skipQuestion()">Skip</button>
-                <button type="submit" class="btn-next">
-                    {% if question_no == total %}Submit Test{% else %}Next →{% endif %}
-                </button>
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-num green">{{ score }}</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num red">{{ wrong_count }}</div>
+                    <div class="stat-label">Wrong</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">{{ total }}</div>
+                    <div class="stat-label">Total</div>
+                </div>
             </div>
-        </form>
-    </div>
 
-    <div class="q-nav">
-        {% for i in question_range %}
-        <div class="q-dot {% if i == question_no %}q-dot-current{% elif i < question_no %}q-dot-answered{% endif %}">
-            {{ i }}
+            <div class="section-title">Question by question review</div>
+
+            {% for r in results %}
+            <div class="q-review">
+                <div class="q-review-header" onclick="toggleReview({{ forloop.counter }})">
+                    <div class="q-status {% if r.is_correct %}correct{% elif r.user_answer %}wrong{% else %}skipped{% endif %}">
+                        {% if r.is_correct %}✓{% elif r.user_answer %}✗{% else %}—{% endif %}
+                    </div>
+                    <div class="q-review-text">{{ forloop.counter }}. {{ r.question.question_text }}</div>
+                    <div class="q-toggle" id="toggle-{{ forloop.counter }}">▼</div>
+                </div>
+                <div class="q-review-body" id="review-{{ forloop.counter }}" style="display:none;">
+                    <div class="q-options-review">
+                        <div class="q-opt {% if r.question.correct_option == 'A' %}correct-ans{% elif r.user_answer == 'A' and not r.is_correct %}wrong-ans{% else %}neutral{% endif %}">
+                            <div class="q-opt-key">A</div>
+                            <div>{{ r.question.option_a }}</div>
+                        </div>
+                        <div class="q-opt {% if r.question.correct_option == 'B' %}correct-ans{% elif r.user_answer == 'B' and not r.is_correct %}wrong-ans{% else %}neutral{% endif %}">
+                            <div class="q-opt-key">B</div>
+                            <div>{{ r.question.option_b }}</div>
+                        </div>
+                        <div class="q-opt {% if r.question.correct_option == 'C' %}correct-ans{% elif r.user_answer == 'C' and not r.is_correct %}wrong-ans{% else %}neutral{% endif %}">
+                            <div class="q-opt-key">C</div>
+                            <div>{{ r.question.option_c }}</div>
+                        </div>
+                        <div class="q-opt {% if r.question.correct_option == 'D' %}correct-ans{% elif r.user_answer == 'D' and not r.is_correct %}wrong-ans{% else %}neutral{% endif %}">
+                            <div class="q-opt-key">D</div>
+                            <div>{{ r.question.option_d }}</div>
+                        </div>
+                    </div>
+                    <div class="answer-summary">
+                        Your answer: <strong>{% if r.user_answer %}{{ r.user_answer }}{% else %}Skipped{% endif %}</strong>
+                        &nbsp;|&nbsp;
+                        Correct answer: <strong style="color:#16a34a;">{{ r.correct_option }}</strong>
+                    </div>
+                    {% if r.question.explanation %}
+                    <div class="explanation">
+                        <strong>Explanation:</strong> {{ r.question.explanation }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="action-btns">
+                <a href="/interview/start/{{ category.id }}/" class="btn-blue">Retake Test</a>
+                <a href="/interview/" class="btn-outline">All Categories</a>
+                <a href="/dashboard/" class="btn-outline">Dashboard</a>
+            </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function selectOpt(val) {
-    ['A','B','C','D'].forEach(function(o) {
-        document.getElementById('opt-'+o).classList.remove('option-selected');
-        document.getElementById('key-'+o).classList.remove('option-key-active');
-    });
-    document.getElementById('opt-'+val).classList.add('option-selected');
-    document.getElementById('key-'+val).classList.add('option-key-active');
-}
-var seconds = 30 * 60;
-var timerEl = document.getElementById('timer');
-function updateTimer() {
-    var m = Math.floor(seconds / 60);
-    var s = seconds % 60;
-    timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-    if (seconds <= 60) timerEl.classList.add('timer-warn');
-    if (seconds <= 0) { document.getElementById('quizForm').submit(); return; }
-    seconds--;
-}
-updateTimer();
-setInterval(updateTimer, 1000);
-function skipQuestion() {
-    var form = document.getElementById('quizForm');
-    var h = document.createElement('input');
-    h.type = 'hidden'; h.name = 'answer'; h.value = '';
-    form.appendChild(h); form.submit();
+function toggleReview(n) {
+    var el = document.getElementById('review-' + n);
+    var tg = document.getElementById('toggle-' + n);
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+        tg.textContent = '▲';
+    } else {
+        el.style.display = 'none';
+        tg.textContent = '▼';
+    }
 }
 </script>
 {% endblock %}

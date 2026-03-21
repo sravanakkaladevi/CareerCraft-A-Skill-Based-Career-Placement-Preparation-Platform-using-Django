@@ -88,5 +88,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 3600
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -118,7 +118,7 @@ body{background:#f4f6fb;min-height:100vh;}
             <div class="cat-grid">
                 {% for cat in categories %}
                 <div class="cat-card">
-                    <div class="cat-icon">{{ cat.icon }}</div>
+                    <div class="cat-icon">{{ cat.display_icon }}</div>
                     <div class="cat-name">{{ cat.name }}</div>
                     <div class="cat-count">{{ cat.question_count }} questions</div>
                     {% if cat.question_count >= 5 %}
@@ -138,7 +138,7 @@ body{background:#f4f6fb;min-height:100vh;}
             <div class="results-card">
                 {% for result in recent_results %}
                 <div class="result-item">
-                    <div>{{ result.category.icon }}</div>
+                    <div>{{ result.category.display_icon }}</div>
                     <div class="result-cat">{{ result.category.name }}</div>
                     <div class="result-score {% if result.percentage >= 80 %}green{% elif result.percentage >= 60 %}blue{% elif result.percentage >= 40 %}amber{% else %}red{% endif %}">
                         {{ result.score }}/{{ result.total }} — {{ result.percentage }}%

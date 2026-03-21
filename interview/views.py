@@ -4,10 +4,21 @@ from django.contrib.auth.decorators import login_required
 from .models import Category, Question, MockResult
 
 
+def _display_icon(icon_value, name):
+    icon = (icon_value or '').strip()
+    if not icon or icon == '??':
+        return (name or 'NA')[:2]
+    return icon
+
+
 @login_required
 def interview_home(request):
     categories = Category.objects.all()
     recent_results = MockResult.objects.filter(user=request.user)[:5]
+    for category in categories:
+        category.display_icon = _display_icon(category.icon, category.name)
+    for result in recent_results:
+        result.category.display_icon = _display_icon(result.category.icon, result.category.name)
     return render(request, 'interview/interview.html', {
         'categories': categories,
         'recent_results': recent_results,
@@ -85,8 +96,10 @@ def quiz_result(request):
             'correct_option': q.correct_option,
         })
     total = len(question_ids)
+    wrong_count = total - score
     percentage = int((score / total) * 100) if total else 0
     category = get_object_or_404(Category, id=category_id)
+    category.display_icon = _display_icon(category.icon, category.name)
     MockResult.objects.create(
         user=request.user,
         category=category,
@@ -111,6 +124,7 @@ def quiz_result(request):
     return render(request, 'interview/result.html', {
         'score': score,
         'total': total,
+        'wrong_count': wrong_count,
         'percentage': percentage,
         'grade': grade,
         'grade_color': grade_color,
