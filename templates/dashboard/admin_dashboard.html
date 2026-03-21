@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#0f172a;color:#fff;min-height:100vh;}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#1e293b;border-bottom:1px solid rgba(24,95,165,0.3);}
+.logo{font-size:18px;font-weight:600;color:#fff;}
+.logo span{color:#378ADD;}
+.nav-links{display:flex;gap:4px;}
+.nav-link{padding:7px 14px;font-size:13px;color:rgba(255,255,255,0.6);border-radius:6px;text-decoration:none;}
+.nav-link:hover,.nav-link.active{background:rgba(24,95,165,0.2);color:#fff;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.avatar{width:34px;height:34px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+.badge-admin{font-size:11px;background:rgba(24,95,165,0.3);color:#378ADD;padding:3px 10px;border-radius:20px;border:1px solid rgba(24,95,165,0.4);}
+.logout-btn{font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;padding:6px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;}
+.logout-btn:hover{color:#fff;}
+.main{padding:28px 32px;}
+.page-title{font-size:20px;font-weight:600;margin-bottom:4px;}
+.page-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:18px;}
+.stat-label{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;}
+.stat-val{font-size:28px;font-weight:600;}
+.blue{color:#378ADD;}
+.green{color:#4ade80;}
+.amber{color:#fbbf24;}
+.red{color:#f87171;}
+.card{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:20px;margin-bottom:20px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.card-title{font-size:15px;font-weight:600;color:rgba(255,255,255,0.9);}
+.card-badge{font-size:11px;background:rgba(24,95,165,0.2);color:#378ADD;padding:3px 10px;border-radius:20px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.5px;padding:8px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);}
+td{font-size:13px;color:rgba(255,255,255,0.7);padding:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+tr:last-child td{border:none;}
+tr:hover td{background:rgba(24,95,165,0.05);}
+.status-active{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:6px;}
+.quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.ql{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:16px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:.2s;}
+.ql:hover{border-color:#185FA5;background:rgba(24,95,165,0.1);}
+.ql-icon{width:40px;height:40px;border-radius:8px;background:rgba(24,95,165,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ql-label{font-size:13px;font-weight:600;color:#fff;}
+.ql-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.divider{font-size:12px;color:rgba(255,255,255,0.2);margin:20px 0 16px;text-transform:uppercase;letter-spacing:1px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+    <div class="logo">Career<span>Craft</span> <span style="font-size:12px;color:rgba(255,255,255,0.3);font-weight:400;">— Admin</span></div>
+    <div class="nav-links">
+        <a href="/dashboard/admin-dashboard/" class="nav-link active">Admin Home</a>
+        <a href="/dashboard/" class="nav-link">User Dashboard</a>
+        <a href="/admin/" class="nav-link">Django Admin</a>
+    </div>
+    <div class="nav-right">
+        <div class="badge-admin">Superuser</div>
+        <div class="avatar">{{ request.user.username|first|upper }}</div>
+        <a href="/accounts/logout/" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="page-title">Admin Dashboard</div>
+    <div class="page-sub">Platform overview — CareerCraft</div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-label">Total users</div>
+            <div class="stat-val blue">{{ total_users }}</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Resumes built</div>
+            <div class="stat-val green">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Mock tests taken</div>
+            <div class="stat-val amber">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Assessments done</div>
+            <div class="stat-val red">0</div>
+        </div>
+    </div>
+
+    <div class="divider">Quick actions</div>
+    <div class="quick-links">
+        <a href="/admin/auth/user/add/" class="ql">
+            <div class="ql-icon">👤</div>
+            <div><div class="ql-label">Add user</div><div class="ql-sub">Create new account</div></div>
+        </a>
+        <a href="/admin/auth/user/" class="ql">
+            <div class="ql-icon">👥</div>
+            <div><div class="ql-label">Manage users</div><div class="ql-sub">View all accounts</div></div>
+        </a>
+        <a href="/admin/" class="ql">
+            <div class="ql-icon">⚙️</div>
+            <div><div class="ql-label">Django admin</div><div class="ql-sub">Full admin panel</div></div>
+        </a>
+    </div>
+
+    <div class="divider">Recent registrations</div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Registered users</div>
+            <div class="card-badge">{{ total_users }} total</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recent_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email|default:"—" }}</td>
+                    <td>{{ user.date_joined|date:"d M Y" }}</td>
+                    <td><span class="status-active"></span>Active</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;color:rgba(255,255,255,0.3);padding:24px;">
+                        No users registered yet
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

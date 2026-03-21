@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Question {{ question_no }}{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f6fb;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
+.quiz-wrapper{width:100%;max-width:680px;}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.quiz-logo{font-size:15px;font-weight:600;color:#185FA5;}
+.quiz-logo span{color:#0C447C;}
+.timer-box{background:#fff;border:0.5px solid #e2e8f0;border-radius:8px;padding:8px 16px;display:flex;align-items:center;gap:8px;}
+.timer-icon{font-size:14px;}
+.timer-text{font-size:14px;font-weight:600;color:#1e293b;min-width:50px;}
+.timer-warn{color:#dc2626;}
+.progress-section{margin-bottom:20px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:6px;}
+.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;}
+.progress-fill{height:6px;background:#185FA5;border-radius:3px;transition:width .3s;}
+.quiz-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:14px;padding:28px;}
+.q-number{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.q-text{font-size:16px;font-weight:500;color:#1e293b;line-height:1.6;margin-bottom:24px;}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.option-label{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:.15s;}
+.option-label:hover{border-color:#185FA5;background:#f8faff;}
+.option-label input{display:none;}
+.option-selected{border-color:#185FA5;background:#E6F1FB;}
+.option-key{width:28px;height:28px;border-radius:50%;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#64748b;flex-shrink:0;}
+.option-key-active{background:#185FA5;border-color:#185FA5;color:#fff;}
+.option-text{font-size:14px;color:#1e293b;}
+.quiz-footer{display:flex;justify-content:space-between;align-items:center;}
+.btn-next{background:#185FA5;color:#fff;border:none;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:.2s;}
+.btn-next:hover{background:#0C447C;}
+.btn-skip{background:transparent;color:#94a3b8;border:0.5px solid #e2e8f0;padding:11px 20px;border-radius:8px;font-size:13px;cursor:pointer;}
+.btn-skip:hover{color:#64748b;}
+.q-nav{display:flex;gap:4px;flex-wrap:wrap;margin-top:16px;}
+.q-dot{width:28px;height:28px;border-radius:6px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#64748b;}
+.q-dot-answered{background:#185FA5;color:#fff;}
+.q-dot-current{background:#0C447C;color:#fff;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-wrapper">
+    <div class="quiz-header">
+        <div class="quiz-logo">Career<span>Craft</span> — Mock Interview</div>
+        <div class="timer-box">
+            <span class="timer-icon">⏱</span>
+            <span class="timer-text" id="timer">30:00</span>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-meta">
+            <span>Question {{ question_no }} of {{ total }}</span>
+            <span>{{ progress }}% complete</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:{{ progress }}%;"></div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <div class="q-number">Question {{ question_no }}</div>
+        <div class="q-text">{{ question.question_text }}</div>
+
+        <form method="POST" id="quizForm">
+            {% csrf_token %}
+            <div class="options">
+                <label class="option-label {% if saved_answer == 'A' %}option-selected{% endif %}" id="opt-A">
+                    <input type="radio" name="answer" value="A" {% if saved_answer == 'A' %}checked{% endif %} onchange="selectOpt('A')">
+                    <div class="option-key {% if saved_answer == 'A' %}option-key-active{% endif %}" id="key-A">A</div>
+                    <div class="option-text">{{ question.option_a }}</div>
+                </label>
+                <label class="option-label {% if saved_answer == 'B' %}option-selected{% endif %}" id="opt-B">
+                    <input type="radio" name="answer" value="B" {% if saved_answer == 'B' %}checked{% endif %} onchange="selectOpt('B')">
+                    <div class="option-key {% if saved_answer == 'B' %}option-key-active{% endif %}" id="key-B">B</div>
+                    <div class="option-text">{{ question.option_b }}</div>
+                </label>
+                <label class="option-label {% if saved_answer == 'C' %}option-selected{% endif %}" id="opt-C">
+                    <input type="radio" name="answer" value="C" {% if saved_answer == 'C' %}checked{% endif %} onchange="selectOpt('C')">
+                    <div class="option-key {% if saved_answer == 'C' %}option-key-active{% endif %}" id="key-C">C</div>
+                    <div class="option-text">{{ question.option_c }}</div>
+                </label>
+                <label class="option-label {% if saved_answer == 'D' %}option-selected{% endif %}" id="opt-D">
+                    <input type="radio" name="answer" value="D" {% if saved_answer == 'D' %}checked{% endif %} onchange="selectOpt('D')">
+                    <div class="option-key {% if saved_answer == 'D' %}option-key-active{% endif %}" id="key-D">D</div>
+                    <div class="option-text">{{ question.option_d }}</div>
+                </label>
+            </div>
+
+            <div class="quiz-footer">
+                <button type="button" class="btn-skip" onclick="skipQuestion()">Skip</button>
+                <button type="submit" class="btn-next">
+                    {% if question_no == total %}Submit Test{% else %}Next →{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="q-nav">
+        {% for i in question_range %}
+        <div class="q-dot {% if i == question_no %}q-dot-current{% elif i < question_no %}q-dot-answered{% endif %}">
+            {{ i }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectOpt(val) {
+    ['A','B','C','D'].forEach(function(o) {
+        document.getElementById('opt-'+o).classList.remove('option-selected');
+        document.getElementById('key-'+o).classList.remove('option-key-active');
+    });
+    document.getElementById('opt-'+val).classList.add('option-selected');
+    document.getElementById('key-'+val).classList.add('option-key-active');
+}
+var seconds = 30 * 60;
+var timerEl = document.getElementById('timer');
+function updateTimer() {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    if (seconds <= 60) timerEl.classList.add('timer-warn');
+    if (seconds <= 0) { document.getElementById('quizForm').submit(); return; }
+    seconds--;
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+function skipQuestion() {
+    var form = document.getElementById('quizForm');
+    var h = document.createElement('input');
+    h.type = 'hidden'; h.name = 'answer'; h.value = '';
+    form.appendChild(h); form.submit();
+}
+</script>
+{% endblock %}

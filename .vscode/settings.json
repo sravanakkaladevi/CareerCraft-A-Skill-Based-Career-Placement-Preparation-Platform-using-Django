@@ -1,0 +1,6 @@
+{
+  "css.validate": false,
+  "html.validate.styles": false,
+  "html.validate.scripts": false,
+  "git.ignoreLimitWarning": true
+}
