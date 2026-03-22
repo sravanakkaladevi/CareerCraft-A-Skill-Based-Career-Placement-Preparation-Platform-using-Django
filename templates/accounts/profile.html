@@ -62,16 +62,16 @@ body{background:#f4f6fb;}
             </div>
         </div>
         <div class="sb-section">Main Menu</div>
-        <a href="/dashboard/" class="sb-link"><span class="sb-icon">▣</span> Dashboard</a>
-        <a href="/resume/" class="sb-link"><span class="sb-icon">📄</span> Resume Builder</a>
-        <a href="/resume/ats/" class="sb-link"><span class="sb-icon">🔍</span> ATS Analyzer</a>
-        <a href="/interview/" class="sb-link"><span class="sb-icon">🎯</span> Mock Interview</a>
-        <a href="/assessment/" class="sb-link"><span class="sb-icon">📊</span> Skill Assessment</a>
-        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon">🗺</span> Roadmap</a>
+        <a href="/dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="grid-alt" color="currentColor" size="sm"></box-icon></span> Dashboard</a>
+        <a href="/resume/" class="sb-link"><span class="sb-icon"><box-icon name="file" color="currentColor" size="sm"></box-icon></span> Resume Builder</a>
+        <a href="/resume/ats/" class="sb-link"><span class="sb-icon"><box-icon name="search-alt-2" color="currentColor" size="sm"></box-icon></span> ATS Analyzer</a>
+        <a href="/interview/" class="sb-link"><span class="sb-icon"><box-icon name="target-lock" color="currentColor" size="sm"></box-icon></span> Mock Interview</a>
+        <a href="/assessment/" class="sb-link"><span class="sb-icon"><box-icon name="bar-chart-alt-2" color="currentColor" size="sm"></box-icon></span> Skill Assessment</a>
+        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon"><box-icon name="map" color="currentColor" size="sm"></box-icon></span> Roadmap</a>
         <div class="sb-section">Account</div>
-        <a href="/accounts/profile/" class="sb-link active"><span class="sb-icon">👤</span> Profile</a>
+        <a href="/accounts/profile/" class="sb-link active"><span class="sb-icon"><box-icon name="user" color="currentColor" size="sm"></box-icon></span> Profile</a>
         {% if request.user.is_superuser %}
-        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon">⚙</span> Admin Panel</a>
+        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="cog" color="currentColor" size="sm"></box-icon></span> Admin Panel</a>
         {% endif %}
         <div class="sb-bottom">
             {% include 'partials/sidebar_logout_button.html' %}

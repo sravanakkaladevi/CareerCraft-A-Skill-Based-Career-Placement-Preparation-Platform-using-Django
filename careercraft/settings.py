@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'interview',
     'assessment',
     'dashboard',
+    'learn',
 ]
 
 MIDDLEWARE = [
@@ -90,5 +91,7 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 3600
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@careercraft.local'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
