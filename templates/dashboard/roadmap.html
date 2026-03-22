@@ -34,6 +34,13 @@ body{background:#f4f6fb;min-height:100vh;}
 .hero-stat{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;text-align:center;}
 .hero-num{font-size:24px;font-weight:700;color:#fff;}
 .hero-lbl{font-size:11px;color:rgba(255,255,255,0.64);margin-top:4px;}
+.explorer-hero{background:linear-gradient(135deg,#fff7ed,#ffffff);border:1px solid #fed7aa;border-radius:18px;padding:22px 24px;margin-bottom:22px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;}
+.explorer-copy h3{font-size:22px;color:#172554;margin-bottom:8px;}
+.explorer-copy p{font-size:13px;color:#475569;line-height:1.7;max-width:650px;}
+.spotlight-wrap{display:flex;flex-wrap:wrap;gap:10px;max-width:440px;}
+.spotlight-link{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid #cbd5e1;color:#0f172a;text-decoration:none;font-size:12px;font-weight:600;}
+.spotlight-link:hover{border-color:#185FA5;color:#185FA5;}
+.spotlight-badge{font-size:10px;padding:4px 8px;border-radius:999px;background:#eff6ff;color:#1d4ed8;}
 .grid{display:grid;grid-template-columns:1.4fr .9fr;gap:18px;}
 .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;}
 .card-title{font-size:16px;font-weight:600;color:#1e293b;margin-bottom:16px;}
@@ -64,6 +71,32 @@ body{background:#f4f6fb;min-height:100vh;}
 .recent-item:last-child{border-bottom:none;padding-bottom:0;}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .empty{font-size:13px;color:#94a3b8;}
+.track-card{border:1px solid #eef2f7;border-radius:14px;padding:14px;margin-bottom:12px;}
+.track-card:last-child{margin-bottom:0;}
+.track-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.track-name{font-size:14px;font-weight:600;color:#1e293b;}
+.track-desc{font-size:12px;color:#64748b;line-height:1.6;margin-top:4px;}
+.track-stats{font-size:11px;color:#94a3b8;white-space:nowrap;}
+.track-link{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:#185FA5;text-decoration:none;font-weight:600;margin-top:10px;}
+.track-link:hover{text-decoration:underline;}
+.topic-chip-wrap{display:flex;flex-wrap:wrap;gap:8px;}
+.topic-chip{background:#f8fafc;border:1px solid #e2e8f0;color:#334155;border-radius:999px;padding:6px 10px;font-size:11px;}
+.topic-list-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f8fafc;}
+.topic-list-item:last-child{border-bottom:none;padding-bottom:0;}
+.topic-list-title{font-size:13px;font-weight:500;color:#334155;}
+.topic-list-meta{font-size:11px;color:#94a3b8;margin-top:3px;}
+.level-pill{font-size:10px;text-transform:capitalize;padding:5px 8px;border-radius:999px;font-weight:600;}
+.level-pill.beginner{background:#dcfce7;color:#166534;}
+.level-pill.intermediate{background:#dbeafe;color:#1d4ed8;}
+.level-pill.advanced{background:#fee2e2;color:#b91c1c;}
+.catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.catalog-card{background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);border:1px solid #dbe7f5;border-radius:16px;padding:16px;}
+.catalog-title{font-size:15px;font-weight:700;color:#0f172a;}
+.catalog-desc{font-size:12px;color:#64748b;line-height:1.6;margin-top:6px;margin-bottom:14px;}
+.catalog-items{display:flex;flex-wrap:wrap;gap:9px;}
+.catalog-link{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:#fff;border:1px solid #dbe7f5;color:#334155;text-decoration:none;font-size:11px;font-weight:600;}
+.catalog-link:hover{border-color:#185FA5;color:#185FA5;transform:translateY(-1px);}
+.catalog-badge{font-size:10px;padding:3px 7px;border-radius:999px;background:#eff6ff;color:#1d4ed8;}
 .logoutButton{--figure-duration:100;--transform-figure:none;--walking-duration:100;--transform-arm1:none;--transform-wrist1:none;--transform-arm2:none;--transform-wrist2:none;--transform-leg1:none;--transform-calf1:none;--transform-leg2:none;--transform-calf2:none;background:none;border:0;cursor:pointer;display:block;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;height:40px;outline:none;padding:0 0 0 20px;perspective:100px;position:relative;text-align:left;width:130px;}
 .logoutButton::before{background:rgba(255,255,255,0.1);border-radius:5px;content:"";display:block;height:100%;left:0;position:absolute;top:0;transition:transform 50ms ease;width:100%;z-index:2;}
 .logoutButton:hover::before{background:rgba(255,255,255,0.2);}
@@ -97,8 +130,10 @@ body{background:#f4f6fb;min-height:100vh;}
 @keyframes flash{0%{opacity:0.4;}100%{opacity:0;}}
 @media (max-width: 1100px){
   .hero{flex-direction:column;align-items:flex-start;}
+  .explorer-hero{flex-direction:column;}
   .hero-stats{min-width:0;width:100%;}
   .grid{grid-template-columns:1fr;}
+  .catalog-grid{grid-template-columns:1fr;}
 }
 </style>
 {% endblock %}
@@ -171,6 +206,21 @@ body{background:#f4f6fb;min-height:100vh;}
                 </div>
             </div>
 
+            <div class="explorer-hero">
+                <div class="explorer-copy">
+                    <h3>Roadmap explorer</h3>
+                    <p>Explore original category-wise learning paths for web development, AI, DevOps, design, databases, and interview prep. Each button opens the matching roadmap resource so users can move from planning into action quickly.</p>
+                </div>
+                <div class="spotlight-wrap">
+                    {% for item in spotlight_paths %}
+                    <a href="{{ item.url }}" class="spotlight-link" target="_blank" rel="noopener noreferrer">
+                        <span>{{ item.title }}</span>
+                        <span class="spotlight-badge">{{ item.badge }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
             <div class="grid">
                 <div>
                     <div class="card">
@@ -188,6 +238,7 @@ body{background:#f4f6fb;min-height:100vh;}
                         {% endfor %}
                     </div>
 
+                    {% comment %}
                     <div class="card" style="margin-top:18px;">
                         <div class="card-title">Skill readiness</div>
                         {% for skill in skill_cards %}
@@ -204,6 +255,57 @@ body{background:#f4f6fb;min-height:100vh;}
                         {% empty %}
                         <div class="empty">No categories available yet.</div>
                         {% endfor %}
+                    </div>
+
+                    <div class="card" style="margin-top:18px;">
+                        <div class="card-title">Learning roadmap</div>
+                        {% for track in learning_tracks %}
+                        <div class="track-card">
+                            <div class="track-head">
+                                <div>
+                                    <div class="track-name">{{ track.icon }} {{ track.name }}</div>
+                                    <div class="track-desc">
+                                        {% if track.description %}
+                                            {{ track.description }}
+                                        {% else %}
+                                            Follow this track topic by topic to build stronger interview and assessment confidence.
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="track-stats">{{ track.topic_count }} topics • {{ track.lesson_count }} lessons</div>
+                            </div>
+                            <div class="topic-chip-wrap">
+                                {% for topic in track.topics %}
+                                <div class="topic-chip">{{ topic.title }} • {{ topic.lesson_count }} lesson{{ topic.lesson_count|pluralize }}</div>
+                                {% empty %}
+                                <div class="empty">No topics added for this track yet.</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="empty">No learning tracks available yet. Add languages and topics in the Learn app to show them here.</div>
+                        {% endfor %}
+                    </div>
+                    {% endcomment %}
+
+                    <div class="card" style="margin-top:18px;">
+                        <div class="card-title">Explore roadmap categories</div>
+                        <div class="catalog-grid">
+                            {% for section in roadmap_catalog %}
+                            <div class="catalog-card">
+                                <div class="catalog-title">{{ section.title }}</div>
+                                <div class="catalog-desc">{{ section.description }}</div>
+                                <div class="catalog-items">
+                                    {% for item in section.items %}
+                                    <a href="{{ item.url }}" class="catalog-link" target="_blank" rel="noopener noreferrer">
+                                        <span>{{ item.title }}</span>
+                                        <span class="catalog-badge">{{ item.badge }}</span>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
 
@@ -236,6 +338,21 @@ body{background:#f4f6fb;min-height:100vh;}
                             <div class="step-dot" style="background:{% if resume_built %}#16a34a{% else %}#d97706{% endif %};"></div>
                             <div>{% if resume_built %}Your resume is marked as built. Keep refining it for ATS and role-specific applications.{% else %}Resume not built yet. Finish your resume first to improve your placement readiness quickly.{% endif %}</div>
                         </div>
+                    </div>
+
+                    <div class="card" style="margin-top:18px;">
+                        <div class="card-title">Featured topics</div>
+                        {% for topic in featured_topics %}
+                        <div class="topic-list-item">
+                            <div>
+                                <div class="topic-list-title">{{ topic.language.icon }} {{ topic.title }}</div>
+                                <div class="topic-list-meta">{{ topic.language.name }} • {{ topic.lesson_count }} lesson{{ topic.lesson_count|pluralize }}</div>
+                            </div>
+                            <div class="level-pill {{ topic.level }}">{{ topic.level }}</div>
+                        </div>
+                        {% empty %}
+                        <div class="empty">No topics available yet.</div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
