@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     # Our apps
     'accounts',
     'resume',
+    'ats',
     'interview',
     'assessment',
     'dashboard',

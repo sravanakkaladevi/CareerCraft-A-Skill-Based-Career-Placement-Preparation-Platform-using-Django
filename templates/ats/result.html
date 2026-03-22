@@ -1,0 +1,69 @@
+{% extends 'base_sidebar.html' %}
+{% block title %}ATS Result{% endblock %}
+{% block nav_ats %}active{% endblock %}
+{% block page_title %}ATS Result{% endblock %}
+
+{% block page_css %}
+.result-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start;}
+.panel{background:#fff;border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 18px 36px rgba(15,23,42,.06);}
+.score-box{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;}
+.score-value{font-size:48px;font-weight:800;color:var(--blue-dark);line-height:1;}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:8px 10px;border-radius:999px;font-size:12px;font-weight:600;}
+.chip-good{background:#ecfdf3;color:#166534;}
+.chip-miss{background:#fff7ed;color:#c2410c;}
+.suggestion-list{display:grid;gap:10px;}
+.suggestion{padding:12px 14px;border-radius:14px;background:#eef6ff;border:1px solid #cfe1fb;color:#1e3a5f;font-size:12px;line-height:1.7;}
+.side-card{position:sticky;top:104px;}
+@media (max-width:980px){.result-layout{grid-template-columns:1fr;}.side-card{position:static;}}
+{% endblock %}
+
+{% block page_content %}
+<div class="result-layout">
+    <div class="panel">
+        <div class="score-box">
+            <div>
+                <div class="page-kicker" style="margin-bottom:8px;">ATS Score</div>
+                <div class="score-value">{{ result.score }}%</div>
+            </div>
+            <a href="/ats/ats-check/" class="btn btn-outline">New Check</a>
+        </div>
+
+        <div class="card-title">Matched Keywords</div>
+        <div class="chip-wrap" style="margin-bottom:18px;">
+            {% for keyword in result.matched_keywords %}
+            <span class="chip chip-good">{{ keyword }}</span>
+            {% empty %}
+            <span>No matched keywords yet.</span>
+            {% endfor %}
+        </div>
+
+        <div class="card-title">Missing Keywords</div>
+        <div class="chip-wrap" style="margin-bottom:18px;">
+            {% for keyword in result.missing_keywords %}
+            <span class="chip chip-miss">{{ keyword }}</span>
+            {% empty %}
+            <span>No missing keywords detected.</span>
+            {% endfor %}
+        </div>
+
+        <div class="card-title">Suggestions</div>
+        <div class="suggestion-list">
+            {% for suggestion in result.suggestions %}
+            <div class="suggestion">{{ suggestion }}</div>
+            {% empty %}
+            <div class="suggestion">Your resume already aligns well with the job description.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="panel side-card">
+        <div class="card-title">Flow</div>
+        <div style="font-size:13px;color:#5b6880;line-height:1.8;">
+            User -> HTML Form -> Django View -> ATS Engine -> Result Page
+            <br><br>
+            Resume lo "python api" undi, JD lo "python api debugging" unte system thinks near 2/3 match and gives score around that similarity.
+        </div>
+    </aside>
+</div>
+{% endblock %}

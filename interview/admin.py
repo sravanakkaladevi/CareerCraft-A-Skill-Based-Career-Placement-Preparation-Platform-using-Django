@@ -16,13 +16,29 @@ class CategoryAdminForm(forms.ModelForm):
         }
 
 
+class QuestionInline(admin.TabularInline):
+    model = Question
+    extra = 1
+    fields = [
+        "question_text",
+        "option_a",
+        "option_b",
+        "option_c",
+        "option_d",
+        "correct_option",
+        "difficulty",
+    ]
+    show_change_link = True
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     form = CategoryAdminForm
-    list_display = ["name", "icon_preview", "order"]
+    list_display = ["name", "question_total", "icon_preview", "order"]
     ordering = ["order", "name"]
     search_fields = ["name", "description"]
     readonly_fields = ["icon_preview", "icon_guide"]
+    inlines = [QuestionInline]
     fields = [
         "name",
         "description",
@@ -56,11 +72,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
     icon_guide.short_description = "Logo guide"
 
+    def question_total(self, obj):
+        return obj.question_count()
+
+    question_total.short_description = "Questions"
+
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ["question_text", "category", "correct_option", "difficulty"]
+    list_display = ["short_question", "category", "correct_option", "difficulty"]
     list_filter = ["category", "difficulty"]
+    list_select_related = ["category"]
     search_fields = [
         "question_text",
         "option_a",
@@ -69,6 +91,23 @@ class QuestionAdmin(admin.ModelAdmin):
         "option_d",
         "explanation",
     ]
+    autocomplete_fields = ["category"]
+    fieldsets = (
+        ("Question Setup", {
+            "fields": ("category", "difficulty", "question_text"),
+        }),
+        ("Options", {
+            "fields": ("option_a", "option_b", "option_c", "option_d", "correct_option"),
+        }),
+        ("Explanation", {
+            "fields": ("explanation",),
+        }),
+    )
+
+    def short_question(self, obj):
+        return obj.question_text[:80]
+
+    short_question.short_description = "Question"
 
 
 @admin.register(MockResult)

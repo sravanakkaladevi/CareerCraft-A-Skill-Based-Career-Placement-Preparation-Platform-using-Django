@@ -33,9 +33,11 @@
 .alert{padding:12px 14px;border-radius:12px;font-size:13px;margin-bottom:16px;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;}
 .result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px;}
+.section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px;}
 .metric{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
 .metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px;}
 .metric-value{font-size:26px;font-weight:700;color:var(--blue);}
+.metric-value-sm{font-size:22px;font-weight:700;color:#0f172a;}
 .metric-copy{font-size:11px;color:#64748b;margin-top:5px;line-height:1.5;}
 .list-card{margin-top:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
 .list-card h3{font-size:13px;color:#1e293b;margin-bottom:10px;}
@@ -43,12 +45,22 @@
 .tag{padding:7px 10px;border-radius:999px;font-size:12px;font-weight:500;}
 .tag-good{background:#EAF7EF;color:#166534;}
 .tag-miss{background:#FFF4E5;color:#B45309;}
+.suggestion-list{display:grid;gap:10px;}
+.suggestion-item{padding:12px 14px;border-radius:12px;background:#eef6ff;border:1px solid #cfe1fb;color:#1e3a5f;font-size:12px;line-height:1.7;}
+.highlight-preview{font-size:12px;line-height:1.8;color:#334155;background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:14px;max-height:220px;overflow:auto;}
+.section-title{font-size:12px;font-weight:700;color:#1e293b;margin:14px 0 8px;}
+.eligibility-card{margin-top:16px;padding:16px;border-radius:14px;border:1px solid #dbe4f0;background:#f8fafc;}
+.eligibility-status{font-size:18px;font-weight:700;color:#0f172a;}
+.eligibility-summary{font-size:12px;color:#475569;line-height:1.7;margin-top:6px;}
+.eligibility-reasons{display:grid;gap:8px;margin-top:12px;}
+.eligibility-reason{font-size:12px;line-height:1.7;color:#1e3a5f;background:#eef6ff;border:1px solid #cfe1fb;border-radius:10px;padding:10px 12px;}
 .empty-state{display:flex;flex-direction:column;gap:10px;justify-content:center;min-height:100%;color:#64748b;}
 .empty-state strong{font-size:15px;color:#1e293b;}
 .helper-list{display:grid;gap:10px;margin-top:14px;}
 .helper-item{padding:12px 14px;border-radius:14px;background:#111827;color:#cbd5e1;border:1px solid rgba(255,255,255,.08);}
 .helper-item strong{display:block;color:#fff;font-size:13px;margin-bottom:4px;}
 @media (max-width:1100px){.analyzer-layout{grid-template-columns:1fr;}.hero{flex-direction:column;align-items:flex-start;padding:20px;}.result-grid{grid-template-columns:1fr;}.sticky-card{position:static;}}
+@media (max-width:1100px){.section-grid{grid-template-columns:1fr;}}
 {% endblock %}
 
 {% block page_content %}
@@ -97,8 +109,62 @@
             <div class="metric"><div class="metric-label">ATS score</div><div class="metric-value">{{ score }}%</div><div class="metric-copy">{{ score_msg }}</div></div>
             <div class="metric"><div class="metric-label">Matched keywords</div><div class="metric-value">{{ matched|length }}</div><div class="metric-copy">{{ missing|length }} still missing</div></div>
         </div>
+        {% if eligibility.status %}
+        <div class="eligibility-card">
+            <div class="metric-label">Eligibility</div>
+            <div class="eligibility-status">{{ eligibility.status }}</div>
+            <div class="eligibility-summary">{{ eligibility.summary }}</div>
+            {% if eligibility.required_years %}
+            <div class="metric-copy" style="margin-top:8px;">JD asks for about {{ eligibility.required_years }}+ years. Resume shows roughly {{ eligibility.resume_years }} years from dated experience.</div>
+            {% endif %}
+            {% if eligibility.reasons %}
+            <div class="eligibility-reasons">
+                {% for reason in eligibility.reasons %}
+                <div class="eligibility-reason">{{ reason }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="section-grid">
+            <div class="metric"><div class="metric-label">Skills Score</div><div class="metric-value-sm">{{ section_scores.skills|default:0 }}%</div><div class="metric-copy">Skills section relevance</div></div>
+            <div class="metric"><div class="metric-label">Experience Score</div><div class="metric-value-sm">{{ section_scores.experience|default:0 }}%</div><div class="metric-copy">Experience section relevance</div></div>
+            <div class="metric"><div class="metric-label">Projects Score</div><div class="metric-value-sm">{{ section_scores.projects|default:0 }}%</div><div class="metric-copy">Projects section relevance</div></div>
+        </div>
         <div class="list-card"><h3>Matched keywords</h3><div class="keyword-list">{% for keyword in matched %}<span class="tag tag-good">{{ keyword }}</span>{% empty %}<span>No matching keywords found yet.</span>{% endfor %}</div></div>
         <div class="list-card"><h3>Missing keywords</h3><div class="keyword-list">{% for keyword in missing %}<span class="tag tag-miss">{{ keyword }}</span>{% empty %}<span>No missing keywords detected.</span>{% endfor %}</div></div>
+        <div class="list-card"><h3>Highlighted Resume Matches</h3><div class="highlight-preview">{{ highlighted_resume|safe }}</div></div>
+        <div class="list-card">
+            <h3>Suggestions</h3>
+            {% if suggestions.skills or suggestions.experience or suggestions.projects %}
+            <div class="section-title">Skills</div>
+            <div class="suggestion-list">
+                {% for suggestion in suggestions.skills %}
+                <div class="suggestion-item">{{ suggestion|safe }}</div>
+                {% empty %}
+                <div class="suggestion-item">Core skills are covering the current role keywords well.</div>
+                {% endfor %}
+            </div>
+            <div class="section-title">Experience</div>
+            <div class="suggestion-list">
+                {% for suggestion in suggestions.experience %}
+                <div class="suggestion-item">{{ suggestion|safe }}</div>
+                {% empty %}
+                <div class="suggestion-item">Experience wording is covering the role direction well.</div>
+                {% endfor %}
+            </div>
+            <div class="section-title">Projects</div>
+            <div class="suggestion-list">
+                {% for suggestion in suggestions.projects %}
+                <div class="suggestion-item">{{ suggestion|safe }}</div>
+                {% empty %}
+                <div class="suggestion-item">Projects already reflect the role direction well.</div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="suggestion-item">Your resume is covering the core job keywords well. Keep the wording role-specific.</div>
+            {% endif %}
+        </div>
         {% else %}
         <div class="empty-state">
             <strong>Results will appear here</strong>

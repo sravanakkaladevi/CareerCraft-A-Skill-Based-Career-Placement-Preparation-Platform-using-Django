@@ -90,6 +90,8 @@ tr:hover td{background:rgba(24,95,165,0.05);}
     <div class="nav-links">
         <a href="/dashboard/admin-dashboard/" class="nav-link active">Admin Home</a>
         <a href="/dashboard/" class="nav-link">User Dashboard</a>
+        <a href="/learn/" class="nav-link">Learn</a>
+        <a href="/learn/blog/" class="nav-link">Blog</a>
         <a href="/admin/" class="nav-link">Django Admin</a>
         <a href="/admin/learn/blogpost/" class="nav-link">Content Manager</a>
     </div>
@@ -143,13 +145,17 @@ tr:hover td{background:rgba(24,95,165,0.05);}
 
     <div class="divider">Content management</div>
     <div class="quick-links">
+        <a href="/admin/interview/category/add/" class="ql">
+            <div class="ql-icon"><box-icon name="folder-plus" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">New interview category</div><div class="ql-sub">Create a topic like Python or DBMS</div></div>
+        </a>
+        <a href="/admin/interview/question/add/" class="ql">
+            <div class="ql-icon"><box-icon name="message-square-add" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">New interview question</div><div class="ql-sub">Add question, options, answer, explanation</div></div>
+        </a>
         <a href="/admin/interview/category/" class="ql">
             <div class="ql-icon"><box-icon name="collection" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Interview categories</div><div class="ql-sub">{{ total_categories }} categories</div></div>
-        </a>
-        <a href="/admin/interview/question/" class="ql">
-            <div class="ql-icon"><box-icon name="help-circle" color="#378ADD"></box-icon></div>
-            <div><div class="ql-label">Interview Q&A</div><div class="ql-sub">{{ total_questions }} questions</div></div>
         </a>
         <a href="/admin/assessment/skilltopic/" class="ql">
             <div class="ql-icon"><box-icon name="bar-chart-alt-2" color="#378ADD"></box-icon></div>
@@ -157,6 +163,10 @@ tr:hover td{background:rgba(24,95,165,0.05);}
         </a>
     </div>
     <div class="quick-links">
+        <a href="/admin/interview/question/" class="ql">
+            <div class="ql-icon"><box-icon name="help-circle" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Interview Q&A</div><div class="ql-sub">{{ total_questions }} questions</div></div>
+        </a>
         <a href="/admin/assessment/skillquestion/" class="ql">
             <div class="ql-icon"><box-icon name="list-check" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Assessment Q&A</div><div class="ql-sub">Manage topic questions</div></div>

@@ -13,6 +13,9 @@
 .topic-row{display:flex;justify-content:space-between;gap:14px;align-items:center;}
 .topic-title{font-size:16px;font-weight:600;color:var(--text);}
 .topic-meta{font-size:12px;color:var(--text-muted);margin-top:6px;}
+.resource-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.resource-link{font-size:11px;font-weight:700;color:#0f172a;background:#eef6ff;border:1px solid #dbeafe;border-radius:999px;padding:7px 10px;text-decoration:none;}
+.resource-link:hover{background:#dbeafe;}
 .empty-state{background:#fff;border:1px dashed #cbd5e1;border-radius:18px;padding:28px;text-align:center;color:var(--text-muted);}
 {% endblock %}
 
@@ -21,6 +24,11 @@
     <div class="hero-copy">
         <h2>{{ language.icon }} {{ language.name }}</h2>
         <p>{{ language.description|default:"Learn the concepts in a simple order, then move into practice and revision." }}</p>
+        <div class="resource-row">
+            {% if language.tutorial_url %}<a href="{{ language.tutorial_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">W3Schools Tutorial</a>{% endif %}
+            {% if language.cheatsheet_url %}<a href="{{ language.cheatsheet_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Cheat Sheet</a>{% endif %}
+            {% if language.practice_url %}<a href="{{ language.practice_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Practice Programming</a>{% endif %}
+        </div>
     </div>
     <a href="/learn/" class="btn btn-outline">All Tracks</a>
 </div>

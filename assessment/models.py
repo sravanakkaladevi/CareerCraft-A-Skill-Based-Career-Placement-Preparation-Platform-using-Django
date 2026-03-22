@@ -1,21 +1,23 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class SkillTopic(models.Model):
     name = models.CharField(max_length=100)
-    icon = models.CharField(max_length=10, default='📊')
+    icon = models.CharField(max_length=10, default="TOP")
+    logo_image = models.ImageField(upload_to="assessment_icons/", blank=True, null=True)
+    logo_url = models.URLField(blank=True)
     order = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
     def __str__(self):
         return self.name
 
 
 class SkillQuestion(models.Model):
-    DIFFICULTY = [('easy','Easy'),('medium','Medium'),('hard','Hard')]
+    DIFFICULTY = [("easy", "Easy"), ("medium", "Medium"), ("hard", "Hard")]
     topic = models.ForeignKey(SkillTopic, on_delete=models.CASCADE)
     question_text = models.TextField()
     option_a = models.CharField(max_length=400)
@@ -24,7 +26,7 @@ class SkillQuestion(models.Model):
     option_d = models.CharField(max_length=400)
     correct_option = models.CharField(max_length=1)
     explanation = models.TextField(blank=True)
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default='medium')
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default="medium")
 
     def __str__(self):
         return self.question_text[:60]
@@ -39,7 +41,7 @@ class SkillScore(models.Model):
     assessed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-assessed_at']
+        ordering = ["-assessed_at"]
 
     def __str__(self):
         return f"{self.user.username} - {self.topic.name} - {self.percentage}%"
@@ -50,8 +52,5 @@ class SkillScore(models.Model):
         results = []
         for topic in topics:
             latest = cls.objects.filter(user=user, topic=topic).first()
-            results.append({
-                'topic': topic,
-                'score': latest,
-            })
+            results.append({"topic": topic, "score": latest})
         return results

@@ -17,6 +17,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
     path('resume/', include('resume.urls')),
+    path('ats/', include('ats.urls')),
     path('interview/', include('interview.urls')),
     path('assessment/', include('assessment.urls')),
     path('learn/', include('learn.urls')),
