@@ -8,9 +8,11 @@ from .models import SkillTopic, SkillQuestion, SkillScore
 def assessment_home(request):
     topics = SkillTopic.objects.all()
     latest_scores = SkillScore.get_latest_per_topic(request.user)
+    ready_topics = sum(1 for item in latest_scores if item['topic'].skillquestion_set.count() >= 5)
     return render(request, 'assessment/assessment.html', {
         'topics': topics,
         'latest_scores': latest_scores,
+        'ready_topics': ready_topics,
     })
 
 

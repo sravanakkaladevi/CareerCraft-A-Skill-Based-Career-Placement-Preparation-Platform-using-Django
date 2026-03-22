@@ -1,15 +1,17 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    icon = models.CharField(max_length=10, default='🎯')
+    icon = models.CharField(max_length=10, default="")
+    logo_image = models.ImageField(upload_to="category_icons/", blank=True, null=True)
+    logo_url = models.URLField(blank=True)
     description = models.CharField(max_length=200, blank=True)
     order = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
     def __str__(self):
         return self.name
@@ -19,7 +21,7 @@ class Category(models.Model):
 
 
 class Question(models.Model):
-    DIFFICULTY = [('easy','Easy'),('medium','Medium'),('hard','Hard')]
+    DIFFICULTY = [("easy", "Easy"), ("medium", "Medium"), ("hard", "Hard")]
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     question_text = models.TextField()
     option_a = models.CharField(max_length=400)
@@ -28,7 +30,7 @@ class Question(models.Model):
     option_d = models.CharField(max_length=400)
     correct_option = models.CharField(max_length=1)
     explanation = models.TextField(blank=True)
-    difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default='medium')
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default="medium")
 
     def __str__(self):
         return self.question_text[:60]
@@ -43,7 +45,7 @@ class MockResult(models.Model):
     taken_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-taken_at']
+        ordering = ["-taken_at"]
 
     def __str__(self):
         return f"{self.user.username} - {self.category.name} - {self.percentage}%"

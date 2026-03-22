@@ -3,21 +3,24 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import UserProfile
 
 
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        if request.user.is_authenticated:
+            logout(request)
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password')
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {
+        'show_switch_notice': request.user.is_authenticated,
+    })
 
 
 def register_view(request):
@@ -47,12 +50,16 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
         action = request.POST.get('action')
 
         if action == 'update_profile':
             username = request.POST.get('username', '').strip()
             email = request.POST.get('email', '').strip()
+            theme_color = request.POST.get('theme_color', '#185FA5').strip() or '#185FA5'
+            uploaded_image = request.FILES.get('profile_image')
             if username and username != request.user.username:
                 if User.objects.filter(username=username).exclude(id=request.user.id).exists():
                     messages.error(request, 'Username already taken')
@@ -64,6 +71,11 @@ def profile_view(request):
                 request.user.email = email
                 request.user.save()
                 messages.success(request, 'Email updated successfully')
+            profile.theme_color = theme_color
+            if uploaded_image:
+                profile.profile_image = uploaded_image
+            profile.save()
+            messages.success(request, 'Theme updated successfully')
 
         elif action == 'change_password':
             old_password = request.POST.get('old_password')
@@ -81,4 +93,6 @@ def profile_view(request):
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Password changed successfully')
 
-    return render(request, 'accounts/profile.html')
+    return render(request, 'accounts/profile.html', {
+        'user_profile': profile,
+    })

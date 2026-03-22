@@ -1,294 +1,280 @@
-{% extends 'base.html' %}
+{% extends 'base_sidebar.html' %}
 {% block title %}Resume Builder{% endblock %}
+{% block nav_resume %}active{% endblock %}
+{% block page_title %}Resume Builder{% endblock %}
 
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f6fb;min-height:100vh;}
-.app{display:flex;min-height:100vh;}
-.sidebar{width:230px;background:#185FA5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:fixed;top:0;left:0;z-index:100;}
-.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-logo-text{font-size:17px;font-weight:600;color:#fff;}
-.sb-logo-text span{color:#B5D4F4;}
-.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
-.sb-user{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:#0C447C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#B5D4F4;flex-shrink:0;text-transform:uppercase;}
-.sb-username{font-size:13px;color:#fff;font-weight:500;}
-.sb-role{font-size:10px;color:rgba(255,255,255,0.45);}
-.sb-section{padding:14px 20px 6px;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;}
-.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;border-left:3px solid transparent;transition:.15s;}
-.sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
-.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
-.sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
-{% include 'partials/sidebar_logout_button_css.html' %}
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
-.topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
-.content{padding:24px 28px;}
-.form-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;padding:24px;max-width:800px;}
-.form-card-title{font-size:15px;font-weight:600;color:#1e293b;margin-bottom:6px;}
+{% block page_css %}
+.resume-layout{display:grid;grid-template-columns:minmax(0,1.2fr) 380px;gap:20px;align-items:start;}
+.form-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:0 18px 40px rgba(15,23,42,.05);}
+.preview-card{position:sticky;top:104px;background:#0f172a;color:#e2e8f0;border-radius:22px;padding:22px;border:1px solid rgba(255,255,255,.06);box-shadow:0 20px 42px rgba(15,23,42,.18);}
+.preview-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;}
+.preview-sub{font-size:12px;color:#93a4bd;line-height:1.6;margin-bottom:18px;}
+.preview-shell{background:#f8fafc;color:#0f172a;border-radius:18px;padding:18px;min-height:420px;}
+.preview-empty{display:flex;flex-direction:column;justify-content:center;min-height:380px;gap:10px;color:#64748b;}
+.preview-empty strong{font-size:16px;color:#0f172a;}
+.resume-name{font-size:24px;font-weight:800;line-height:1.1;margin-bottom:8px;color:#0f172a;}
+.resume-contact{font-size:12px;color:#475569;display:flex;flex-wrap:wrap;gap:6px 10px;margin-bottom:14px;}
+.preview-section{padding-top:14px;margin-top:14px;border-top:1px solid #e2e8f0;}
+.preview-section:first-of-type{padding-top:0;margin-top:0;border-top:none;}
+.preview-section h4{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.preview-text{font-size:12px;line-height:1.7;color:#334155;}
+.preview-chip-list{display:flex;flex-wrap:wrap;gap:8px;}
+.preview-chip{padding:6px 10px;border-radius:999px;background:#e8f1fb;color:#0c447c;font-size:11px;font-weight:600;}
+.preview-block{padding:10px 0;border-bottom:1px solid #edf2f7;}
+.preview-block:last-child{border-bottom:none;padding-bottom:0;}
+.preview-block-title{font-size:13px;font-weight:700;color:#0f172a;}
+.preview-meta{font-size:11px;color:#64748b;margin-top:3px;}
+.preview-points{padding-left:18px;margin-top:8px;color:#334155;font-size:12px;line-height:1.6;}
+.preview-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.form-card-title{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:6px;}
 .form-card-sub{font-size:12px;color:#94a3b8;margin-bottom:20px;}
-.section-head{font-size:11px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:0.5px;padding-bottom:6px;border-bottom:0.5px solid #e2e8f0;margin:20px 0 12px;}
+.section-head{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.6px;padding-bottom:6px;border-bottom:1px solid #e2e8f0;margin:20px 0 12px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .form-group{margin-bottom:12px;}
-.form-group label{font-size:11px;color:#64748b;display:block;margin-bottom:4px;font-weight:500;}
-.form-group input,.form-group textarea,.form-group select{width:100%;padding:9px 11px;border:0.5px solid #e2e8f0;border-radius:7px;font-size:13px;color:#1e293b;background:#fff;font-family:'Poppins',sans-serif;outline:none;transition:.2s;}
-.form-group input:focus,.form-group textarea:focus{border-color:#185FA5;}
+.form-group label{font-size:11px;color:#64748b;display:block;margin-bottom:4px;font-weight:600;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;color:#1e293b;background:#fff;font-family:'Poppins',sans-serif;outline:none;transition:.2s;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.08);}
 .form-group textarea{resize:vertical;min-height:70px;}
 .hint{font-size:10px;color:#94a3b8;margin-top:3px;}
-.btn-blue{background:#185FA5;color:#fff;border:none;padding:11px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;transition:.2s;}
-.btn-blue:hover{background:#0C447C;}
-.btn-green{background:#16a34a;color:#fff;border:none;padding:11px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;transition:.2s;margin-left:10px;}
+.btn-blue{background:var(--blue);color:#fff;border:none;padding:11px 20px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;transition:.2s;}
+.btn-blue:hover{background:var(--blue-dark);}
+.btn-green{background:#16a34a;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;transition:.2s;}
 .btn-green:hover{background:#15803d;}
-.success-banner{background:#EAF3DE;border:0.5px solid #3B6D11;color:#27500A;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.add-btn{background:#E6F1FB;color:#0C447C;border:0.5px solid #B5D4F4;padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:6px;}
+.success-banner{background:#EAF3DE;border:1px solid #3B6D11;color:#27500A;padding:12px 16px;border-radius:12px;font-size:13px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.add-btn{background:#E6F1FB;color:#0C447C;border:1px solid #B5D4F4;padding:8px 14px;border-radius:10px;font-size:12px;cursor:pointer;margin-top:6px;}
 .add-btn:hover{background:#B5D4F4;}
-.entry-block{background:#f8faff;border:0.5px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px;position:relative;}
+.entry-block{background:#f8faff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:10px;position:relative;}
 .remove-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#dc2626;cursor:pointer;font-size:14px;}
-</style>
+@media (max-width:1100px){.resume-layout{grid-template-columns:1fr;}.preview-card{position:static;}}
+@media (max-width:760px){.form-row{grid-template-columns:1fr;}}
 {% endblock %}
 
-{% block content %}
-<div class="app">
-    <div class="sidebar">
-        <div class="sb-logo">
-            <div class="sb-logo-text">Career<span>Craft</span></div>
-            <div class="sb-logo-sub">Placement Prep Platform</div>
-        </div>
-        <div class="sb-user">
-            <div class="sb-avatar">{{ request.user.username|first }}</div>
-            <div>
-                <div class="sb-username">{{ request.user.username }}</div>
-                <div class="sb-role">Student</div>
+{% block page_content %}
+{% if submitted %}
+<div class="success-banner">Resume preview updated. Review it on the right, then download the PDF when it looks good.</div>
+{% endif %}
+
+<div class="resume-layout">
+    <div class="form-card">
+        <div class="form-card-title">Build Your Professional Resume</div>
+        <div class="form-card-sub">Fill the sections once, preview the final result instantly, then export the same structure as PDF.</div>
+
+        <form method="POST" action="/resume/" id="resumeForm">
+            {% csrf_token %}
+
+            <div class="section-head">Personal Details</div>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name *</label><input type="text" name="full_name" value="{{ full_name }}" placeholder="ADAM" required></div>
+                <div class="form-group"><label>Email *</label><input type="email" name="email" value="{{ email }}" placeholder="adam@gmail.com" required></div>
             </div>
-        </div>
-        <div class="sb-section">Main Menu</div>
-        <a href="/dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="grid-alt" color="currentColor" size="sm"></box-icon></span> Dashboard</a>
-        <a href="/resume/" class="sb-link active"><span class="sb-icon"><box-icon name="file" color="currentColor" size="sm"></box-icon></span> Resume Builder</a>
-        <a href="/resume/ats/" class="sb-link"><span class="sb-icon"><box-icon name="search-alt-2" color="currentColor" size="sm"></box-icon></span> ATS Analyzer</a>
-        <a href="/interview/" class="sb-link"><span class="sb-icon"><box-icon name="target-lock" color="currentColor" size="sm"></box-icon></span> Mock Interview</a>
-        <a href="/assessment/" class="sb-link"><span class="sb-icon"><box-icon name="bar-chart-alt-2" color="currentColor" size="sm"></box-icon></span> Skill Assessment</a>
-        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon"><box-icon name="map" color="currentColor" size="sm"></box-icon></span> Roadmap</a>
-        <div class="sb-section">Account</div>
-        <a href="/accounts/profile/" class="sb-link"><span class="sb-icon"><box-icon name="user" color="currentColor" size="sm"></box-icon></span> Profile</a>
-        {% if request.user.is_superuser %}
-        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="cog" color="currentColor" size="sm"></box-icon></span> Admin Panel</a>
-        {% endif %}
-        <div class="sb-bottom">
-            {% include 'partials/sidebar_logout_button.html' %}
-        </div>
-    </div>
+            <div class="form-row">
+                <div class="form-group"><label>Phone *</label><input type="text" name="phone" value="{{ phone }}" placeholder="+91 *******" required></div>
+                <div class="form-group"><label>LinkedIn URL</label><input type="text" name="linkedin" value="{{ linkedin }}" placeholder="linkedin.com/in/yourname"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>GitHub URL</label><input type="text" name="github" value="{{ github }}" placeholder="github.com/username"></div>
+                <div class="form-group"><label>Portfolio URL</label><input type="text" name="portfolio" value="{{ portfolio }}" placeholder="yourportfolio.com"></div>
+            </div>
 
-    <div class="main">
-        <div class="topbar">
-            <div class="topbar-title">Resume Builder</div>
-        </div>
-        <div class="content">
-            {% if submitted %}
-            <div class="success-banner">✓ Resume ready! Click "Download PDF" to save.</div>
-            {% endif %}
+            <div class="section-head">Professional Summary</div>
+            <div class="form-group">
+                <textarea name="summary" placeholder="MCA student with hands-on experience building full-stack web applications...">{{ summary }}</textarea>
+                <div class="hint">2-3 sentences about your skills and experience</div>
+            </div>
 
-            <div class="form-card">
-                <div class="form-card-title">Build Your Professional Resume</div>
-                <div class="form-card-sub">Fill all sections — PDF will match professional LaTeX format</div>
+            <div class="section-head">Technical Skills</div>
+            <div class="form-group"><label>Programming Languages</label><input type="text" name="skills_programming" value="{{ skills_programming }}" placeholder="Java, Python, C++"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Web Technologies</label><input type="text" name="skills_web" value="{{ skills_web }}" placeholder="HTML, CSS, JavaScript, Bootstrap, React"></div>
+                <div class="form-group"><label>Backend / Frameworks</label><input type="text" name="skills_backend" value="{{ skills_backend }}" placeholder="Django, PHP, Node.js"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Database</label><input type="text" name="skills_db" value="{{ skills_db }}" placeholder="MySQL, PostgreSQL, SQLite"></div>
+                <div class="form-group"><label>Tools</label><input type="text" name="skills_tools" value="{{ skills_tools }}" placeholder="Git, GitHub, Linux, VS Code"></div>
+            </div>
+            <div class="form-group"><label>Other Skills</label><input type="text" name="skills_other" value="{{ skills_other }}" placeholder="Scikit-learn, Pandas, DSA, OOP, DBMS"></div>
 
-                <form method="POST" action="/resume/" id="resumeForm">
-                    {% csrf_token %}
-
-                    <div class="section-head">Personal Details</div>
+            <div class="section-head">Projects</div>
+            <div id="projectsContainer">
+                <div class="entry-block">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Full Name *</label>
-                            <input type="text" name="full_name" value="{{ full_name }}" placeholder="ADAM" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email *</label>
-                            <input type="email" name="email" value="{{ email }}" placeholder="adam@gmail.com" required>
-                        </div>
+                        <div class="form-group"><label>Project Title</label><input type="text" name="project_title[]" placeholder="Online Library Management System"></div>
+                        <div class="form-group"><label>Tech Stack</label><input type="text" name="project_tech[]" placeholder="PHP, MySQL, JavaScript, Bootstrap"></div>
                     </div>
+                    <div class="form-group"><label>GitHub Link (optional)</label><input type="text" name="project_github[]" placeholder="github.com/username/project"></div>
+                    <div class="form-group"><label>Description (one point per line)</label><textarea name="project_desc[]" placeholder="Developed a full-stack library management web application.&#10;Implemented role-based authentication for admin and users.&#10;Designed relational database schema using MySQL."></textarea></div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addProject()">+ Add Another Project</button>
+
+            <div class="section-head">Experience / Internships</div>
+            <div id="expContainer">
+                <div class="entry-block">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Phone *</label>
-                            <input type="text" name="phone" value="{{ phone }}" placeholder="+91 *******" required>
-                        </div>
-                        <div class="form-group">
-                            <label>LinkedIn URL</label>
-                            <input type="text" name="linkedin" value="{{ linkedin }}" placeholder="linkedin.com/in/yourname">
-                        </div>
+                        <div class="form-group"><label>Role / Position</label><input type="text" name="exp_role[]" placeholder="Front End Web Development Intern"></div>
+                        <div class="form-group"><label>Duration</label><input type="text" name="exp_duration[]" placeholder="Aug 2025 -- Sept 2025"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>GitHub URL</label>
-                            <input type="text" name="github" value="{{ github }}" placeholder="github.com/username">
-                        </div>
-                        <div class="form-group">
-                            <label>Portfolio URL</label>
-                            <input type="text" name="portfolio" value="{{ portfolio }}" placeholder="yourportfolio.com">
-                        </div>
+                        <div class="form-group"><label>Organisation</label><input type="text" name="exp_org[]" placeholder="AICTE & Edunet Foundation"></div>
+                        <div class="form-group"><label>Location</label><input type="text" name="exp_location[]" placeholder="Remote"></div>
                     </div>
+                    <div class="form-group"><label>Points (one per line)</label><textarea name="exp_desc[]" placeholder="Developed responsive web interfaces using HTML, CSS and JavaScript.&#10;Implemented DOM manipulation and improved cross-device usability."></textarea></div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addExp()">+ Add Another Experience</button>
 
-                    <div class="section-head">Professional Summary</div>
-                    <div class="form-group">
-                        <textarea name="summary" placeholder="MCA student with hands-on experience building full-stack web applications...">{{ summary }}</textarea>
-                        <div class="hint">2-3 sentences about your skills and experience</div>
-                    </div>
-
-                    <div class="section-head">Technical Skills</div>
-                    <div class="form-group">
-                        <label>Programming Languages</label>
-                        <input type="text" name="skills_programming" value="{{ skills_programming }}" placeholder="Java, Python, C++">
+            <div class="section-head">Education</div>
+            <div id="eduContainer">
+                <div class="entry-block">
+                    <div class="form-row">
+                        <div class="form-group"><label>Degree / Programme</label><input type="text" name="edu_degree[]" placeholder="B.Tech in Computer Science"></div>
+                        <div class="form-group"><label>Year</label><input type="text" name="edu_year[]" placeholder="2024"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Web Technologies</label>
-                            <input type="text" name="skills_web" value="{{ skills_web }}" placeholder="HTML, CSS, JavaScript, Bootstrap, React">
-                        </div>
-                        <div class="form-group">
-                            <label>Backend / Frameworks</label>
-                            <input type="text" name="skills_backend" value="{{ skills_backend }}" placeholder="Django, PHP, Node.js">
-                        </div>
+                        <div class="form-group"><label>College / University</label><input type="text" name="edu_college[]" placeholder="College name"></div>
+                        <div class="form-group"><label>Grade / CGPA</label><input type="text" name="edu_grade[]" placeholder="8.5 CGPA"></div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Database</label>
-                            <input type="text" name="skills_db" value="{{ skills_db }}" placeholder="MySQL, PostgreSQL, SQLite">
-                        </div>
-                        <div class="form-group">
-                            <label>Tools</label>
-                            <input type="text" name="skills_tools" value="{{ skills_tools }}" placeholder="Git, GitHub, Linux, VS Code">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Other Skills (ML, Concepts etc.)</label>
-                        <input type="text" name="skills_other" value="{{ skills_other }}" placeholder="Scikit-learn, Pandas, DSA, OOP, DBMS">
-                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addEdu()">+ Add Another Education</button>
 
-                    <div class="section-head">Projects</div>
-                    <div id="projectsContainer">
-                        <div class="entry-block">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Project Title</label>
-                                    <input type="text" name="project_title[]" placeholder="Online Library Management System">
-                                </div>
-                                <div class="form-group">
-                                    <label>Tech Stack</label>
-                                    <input type="text" name="project_tech[]" placeholder="PHP, MySQL, JavaScript, Bootstrap">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>GitHub Link (optional)</label>
-                                <input type="text" name="project_github[]" placeholder="github.com/username/project">
-                            </div>
-                            <div class="form-group">
-                                <label>Description (one point per line)</label>
-                                <textarea name="project_desc[]" placeholder="Developed a full-stack library management web application.&#10;Implemented role-based authentication for admin and users.&#10;Designed relational database schema using MySQL."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="add-btn" onclick="addProject()">+ Add Another Project</button>
-
-                    <div class="section-head">Experience / Internships</div>
-                    <div id="expContainer">
-                        <div class="entry-block">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Role / Position</label>
-                                    <input type="text" name="exp_role[]" placeholder="Front End Web Development Intern">
-                                </div>
-                                <div class="form-group">
-                                    <label>Duration</label>
-                                    <input type="text" name="exp_duration[]" placeholder="Aug 2025 -- Sept 2025">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Organisation</label>
-                                    <input type="text" name="exp_org[]" placeholder="AICTE & Edunet Foundation">
-                                </div>
-                                <div class="form-group">
-                                    <label>Location</label>
-                                    <input type="text" name="exp_location[]" placeholder="Remote">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Points (one per line)</label>
-                                <textarea name="exp_desc[]" placeholder="Developed responsive web interfaces using HTML, CSS and JavaScript.&#10;Implemented DOM manipulation and improved cross-device usability."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="add-btn" onclick="addExp()">+ Add Another Experience</button>
-
-                    <div class="section-head">Education</div>
-                    <div id="eduContainer">
-                        <div class="entry-block">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Degree / Programme</label>
-                                    <input type="text" name="edu_degree[]" placeholder="Degree / Programme (e.g. B.Tech in Computer Science)">
-                                </div>
-                                <div class="form-group">
-                                    <label>Year</label>
-                                    <input type="text" name="edu_year[]" placeholder="Year of Completion (e.g. 2024)">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>College / University</label>
-                                    <input type="text" name="edu_college[]" placeholder="college name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Grade / CGPA</label>
-                                    <input type="text" name="edu_grade[]" placeholder="Pursuing / 8.5 CGPA">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="add-btn" onclick="addEdu()">+ Add Another Education</button>
-
-                    <div style="margin-top:24px;display:flex;align-items:center;gap:10px;">
-                        <button type="submit" class="btn-blue">Preview Resume</button>
-                        {% if submitted %}
-                        <button type="button" onclick="downloadPDF()" class="btn-green">Download PDF</button>
-                        {% endif %}
-                    </div>
-                </form>
-
+            <div style="margin-top:24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <button type="submit" class="btn-blue">Preview Resume</button>
                 {% if submitted %}
-                <form method="POST" action="/resume/download/" id="downloadForm" style="display:none;">
-                    {% csrf_token %}
-                    <input type="hidden" name="full_name" value="{{ full_name }}">
-                    <input type="hidden" name="email" value="{{ email }}">
-                    <input type="hidden" name="phone" value="{{ phone }}">
-                    <input type="hidden" name="linkedin" value="{{ linkedin }}">
-                    <input type="hidden" name="github" value="{{ github }}">
-                    <input type="hidden" name="portfolio" value="{{ portfolio }}">
-                    <input type="hidden" name="summary" value="{{ summary }}">
-                    <input type="hidden" name="skills_programming" value="{{ skills_programming }}">
-                    <input type="hidden" name="skills_web" value="{{ skills_web }}">
-                    <input type="hidden" name="skills_backend" value="{{ skills_backend }}">
-                    <input type="hidden" name="skills_db" value="{{ skills_db }}">
-                    <input type="hidden" name="skills_tools" value="{{ skills_tools }}">
-                    <input type="hidden" name="skills_other" value="{{ skills_other }}">
-                    <input type="hidden" name="projects_json" value="{{ projects_json }}">
-                    <input type="hidden" name="experience_json" value="{{ experience_json }}">
-                    <input type="hidden" name="education_json" value="{{ education_json }}">
-                </form>
+                <button type="button" onclick="downloadPDF()" class="btn-green">Download PDF</button>
                 {% endif %}
             </div>
-        </div>
+        </form>
+
+        {% if submitted %}
+        <form method="POST" action="/resume/download/" id="downloadForm" style="display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="full_name" value="{{ full_name }}">
+            <input type="hidden" name="email" value="{{ email }}">
+            <input type="hidden" name="phone" value="{{ phone }}">
+            <input type="hidden" name="linkedin" value="{{ linkedin }}">
+            <input type="hidden" name="github" value="{{ github }}">
+            <input type="hidden" name="portfolio" value="{{ portfolio }}">
+            <input type="hidden" name="summary" value="{{ summary }}">
+            <input type="hidden" name="skills_programming" value="{{ skills_programming }}">
+            <input type="hidden" name="skills_web" value="{{ skills_web }}">
+            <input type="hidden" name="skills_backend" value="{{ skills_backend }}">
+            <input type="hidden" name="skills_db" value="{{ skills_db }}">
+            <input type="hidden" name="skills_tools" value="{{ skills_tools }}">
+            <input type="hidden" name="skills_other" value="{{ skills_other }}">
+            <input type="hidden" name="projects_json" value="{{ projects_json }}">
+            <input type="hidden" name="experience_json" value="{{ experience_json }}">
+            <input type="hidden" name="education_json" value="{{ education_json }}">
+        </form>
+        {% endif %}
     </div>
+
+    <aside class="preview-card">
+        <div class="preview-title">Resume Preview</div>
+        <div class="preview-sub">This side panel shows the structure that will be exported to PDF, so the user can review it before downloading.</div>
+        <div class="preview-shell">
+            {% if submitted %}
+            <div class="resume-name">{{ full_name|default:"Your Name" }}</div>
+            <div class="resume-contact">
+                {% if email %}<span>{{ email }}</span>{% endif %}
+                {% if phone %}<span>{{ phone }}</span>{% endif %}
+                {% if linkedin %}<span>{{ linkedin }}</span>{% endif %}
+                {% if github %}<span>{{ github }}</span>{% endif %}
+                {% if portfolio %}<span>{{ portfolio }}</span>{% endif %}
+            </div>
+
+            {% if summary %}
+            <div class="preview-section">
+                <h4>Summary</h4>
+                <div class="preview-text">{{ summary }}</div>
+            </div>
+            {% endif %}
+
+            {% if skills_list %}
+            <div class="preview-section">
+                <h4>Skills</h4>
+                <div class="preview-chip-list">
+                    {% for skill in skills_list %}
+                    <span class="preview-chip">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if projects_list %}
+            <div class="preview-section">
+                <h4>Projects</h4>
+                {% for project in projects_list %}
+                <div class="preview-block">
+                    <div class="preview-block-title">{{ project.title }}</div>
+                    <div class="preview-meta">{{ project.tech }}{% if project.github %} | {{ project.github }}{% endif %}</div>
+                    {% if project.points %}
+                    <ul class="preview-points">
+                        {% for point in project.points %}
+                        <li>{{ point }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if experience_list %}
+            <div class="preview-section">
+                <h4>Experience</h4>
+                {% for experience in experience_list %}
+                <div class="preview-block">
+                    <div class="preview-block-title">{{ experience.role }}</div>
+                    <div class="preview-meta">{{ experience.org }}{% if experience.location %} | {{ experience.location }}{% endif %}{% if experience.duration %} | {{ experience.duration }}{% endif %}</div>
+                    {% if experience.points %}
+                    <ul class="preview-points">
+                        {% for point in experience.points %}
+                        <li>{{ point }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if education_list %}
+            <div class="preview-section">
+                <h4>Education</h4>
+                {% for education in education_list %}
+                <div class="preview-block">
+                    <div class="preview-block-title">{{ education.degree }}</div>
+                    <div class="preview-meta">{{ education.college }}{% if education.year %} | {{ education.year }}{% endif %}{% if education.grade %} | {{ education.grade }}{% endif %}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="preview-actions">
+                <button type="button" class="btn-blue" onclick="document.getElementById('resumeForm').submit()">Update Preview</button>
+                {% if submitted %}
+                <button type="button" class="btn-green" onclick="downloadPDF()">Download PDF</button>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="preview-empty">
+                <strong>Preview will appear here</strong>
+                <p>Fill the form on the left and click `Preview Resume` to show the final structure here before exporting.</p>
+                <p>This saves space and lets the user review the resume on the same page.</p>
+            </div>
+            {% endif %}
+        </div>
+    </aside>
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
+{% block page_js %}
 function addProject(){
     const c=document.getElementById('projectsContainer');
     const d=document.createElement('div');
     d.className='entry-block';
-    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
     <div class="form-row">
         <div class="form-group"><label>Project Title</label><input type="text" name="project_title[]" placeholder="Project Name"></div>
         <div class="form-group"><label>Tech Stack</label><input type="text" name="project_tech[]" placeholder="Python, Django..."></div>
@@ -301,10 +287,10 @@ function addExp(){
     const c=document.getElementById('expContainer');
     const d=document.createElement('div');
     d.className='entry-block';
-    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
     <div class="form-row">
         <div class="form-group"><label>Role</label><input type="text" name="exp_role[]" placeholder="Intern"></div>
-        <div class="form-group"><label>Duration</label><input type="text" name="exp_duration[]" placeholder="Jun 2025 -- Aug 2025"></div>
+        <div class="form-group"><label>Duration</label><input type="text" name="exp_duration[]" placeholder="Jun 2025 - Aug 2025"></div>
     </div>
     <div class="form-row">
         <div class="form-group"><label>Organisation</label><input type="text" name="exp_org[]" placeholder="Company Name"></div>
@@ -317,10 +303,10 @@ function addEdu(){
     const c=document.getElementById('eduContainer');
     const d=document.createElement('div');
     d.className='entry-block';
-    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+    d.innerHTML=`<button type="button" class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
     <div class="form-row">
         <div class="form-group"><label>Degree</label><input type="text" name="edu_degree[]" placeholder="B.Tech / BCA..."></div>
-        <div class="form-group"><label>Year</label><input type="text" name="edu_year[]" placeholder="2021 -- 2024"></div>
+        <div class="form-group"><label>Year</label><input type="text" name="edu_year[]" placeholder="2021 - 2024"></div>
     </div>
     <div class="form-row">
         <div class="form-group"><label>College</label><input type="text" name="edu_college[]" placeholder="College Name"></div>
@@ -329,8 +315,7 @@ function addEdu(){
     c.appendChild(d);
 }
 function downloadPDF(){
-    document.getElementById('downloadForm').submit();
+    const form=document.getElementById('downloadForm');
+    if(form){form.submit();}
 }
-</script>
-{% include 'partials/sidebar_logout_button_js.html' %}
 {% endblock %}

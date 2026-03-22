@@ -51,6 +51,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .feat-dot{width:5px;height:5px;border-radius:50%;background:#378ADD;flex-shrink:0;}
 .logo-mark{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(255,255,255,0.15);letter-spacing:1px;z-index:3;white-space:nowrap;}
 .error-msg{color:#E24B4A;font-size:12px;text-align:center;margin-top:6px;}
+.switch-msg{margin:10px 0 2px;padding:10px 12px;border:1px solid rgba(127,183,239,0.35);background:rgba(24,95,165,0.18);color:#dbeafe;font-size:12px;line-height:1.6;border-radius:12px;text-align:center;}
+.switch-msg a{color:#fff;font-weight:600;text-decoration:none;}
+.switch-msg a:hover{text-decoration:underline;}
 </style>
 {% endblock %}
 
@@ -64,6 +67,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
         <p class="subtitle animation" style="--D:0; --S:21">Welcome back to CareerCraft</p>
         <form action="/accounts/login/" method="POST">
             {% csrf_token %}
+            {% if show_switch_notice %}
+                <div class="switch-msg">You are already signed in as <strong>{{ request.user.username }}</strong>. Signing in below will switch this browser to another account. Tabs share the same login session, so use an incognito window or another browser for simultaneous user and admin logins.</div>
+            {% endif %}
             {% if messages %}
                 {% for message in messages %}
                 <div class="error-msg">{{ message }}</div>
@@ -86,7 +92,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
                 <button class="btn" type="submit">Sign In</button>
             </div>
             <div class="regi-link animation" style="--D:5; --S:26">
-                <p>No account yet? <a href="#" class="SignUpLink">Create one free</a></p>
+                <p>{% if show_switch_notice %}<a href="/dashboard/" style="color:#7fb7ef;">Continue current session</a>{% else %}No account yet? <a href="#" class="SignUpLink">Create one free</a>{% endif %}</p>
             </div>
         </form>
     </div>

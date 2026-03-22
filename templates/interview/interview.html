@@ -1,162 +1,85 @@
-{% extends 'base.html' %}
+{% extends 'base_sidebar.html' %}
 {% block title %}Mock Interview{% endblock %}
+{% block nav_interview %}active{% endblock %}
+{% block page_title %}Mock Interview{% endblock %}
 
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% block page_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f6fb;min-height:100vh;}
-.app{display:flex;min-height:100vh;}
-.sidebar{width:230px;background:#185FA5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:fixed;top:0;left:0;z-index:100;}
-.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-logo-text{font-size:17px;font-weight:600;color:#fff;}
-.sb-logo-text span{color:#B5D4F4;}
-.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
-.sb-user{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:#0C447C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#B5D4F4;flex-shrink:0;text-transform:uppercase;}
-.sb-username{font-size:13px;color:#fff;font-weight:500;}
-.sb-role{font-size:10px;color:rgba(255,255,255,0.45);}
-.sb-section{padding:14px 20px 6px;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;}
-.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;border-left:3px solid transparent;transition:.15s;}
-.sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
-.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
-.sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
-{% include 'partials/sidebar_logout_button_css.html' %}
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
-.topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
-.content{padding:24px 28px;}
-.hero{background:#185FA5;border-radius:12px;padding:24px 28px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}
-.hero-text h2{font-size:20px;font-weight:600;color:#fff;margin-bottom:6px;}
-.hero-text p{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;}
+.hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:22px;padding:24px 28px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:18px;color:#fff;}
+.hero-text h2{font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;}
+.hero-text p{font-size:13px;color:rgba(255,255,255,.74);line-height:1.6;}
 .hero-stats{display:flex;gap:16px;}
-.hero-stat{background:rgba(255,255,255,0.15);border-radius:8px;padding:12px 18px;text-align:center;}
+.hero-stat{background:rgba(255,255,255,0.15);border-radius:14px;padding:12px 18px;text-align:center;}
 .hero-stat-num{font-size:22px;font-weight:600;color:#fff;}
-.hero-stat-label{font-size:10px;color:rgba(255,255,255,0.6);margin-top:2px;}
-.section-title{font-size:14px;font-weight:600;color:#1e293b;margin-bottom:14px;}
-.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
-.cat-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;text-decoration:none;display:block;transition:.2s;}
-.cat-card:hover{border-color:#185FA5;background:#f8faff;transform:translateY(-2px);}
-.cat-icon{height:52px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:#185FA5;}
+.hero-stat-label{font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;text-transform:uppercase;letter-spacing:.6px;}
+.section-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:14px;}
+.cat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:28px;}
+.cat-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center;text-decoration:none;display:block;transition:.2s;box-shadow:0 14px 34px rgba(15,23,42,.05);}
+.cat-card:hover{border-color:var(--blue);background:#f8faff;transform:translateY(-2px);}
+.cat-icon{height:52px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);}
 .cat-icon i{font-size:40px;line-height:1;}
 .cat-icon svg{width:40px;height:40px;display:block;}
 .cat-fallback{font-size:34px;font-weight:700;letter-spacing:-1px;}
-.cat-name{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:4px;}
+.cat-name{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:4px;}
 .cat-count{font-size:11px;color:#94a3b8;}
-.cat-diff{display:flex;gap:4px;justify-content:center;margin-top:8px;}
-.diff-dot{width:6px;height:6px;border-radius:50%;background:#e2e8f0;}
-.diff-dot.filled{background:#185FA5;}
-.start-btn{background:#185FA5;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:10px;font-weight:500;width:100%;}
-.start-btn:hover{background:#0C447C;}
-.no-questions{background:#FAEEDA;border:0.5px solid #d97706;color:#633806;padding:8px 12px;border-radius:6px;font-size:11px;margin-top:8px;}
-.results-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:20px;}
-.result-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid #f1f5f9;}
+.start-btn{background:var(--blue);color:#fff;border:none;padding:9px 16px;border-radius:10px;font-size:12px;cursor:pointer;margin-top:10px;font-weight:600;width:100%;text-decoration:none;display:inline-block;}
+.start-btn:hover{background:var(--blue-dark);}
+.no-questions{background:#FAEEDA;border:1px solid #d97706;color:#633806;padding:8px 12px;border-radius:10px;font-size:11px;margin-top:8px;}
+.results-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;}
+.result-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
 .result-item:last-child{border:none;}
 .result-cat{font-size:13px;font-weight:500;color:#1e293b;flex:1;}
-.result-score{font-size:13px;font-weight:600;}
+.result-score{font-size:13px;font-weight:700;}
 .result-score.green{color:#16a34a;}
-.result-score.blue{color:#185FA5;}
+.result-score.blue{color:var(--blue);}
 .result-score.amber{color:#d97706;}
 .result-score.red{color:#dc2626;}
 .result-date{font-size:11px;color:#94a3b8;}
 .empty-results{text-align:center;padding:24px;color:#94a3b8;font-size:13px;}
-</style>
+@media (max-width:1100px){.cat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.hero{flex-direction:column;align-items:flex-start;}}
 {% endblock %}
 
-{% block content %}
-<div class="app">
-    <div class="sidebar">
-        <div class="sb-logo">
-            <div class="sb-logo-text">Career<span>Craft</span></div>
-            <div class="sb-logo-sub">Placement Prep Platform</div>
-        </div>
-        <div class="sb-user">
-            <div class="sb-avatar">{{ request.user.username|first }}</div>
-            <div>
-                <div class="sb-username">{{ request.user.username }}</div>
-                <div class="sb-role">{% if request.user.is_superuser %}Admin{% else %}Student{% endif %}</div>
-            </div>
-        </div>
-        <div class="sb-section">Main Menu</div>
-        <a href="/dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="grid-alt" color="currentColor" size="sm"></box-icon></span> Dashboard</a>
-        <a href="/resume/" class="sb-link"><span class="sb-icon"><box-icon name="file" color="currentColor" size="sm"></box-icon></span> Resume Builder</a>
-        <a href="/resume/ats/" class="sb-link"><span class="sb-icon"><box-icon name="search-alt-2" color="currentColor" size="sm"></box-icon></span> ATS Analyzer</a>
-        <a href="/interview/" class="sb-link active"><span class="sb-icon"><box-icon name="target-lock" color="currentColor" size="sm"></box-icon></span> Mock Interview</a>
-        <a href="/assessment/" class="sb-link"><span class="sb-icon"><box-icon name="bar-chart-alt-2" color="currentColor" size="sm"></box-icon></span> Skill Assessment</a>
-        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon"><box-icon name="map" color="currentColor" size="sm"></box-icon></span> Roadmap</a>
-        <div class="sb-section">Account</div>
-        <a href="/accounts/profile/" class="sb-link"><span class="sb-icon"><box-icon name="user" color="currentColor" size="sm"></box-icon></span> Profile</a>
-        {% if request.user.is_superuser %}
-        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="cog" color="currentColor" size="sm"></box-icon></span> Admin Panel</a>
-        {% endif %}
-        <div class="sb-bottom">
-            {% include 'partials/sidebar_logout_button.html' %}
-        </div>
+{% block page_content %}
+<div class="hero">
+    <div class="hero-text">
+        <h2>Practice makes placement</h2>
+        <p>Choose a topic, answer 20 MCQs with a timer, and get instant feedback with explanations.</p>
     </div>
-
-    <div class="main">
-        <div class="topbar">
-            <div class="topbar-title">Mock Interview</div>
-        </div>
-        <div class="content">
-            <div class="hero">
-                <div class="hero-text">
-                    <h2>Practice makes placement 🎯</h2>
-                    <p>Choose a topic, answer 20 MCQs with a timer, and get instant feedback with explanations.</p>
-                </div>
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-num">{{ recent_results|length }}</div>
-                        <div class="hero-stat-label">Tests taken</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-num">{{ categories|length }}</div>
-                        <div class="hero-stat-label">Categories</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-title">Select a category to start</div>
-            <div class="cat-grid">
-                {% for cat in categories %}
-                <div class="cat-card">
-                    <div class="cat-icon">{{ cat.display_icon|safe }}</div>
-                    <div class="cat-name">{{ cat.name }}</div>
-                    <div class="cat-count">{{ cat.question_count }} questions</div>
-                    {% if cat.question_count >= 5 %}
-                    <a href="/interview/start/{{ cat.id }}/" class="start-btn">Start Test</a>
-                    {% else %}
-                    <div class="no-questions">Questions coming soon</div>
-                    {% endif %}
-                </div>
-                {% empty %}
-                <div style="grid-column:span 4;text-align:center;color:#94a3b8;padding:40px;font-size:13px;">
-                    No categories yet. Admin panel lo categories add cheyyi.
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="section-title">Recent results</div>
-            <div class="results-card">
-                {% for result in recent_results %}
-                <div class="result-item">
-                    <div class="cat-icon" style="height:34px;margin-bottom:0;width:34px;">{{ result.category.display_icon|safe }}</div>
-                    <div class="result-cat">{{ result.category.name }}</div>
-                    <div class="result-score {% if result.percentage >= 80 %}green{% elif result.percentage >= 60 %}blue{% elif result.percentage >= 40 %}amber{% else %}red{% endif %}">
-                        {{ result.score }}/{{ result.total }} — {{ result.percentage }}%
-                    </div>
-                    <div class="result-date">{{ result.taken_at|date:"d M Y" }}</div>
-                </div>
-                {% empty %}
-                <div class="empty-results">No tests taken yet. Start your first mock interview above!</div>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">{{ total_tests }}</div><div class="hero-stat-label">Tests taken</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">{{ categories|length }}</div><div class="hero-stat-label">Categories</div></div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
-{% include 'partials/sidebar_logout_button_js.html' %}
+<div class="section-title">Select a category to start</div>
+<div class="cat-grid">
+    {% for cat in categories %}
+    <div class="cat-card">
+        <div class="cat-icon">{{ cat.display_icon|safe }}</div>
+        <div class="cat-name">{{ cat.name }}</div>
+        <div class="cat-count">{{ cat.question_count }} questions</div>
+        {% if cat.question_count >= 5 %}
+        <a href="/interview/start/{{ cat.id }}/" class="start-btn">Start Test</a>
+        {% else %}
+        <div class="no-questions">Questions coming soon</div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div style="grid-column:1/-1;text-align:center;color:#94a3b8;padding:40px;font-size:13px;">No categories yet.</div>
+    {% endfor %}
+</div>
+
+<div class="section-title">Recent results</div>
+<div class="results-card">
+    {% for result in recent_results %}
+    <div class="result-item">
+        <div class="cat-icon" style="height:34px;margin-bottom:0;width:34px;">{{ result.category.display_icon|safe }}</div>
+        <div class="result-cat">{{ result.category.name }}</div>
+        <div class="result-score {% if result.percentage >= 80 %}green{% elif result.percentage >= 60 %}blue{% elif result.percentage >= 40 %}amber{% else %}red{% endif %}">{{ result.score }}/{{ result.total }} — {{ result.percentage }}%</div>
+        <div class="result-date">{{ result.taken_at|date:"d M Y" }}</div>
+    </div>
+    {% empty %}
+    <div class="empty-results">No tests taken yet. Start your first mock interview above.</div>
+    {% endfor %}
+</div>
 {% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base_sidebar.html' %}
+{% block title %}{{ language.name }} Topics{% endblock %}
+{% block nav_learn %}active{% endblock %}
+{% block page_title %}{{ language.name }} Topics{% endblock %}
+
+{% block page_css %}
+.hero{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:22px;display:flex;justify-content:space-between;gap:16px;align-items:center;}
+.hero-copy h2{font-size:24px;color:var(--text);margin-bottom:8px;}
+.hero-copy p{font-size:13px;color:var(--text-muted);line-height:1.7;max-width:640px;}
+.level-section{margin-bottom:20px;}
+.level-head{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-hint);font-weight:700;margin-bottom:12px;}
+.topic-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;}
+.topic-row{display:flex;justify-content:space-between;gap:14px;align-items:center;}
+.topic-title{font-size:16px;font-weight:600;color:var(--text);}
+.topic-meta{font-size:12px;color:var(--text-muted);margin-top:6px;}
+.empty-state{background:#fff;border:1px dashed #cbd5e1;border-radius:18px;padding:28px;text-align:center;color:var(--text-muted);}
+{% endblock %}
+
+{% block page_content %}
+<div class="hero">
+    <div class="hero-copy">
+        <h2>{{ language.icon }} {{ language.name }}</h2>
+        <p>{{ language.description|default:"Learn the concepts in a simple order, then move into practice and revision." }}</p>
+    </div>
+    <a href="/learn/" class="btn btn-outline">All Tracks</a>
+</div>
+
+<div class="level-section">
+    <div class="level-head">Beginner</div>
+    {% for topic in beginner %}
+    <div class="topic-card">
+        <div class="topic-row">
+            <div>
+                <div class="topic-title">{{ topic.title }}</div>
+                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+            </div>
+            {% with first_lesson=topic.lesson_set.first %}
+            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">No beginner topics added yet.</div>
+    {% endfor %}
+</div>
+
+<div class="level-section">
+    <div class="level-head">Intermediate</div>
+    {% for topic in intermediate %}
+    <div class="topic-card">
+        <div class="topic-row">
+            <div>
+                <div class="topic-title">{{ topic.title }}</div>
+                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+            </div>
+            {% with first_lesson=topic.lesson_set.first %}
+            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">No intermediate topics added yet.</div>
+    {% endfor %}
+</div>
+
+<div class="level-section">
+    <div class="level-head">Advanced</div>
+    {% for topic in advanced %}
+    <div class="topic-card">
+        <div class="topic-row">
+            <div>
+                <div class="topic-title">{{ topic.title }}</div>
+                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+            </div>
+            {% with first_lesson=topic.lesson_set.first %}
+            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">No advanced topics added yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}

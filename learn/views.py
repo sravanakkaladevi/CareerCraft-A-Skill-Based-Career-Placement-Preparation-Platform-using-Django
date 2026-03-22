@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Language, Topic, Lesson, BlogPost
+from .models import Language, Topic, Lesson, BlogPost, BlogComment
 
 
 @login_required
@@ -47,7 +48,7 @@ def lesson_detail(request, lesson_id):
 @login_required
 def blog_home(request):
     category = request.GET.get('cat', '')
-    posts = BlogPost.objects.filter(published=True)
+    posts = BlogPost.objects.all() if request.user.is_superuser else BlogPost.objects.filter(published=True)
     if category:
         posts = posts.filter(category=category)
     categories = BlogPost.CATEGORY
@@ -60,11 +61,35 @@ def blog_home(request):
 
 @login_required
 def blog_detail(request, post_id):
-    post = get_object_or_404(BlogPost, id=post_id, published=True)
-    related = BlogPost.objects.filter(
-        published=True, category=post.category
-    ).exclude(id=post.id)[:3]
+    if request.user.is_superuser:
+        post = get_object_or_404(BlogPost, id=post_id)
+        related = BlogPost.objects.filter(category=post.category).exclude(id=post.id)[:3]
+    else:
+        post = get_object_or_404(BlogPost, id=post_id, published=True)
+        related = BlogPost.objects.filter(published=True, category=post.category).exclude(id=post.id)[:3]
+
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment', '').strip()
+        if comment_text:
+            BlogComment.objects.create(
+                post=post,
+                user=request.user,
+                content=comment_text,
+                approved=request.user.is_superuser,
+            )
+            if request.user.is_superuser:
+                messages.success(request, 'Comment added and approved.')
+            else:
+                messages.success(request, 'Comment submitted. It will appear after admin approval.')
+        else:
+            messages.error(request, 'Please write a comment before submitting.')
+        return redirect('blog_detail', post_id=post.id)
+
+    comments = post.comments.filter(approved=True).select_related('user')
+    pending_comments = post.comments.filter(approved=False).select_related('user') if request.user.is_superuser else []
     return render(request, 'learn/blog_detail.html', {
         'post': post,
         'related': related,
+        'comments': comments,
+        'pending_comments': pending_comments,
     })

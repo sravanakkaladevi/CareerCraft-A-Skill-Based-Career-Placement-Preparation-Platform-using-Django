@@ -1,0 +1,71 @@
+{% extends 'base_sidebar.html' %}
+{% block title %}Assessment Result{% endblock %}
+{% block nav_assessment %}active{% endblock %}
+{% block page_title %}{{ topic.name }} Result{% endblock %}
+
+{% block page_css %}
+.result-hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:22px;}
+.result-banner{padding:24px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#185FA5,#0C447C);}
+.result-banner h2{font-size:26px;margin-bottom:8px;}
+.result-banner p{font-size:13px;color:rgba(255,255,255,.78);line-height:1.7;}
+.result-score{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;text-align:center;}
+.result-score-num{font-size:40px;font-weight:700;color:var(--blue);}
+.result-score-sub{font-size:12px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.6px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.review-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
+.review-head{display:flex;justify-content:space-between;gap:14px;margin-bottom:12px;}
+.review-question{font-size:15px;font-weight:600;color:var(--text);line-height:1.6;}
+.review-state{font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;}
+.review-state.correct{background:#dcfce7;color:#166534;}
+.review-state.wrong{background:#fee2e2;color:#991b1b;}
+.review-options{display:grid;gap:8px;}
+.review-option{padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.5;border:1px solid #e2e8f0;background:#f8fafc;}
+.review-option.correct{background:#f0fdf4;border-color:#86efac;}
+.review-option.wrong{background:#fef2f2;border-color:#fca5a5;}
+.review-meta{margin-top:12px;font-size:13px;color:var(--text-muted);line-height:1.7;}
+.review-note{margin-top:10px;padding:12px;border-radius:12px;background:#eff6ff;color:#1e3a8a;font-size:13px;line-height:1.6;}
+@media (max-width:900px){.result-hero,.stats-grid{grid-template-columns:1fr;}}
+{% endblock %}
+
+{% block page_content %}
+<div class="result-hero">
+    <div class="result-banner">
+        <h2>{{ grade }} in {{ topic.name }}</h2>
+        <p>{{ suggestion }}</p>
+    </div>
+    <div class="result-score">
+        <div class="result-score-num">{{ percentage }}%</div>
+        <div class="result-score-sub">{{ score }}/{{ total }} correct</div>
+    </div>
+</div>
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Correct</div><div class="stat-val green">{{ score }}</div></div>
+    <div class="stat-card"><div class="stat-label">Wrong</div><div class="stat-val red">{{ wrong_count }}</div></div>
+    <div class="stat-card"><div class="stat-label">Topic</div><div class="stat-val blue">{{ topic.name }}</div></div>
+</div>
+<div class="card">
+    <div class="card-title">Question Review</div>
+    {% for item in results %}
+    <div class="review-card">
+        <div class="review-head">
+            <div class="review-question">{{ forloop.counter }}. {{ item.question.question_text }}</div>
+            <div class="review-state {% if item.is_correct %}correct{% else %}wrong{% endif %}">{% if item.is_correct %}Correct{% else %}Review{% endif %}</div>
+        </div>
+        <div class="review-options">
+            <div class="review-option {% if item.question.correct_option == 'A' %}correct{% elif item.user_answer == 'A' and not item.is_correct %}wrong{% endif %}">A. {{ item.question.option_a }}</div>
+            <div class="review-option {% if item.question.correct_option == 'B' %}correct{% elif item.user_answer == 'B' and not item.is_correct %}wrong{% endif %}">B. {{ item.question.option_b }}</div>
+            <div class="review-option {% if item.question.correct_option == 'C' %}correct{% elif item.user_answer == 'C' and not item.is_correct %}wrong{% endif %}">C. {{ item.question.option_c }}</div>
+            <div class="review-option {% if item.question.correct_option == 'D' %}correct{% elif item.user_answer == 'D' and not item.is_correct %}wrong{% endif %}">D. {{ item.question.option_d }}</div>
+        </div>
+        <div class="review-meta">Your answer: <strong>{% if item.user_answer %}{{ item.user_answer }}{% else %}Skipped{% endif %}</strong> | Correct answer: <strong>{{ item.correct_option }}</strong></div>
+        {% if item.question.explanation %}
+        <div class="review-note">{{ item.question.explanation }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="/assessment/start/{{ topic.id }}/" class="btn btn-primary">Retake</a>
+        <a href="/assessment/" class="btn btn-outline">All Topics</a>
+    </div>
+</div>
+{% endblock %}

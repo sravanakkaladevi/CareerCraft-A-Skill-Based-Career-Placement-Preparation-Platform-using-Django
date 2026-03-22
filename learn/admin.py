@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Language, Topic, Lesson, BlogPost
+from .models import Language, Topic, Lesson, BlogPost, BlogComment
 
 
 @admin.register(Language)
@@ -23,4 +23,14 @@ class LessonAdmin(admin.ModelAdmin):
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ['title', 'category', 'author', 'published', 'created_at']
     list_filter = ['category', 'published']
-    search_fields = ['title', 'content']
+    search_fields = ['title', 'summary', 'content']
+    list_editable = ['published']
+    autocomplete_fields = ['author']
+
+
+@admin.register(BlogComment)
+class BlogCommentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post', 'approved', 'created_at']
+    list_filter = ['approved', 'created_at', 'post']
+    search_fields = ['user__username', 'post__title', 'content']
+    list_editable = ['approved']

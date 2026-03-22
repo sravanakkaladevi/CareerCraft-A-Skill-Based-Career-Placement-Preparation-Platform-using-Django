@@ -5,17 +5,23 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:#0f172a;color:#fff;min-height:100vh;}
-.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#1e293b;border-bottom:1px solid rgba(24,95,165,0.3);}
-.logo{font-size:18px;font-weight:600;color:#fff;}
-.logo span{color:#378ADD;}
-.nav-links{display:flex;gap:4px;}
-.nav-link{padding:7px 14px;font-size:13px;color:rgba(255,255,255,0.6);border-radius:6px;text-decoration:none;}
-.nav-link:hover,.nav-link.active{background:rgba(24,95,165,0.2);color:#fff;}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#111827;border-bottom:1px solid rgba(24,95,165,0.3);gap:18px;}
+.logo{font-size:18px;font-weight:600;color:#fff;display:flex;align-items:center;gap:12px;min-width:0;}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#f8fbff,#dbe7ff);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+.logo-mark svg{width:24px;height:24px;display:block;}
+.logo-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+.logo-text{min-width:0;}
+.logo-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.35);}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+.nav-link{padding:7px 14px;font-size:13px;color:rgba(255,255,255,0.6);border-radius:999px;text-decoration:none;border:1px solid transparent;}
+.nav-link:hover,.nav-link.active{background:rgba(24,95,165,0.2);color:#fff;border-color:rgba(24,95,165,0.3);}
 .nav-right{display:flex;align-items:center;gap:12px;}
 .avatar{width:34px;height:34px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
 .badge-admin{font-size:11px;background:rgba(24,95,165,0.3);color:#378ADD;padding:3px 10px;border-radius:20px;border:1px solid rgba(24,95,165,0.4);}
-.logout-btn{font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;padding:6px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;}
-.logout-btn:hover{color:#fff;}
+.admin-logout{width:130px;flex-shrink:0;}
+{% include 'partials/sidebar_logout_button_css.html' %}
 .main{padding:28px 32px;}
 .page-title{font-size:20px;font-weight:600;margin-bottom:4px;}
 .page-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
@@ -44,27 +50,61 @@ tr:hover td{background:rgba(24,95,165,0.05);}
 .ql-label{font-size:13px;font-weight:600;color:#fff;}
 .ql-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;}
 .divider{font-size:12px;color:rgba(255,255,255,0.2);margin:20px 0 16px;text-transform:uppercase;letter-spacing:1px;}
+@media (max-width:1100px){
+    .navbar{flex-wrap:wrap;padding:14px 18px;}
+    .stats,.quick-links{grid-template-columns:1fr 1fr;}
+    .main{padding:22px 18px;}
+}
+@media (max-width:720px){
+    .stats,.quick-links{grid-template-columns:1fr;}
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="navbar">
-    <div class="logo">Career<span>Craft</span> <span style="font-size:12px;color:rgba(255,255,255,0.3);font-weight:400;">— Admin</span></div>
+    <div class="logo">
+        <div class="logo-mark">
+            {% if branding.logo %}
+            <img src="{{ branding.logo.url }}" alt="{{ branding.company_name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="logo-fallback" style="display:none;">
+                <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <rect x="5" y="5" width="16" height="16" rx="5" fill="#0f172a"></rect>
+                    <rect x="27" y="5" width="16" height="16" rx="5" fill="#7c93ff"></rect>
+                    <rect x="16" y="27" width="16" height="16" rx="5" fill="#0f172a"></rect>
+                </svg>
+            </span>
+            {% else %}
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                <rect x="5" y="5" width="16" height="16" rx="5" fill="#0f172a"></rect>
+                <rect x="27" y="5" width="16" height="16" rx="5" fill="#7c93ff"></rect>
+                <rect x="16" y="27" width="16" height="16" rx="5" fill="#0f172a"></rect>
+            </svg>
+            {% endif %}
+        </div>
+        <div class="logo-text">
+            <div class="logo-name">{{ branding.company_name|default:"CareerCraft" }}</div>
+            <div class="logo-sub">Admin home and site controls</div>
+        </div>
+    </div>
     <div class="nav-links">
         <a href="/dashboard/admin-dashboard/" class="nav-link active">Admin Home</a>
         <a href="/dashboard/" class="nav-link">User Dashboard</a>
         <a href="/admin/" class="nav-link">Django Admin</a>
+        <a href="/admin/learn/blogpost/" class="nav-link">Content Manager</a>
     </div>
     <div class="nav-right">
         <div class="badge-admin">Superuser</div>
         <div class="avatar">{{ request.user.username|first|upper }}</div>
-        <a href="/accounts/logout/" class="logout-btn">Logout</a>
+        <div class="admin-logout">
+            {% include 'partials/sidebar_logout_button.html' %}
+        </div>
     </div>
 </div>
 
 <div class="main">
     <div class="page-title">Admin Dashboard</div>
-    <div class="page-sub">Platform overview — CareerCraft</div>
+    <div class="page-sub">Platform overview for {{ branding.company_name|default:"CareerCraft" }}</div>
 
     <div class="stats">
         <div class="stat">
@@ -77,11 +117,11 @@ tr:hover td{background:rgba(24,95,165,0.05);}
         </div>
         <div class="stat">
             <div class="stat-label">Mock tests taken</div>
-            <div class="stat-val amber">0</div>
+            <div class="stat-val amber">{{ total_tests }}</div>
         </div>
         <div class="stat">
             <div class="stat-label">Assessments done</div>
-            <div class="stat-val red">0</div>
+            <div class="stat-val red">{{ total_assessments }}</div>
         </div>
     </div>
 
@@ -91,13 +131,57 @@ tr:hover td{background:rgba(24,95,165,0.05);}
             <div class="ql-icon"><box-icon name="user-plus" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Add user</div><div class="ql-sub">Create new account</div></div>
         </a>
-        <a href="/admin/auth/user/" class="ql">
-            <div class="ql-icon"><box-icon name="group" color="#378ADD"></box-icon></div>
-            <div><div class="ql-label">Manage users</div><div class="ql-sub">View all accounts</div></div>
+        <a href="/admin/dashboard/sitebranding/" class="ql">
+            <div class="ql-icon"><box-icon name="paint" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Site branding</div><div class="ql-sub">Change logo, name, tagline</div></div>
         </a>
         <a href="/admin/" class="ql">
             <div class="ql-icon"><box-icon name="cog" color="#378ADD"></box-icon></div>
-            <div><div class="ql-label">Django admin</div><div class="ql-sub">Full admin panel</div></div>
+            <div><div class="ql-label">Django admin</div><div class="ql-sub">Advanced model tools</div></div>
+        </a>
+    </div>
+
+    <div class="divider">Content management</div>
+    <div class="quick-links">
+        <a href="/admin/interview/category/" class="ql">
+            <div class="ql-icon"><box-icon name="collection" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Interview categories</div><div class="ql-sub">{{ total_categories }} categories</div></div>
+        </a>
+        <a href="/admin/interview/question/" class="ql">
+            <div class="ql-icon"><box-icon name="help-circle" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Interview Q&A</div><div class="ql-sub">{{ total_questions }} questions</div></div>
+        </a>
+        <a href="/admin/assessment/skilltopic/" class="ql">
+            <div class="ql-icon"><box-icon name="bar-chart-alt-2" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Assessment topics</div><div class="ql-sub">{{ total_topics }} topics</div></div>
+        </a>
+    </div>
+    <div class="quick-links">
+        <a href="/admin/assessment/skillquestion/" class="ql">
+            <div class="ql-icon"><box-icon name="list-check" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Assessment Q&A</div><div class="ql-sub">Manage topic questions</div></div>
+        </a>
+        <a href="/admin/learn/blogpost/" class="ql">
+            <div class="ql-icon"><box-icon name="news" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Blog & News</div><div class="ql-sub">{{ total_blog_posts }} posts</div></div>
+        </a>
+        <a href="/admin/learn/blogcomment/" class="ql">
+            <div class="ql-icon"><box-icon name="message-rounded-dots" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Blog comments</div><div class="ql-sub">Approve reader comments</div></div>
+        </a>
+    </div>
+    <div class="quick-links">
+        <a href="/admin/learn/blogpost/add/" class="ql">
+            <div class="ql-icon"><box-icon name="image-add" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">New blog post</div><div class="ql-sub">Title, image, content</div></div>
+        </a>
+        <a href="/admin/dashboard/sitebranding/" class="ql">
+            <div class="ql-icon"><box-icon name="image" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">Logo settings</div><div class="ql-sub">Upload company logo</div></div>
+        </a>
+        <a href="/dashboard/" class="ql">
+            <div class="ql-icon"><box-icon name="home-circle" color="#378ADD"></box-icon></div>
+            <div><div class="ql-label">User side</div><div class="ql-sub">Preview the student experience</div></div>
         </a>
     </div>
 
@@ -120,7 +204,7 @@ tr:hover td{background:rgba(24,95,165,0.05);}
                 {% for user in recent_users %}
                 <tr>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.email|default:"—" }}</td>
+                    <td>{{ user.email|default:"-" }}</td>
                     <td>{{ user.date_joined|date:"d M Y" }}</td>
                     <td><span class="status-active"></span>Active</td>
                 </tr>
@@ -135,4 +219,8 @@ tr:hover td{background:rgba(24,95,165,0.05);}
         </table>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include 'partials/sidebar_logout_button_js.html' %}
 {% endblock %}

@@ -10,6 +10,54 @@
 </head>
 <body>
     {% block content %}{% endblock %}
+    <script>
+    (function () {
+        function getCookie(name) {
+            var value = '; ' + document.cookie;
+            var parts = value.split('; ' + name + '=');
+            if (parts.length === 2) {
+                return parts.pop().split(';').shift();
+            }
+            return '';
+        }
+
+        function syncCsrfToken(form) {
+            if (!form || String(form.method || '').toUpperCase() !== 'POST') {
+                return;
+            }
+
+            var csrfToken = getCookie('csrftoken');
+            if (!csrfToken) {
+                return;
+            }
+
+            var tokenInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (!tokenInput) {
+                tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = 'csrfmiddlewaretoken';
+                form.appendChild(tokenInput);
+            }
+            tokenInput.value = csrfToken;
+        }
+
+        function wireForms() {
+            document.querySelectorAll('form').forEach(function (form) {
+                syncCsrfToken(form);
+                if (form.dataset.csrfBound === 'true') {
+                    return;
+                }
+                form.dataset.csrfBound = 'true';
+                form.addEventListener('submit', function () {
+                    syncCsrfToken(form);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', wireForms);
+        window.addEventListener('pageshow', wireForms);
+    })();
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

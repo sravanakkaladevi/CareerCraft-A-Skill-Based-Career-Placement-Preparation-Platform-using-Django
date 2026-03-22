@@ -55,6 +55,7 @@ class BlogPost(models.Model):
     ]
     title = models.CharField(max_length=300)
     category = models.CharField(max_length=20, choices=CATEGORY, default='tech')
+    cover_image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
     summary = models.TextField()
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -68,3 +69,17 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BlogComment(models.Model):
+    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(max_length=800)
+    approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} on {self.post.title}"

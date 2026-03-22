@@ -1,0 +1,85 @@
+{% extends 'base_sidebar.html' %}
+{% block title %}Assessment Quiz{% endblock %}
+{% block nav_assessment %}active{% endblock %}
+{% block page_title %}Skill Assessment{% endblock %}
+
+{% block page_css %}
+.quiz-shell{max-width:980px;margin:0 auto;}
+.quiz-head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px;}
+.quiz-kicker{font-size:11px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
+.quiz-progress-text{font-size:13px;color:var(--text-muted);margin-top:4px;}
+.quiz-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 18px 40px rgba(15,23,42,.06);}
+.quiz-progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:20px;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),#3b82f6);border-radius:999px;}
+.question-text{font-size:22px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:20px;}
+.option-grid{display:grid;gap:12px;}
+.option-card{position:relative;border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff;}
+.option-card:hover{border-color:var(--blue);background:#f8fbff;transform:translateY(-1px);}
+.option-card input{position:absolute;opacity:0;pointer-events:none;}
+.option-key{width:34px;height:34px;border-radius:10px;background:#eff6ff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+.option-copy{font-size:14px;color:var(--text);line-height:1.6;}
+.option-card.selected{border-color:var(--blue);box-shadow:0 0 0 4px rgba(24,95,165,.10);background:#f8fbff;}
+.quiz-actions{display:flex;justify-content:space-between;gap:12px;margin-top:22px;flex-wrap:wrap;}
+.question-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.question-pill{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-muted);background:#fff;}
+.question-pill.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600;}
+{% endblock %}
+
+{% block page_content %}
+<div class="quiz-shell">
+    <div class="quiz-head">
+        <div>
+            <div class="quiz-kicker">Question {{ question_no }} of {{ total }}</div>
+            <div class="quiz-progress-text">Answer carefully and move through the assessment topic-wise.</div>
+        </div>
+        <a href="/assessment/" class="btn btn-outline">Back to Topics</a>
+    </div>
+    <form method="post" class="quiz-card">
+        {% csrf_token %}
+        <div class="quiz-progress">
+            <div class="quiz-progress-fill" style="width: {{ progress }}%;"></div>
+        </div>
+        <div class="question-text">{{ question.question_text }}</div>
+        <div class="option-grid">
+            <label class="option-card {% if saved_answer == 'A' %}selected{% endif %}">
+                <input type="radio" name="answer" value="A" {% if saved_answer == 'A' %}checked{% endif %}>
+                <div class="option-key">A</div>
+                <div class="option-copy">{{ question.option_a }}</div>
+            </label>
+            <label class="option-card {% if saved_answer == 'B' %}selected{% endif %}">
+                <input type="radio" name="answer" value="B" {% if saved_answer == 'B' %}checked{% endif %}>
+                <div class="option-key">B</div>
+                <div class="option-copy">{{ question.option_b }}</div>
+            </label>
+            <label class="option-card {% if saved_answer == 'C' %}selected{% endif %}">
+                <input type="radio" name="answer" value="C" {% if saved_answer == 'C' %}checked{% endif %}>
+                <div class="option-key">C</div>
+                <div class="option-copy">{{ question.option_c }}</div>
+            </label>
+            <label class="option-card {% if saved_answer == 'D' %}selected{% endif %}">
+                <input type="radio" name="answer" value="D" {% if saved_answer == 'D' %}checked{% endif %}>
+                <div class="option-key">D</div>
+                <div class="option-copy">{{ question.option_d }}</div>
+            </label>
+        </div>
+        <div class="quiz-actions">
+            <div class="quiz-progress-text">Select one answer and continue.</div>
+            <button type="submit" class="btn btn-primary">{% if question_no == total %}Finish Assessment{% else %}Save & Next{% endif %}</button>
+        </div>
+        <div class="question-nav">
+            {% for num in question_range %}
+            <div class="question-pill {% if num == question_no %}active{% endif %}">{{ num }}</div>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block page_js %}
+document.querySelectorAll('.option-card').forEach(function(card){
+    card.addEventListener('click', function(){
+        document.querySelectorAll('.option-card').forEach(function(item){ item.classList.remove('selected'); });
+        card.classList.add('selected');
+    });
+});
+{% endblock %}

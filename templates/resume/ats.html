@@ -1,61 +1,42 @@
-{% extends 'base.html' %}
+{% extends 'base_sidebar.html' %}
 {% block title %}ATS Analyzer{% endblock %}
+{% block nav_ats %}active{% endblock %}
+{% block page_title %}ATS Analyzer{% endblock %}
 
-{% block extra_css %}
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f6fb;min-height:100vh;}
-.app{display:flex;min-height:100vh;}
-.sidebar{width:230px;background:#185FA5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:fixed;top:0;left:0;z-index:100;}
-.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-logo-text{font-size:17px;font-weight:600;color:#fff;}
-.sb-logo-text span{color:#B5D4F4;}
-.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
-.sb-user{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:#0C447C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#B5D4F4;flex-shrink:0;text-transform:uppercase;}
-.sb-username{font-size:13px;color:#fff;font-weight:500;}
-.sb-role{font-size:10px;color:rgba(255,255,255,0.45);}
-.sb-section{padding:14px 20px 6px;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;}
-.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;border-left:3px solid transparent;transition:.15s;}
-.sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
-.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
-.sb-bottom{margin-top:auto;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.1);}
-{% include 'partials/sidebar_logout_button_css.html' %}
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;}
-.topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
-.content{padding:24px 28px;}
-.hero{background:linear-gradient(135deg,#185FA5,#0C447C);border-radius:16px;padding:24px;color:#fff;display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:20px;}
-.hero h1{font-size:24px;font-weight:600;margin-bottom:8px;}
+{% block page_css %}
+.hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:22px;padding:22px 24px;color:#fff;display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px;}
+.hero h1{font-size:24px;font-weight:700;margin-bottom:8px;}
 .hero p{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.78);max-width:620px;}
-.hero-score{min-width:160px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.16);border-radius:14px;padding:16px;text-align:center;}
+.hero-score{min-width:160px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.16);border-radius:16px;padding:16px;text-align:center;}
 .hero-score-num{font-size:34px;font-weight:700;line-height:1;}
 .hero-score-label{margin-top:6px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,0.76);}
-.analyzer-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:20px;align-items:start;}
-.card{background:#fff;border:0.5px solid #e2e8f0;border-radius:14px;padding:22px;box-shadow:0 14px 40px rgba(15,23,42,0.06);}
-.card-title{font-size:15px;font-weight:600;color:#1e293b;margin-bottom:6px;}
+.analyzer-layout{display:grid;grid-template-columns:minmax(0,1.18fr) 360px;gap:18px;align-items:start;}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 14px 40px rgba(15,23,42,0.06);}
+.sticky-card{position:sticky;top:104px;}
+.card-title{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:6px;}
 .card-sub{font-size:12px;color:#64748b;line-height:1.6;margin-bottom:18px;}
 .form-group{margin-bottom:16px;}
-.form-group label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:7px;}
-.form-group textarea{width:100%;min-height:150px;padding:12px 14px;border:1px solid #dbe4f0;border-radius:10px;font-size:13px;line-height:1.6;color:#1e293b;resize:vertical;outline:none;transition:border-color .2s, box-shadow .2s;}
-.form-group textarea:focus{border-color:#185FA5;box-shadow:0 0 0 4px rgba(24,95,165,0.12);}
-.upload-box{height:300px;width:100%;border-radius:16px;box-shadow:4px 4px 30px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px;gap:8px;background-color:rgba(0,110,255,.041);}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:7px;}
+.form-group textarea{width:100%;min-height:150px;padding:12px 14px;border:1px solid #dbe4f0;border-radius:12px;font-size:13px;line-height:1.6;color:#1e293b;resize:vertical;outline:none;transition:border-color .2s, box-shadow .2s;}
+.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(24,95,165,0.12);}
+.upload-box{height:280px;width:100%;border-radius:16px;box-shadow:4px 4px 30px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px;gap:8px;background-color:rgba(0,110,255,.041);}
 .upload-header{flex:1;width:100%;border:2px dashed royalblue;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;}
-.upload-header svg{height:96px;width:96px;}
+.upload-header svg{height:90px;width:90px;}
 .upload-header p{color:#0f172a;font-size:14px;font-weight:500;}
 .upload-footer{background-color:rgba(0,110,255,.075);width:100%;min-height:48px;padding:8px 10px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:flex-end;color:#0f172a;border:none;gap:10px;}
 .upload-footer svg{height:24px;width:24px;fill:royalblue;background-color:rgba(70,66,66,.103);border-radius:50%;padding:2px;box-shadow:0 2px 30px rgba(0,0,0,.12);flex-shrink:0;}
 .upload-footer p{flex:1;text-align:center;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #file{display:none;}
 .upload-note{font-size:11px;color:#64748b;line-height:1.6;margin-top:10px;}
-.btn-blue{background:#185FA5;color:#fff;border:none;padding:12px 20px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;transition:.2s;}
-.btn-blue:hover{background:#0C447C;}
-.alert{padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;}
+.btn-blue{background:var(--blue);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-size:13px;cursor:pointer;font-weight:700;transition:.2s;}
+.btn-blue:hover{background:var(--blue-dark);}
+.alert{padding:12px 14px;border-radius:12px;font-size:13px;margin-bottom:16px;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;}
-.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px;}
+.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px;}
 .metric{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
 .metric-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px;}
-.metric-value{font-size:26px;font-weight:700;color:#185FA5;}
+.metric-value{font-size:26px;font-weight:700;color:var(--blue);}
+.metric-copy{font-size:11px;color:#64748b;margin-top:5px;line-height:1.5;}
 .list-card{margin-top:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
 .list-card h3{font-size:13px;color:#1e293b;margin-bottom:10px;}
 .keyword-list{display:flex;flex-wrap:wrap;gap:8px;}
@@ -64,185 +45,82 @@ body{background:#f4f6fb;min-height:100vh;}
 .tag-miss{background:#FFF4E5;color:#B45309;}
 .empty-state{display:flex;flex-direction:column;gap:10px;justify-content:center;min-height:100%;color:#64748b;}
 .empty-state strong{font-size:15px;color:#1e293b;}
-@media (max-width:1100px){
-  .analyzer-layout{grid-template-columns:1fr;}
-}
-@media (max-width:768px){
-  .sidebar{position:static;width:100%;min-height:auto;}
-  .main{margin-left:0;}
-  .app{flex-direction:column;}
-  .content{padding:18px;}
-  .topbar{padding:14px 18px;}
-  .hero{flex-direction:column;align-items:flex-start;padding:20px;}
-  .result-grid{grid-template-columns:1fr;}
-}
-</style>
+.helper-list{display:grid;gap:10px;margin-top:14px;}
+.helper-item{padding:12px 14px;border-radius:14px;background:#111827;color:#cbd5e1;border:1px solid rgba(255,255,255,.08);}
+.helper-item strong{display:block;color:#fff;font-size:13px;margin-bottom:4px;}
+@media (max-width:1100px){.analyzer-layout{grid-template-columns:1fr;}.hero{flex-direction:column;align-items:flex-start;padding:20px;}.result-grid{grid-template-columns:1fr;}.sticky-card{position:static;}}
 {% endblock %}
 
-{% block content %}
-<div class="app">
-    <div class="sidebar">
-        <div class="sb-logo">
-            <div class="sb-logo-text">Career<span>Craft</span></div>
-            <div class="sb-logo-sub">Placement Prep Platform</div>
-        </div>
-        <div class="sb-user">
-            <div class="sb-avatar">{{ request.user.username|first }}</div>
-            <div>
-                <div class="sb-username">{{ request.user.username }}</div>
-                <div class="sb-role">{% if request.user.is_superuser %}Admin{% else %}Student{% endif %}</div>
+{% block page_content %}
+<div class="hero">
+    <div>
+        <h1>Check how your resume matches the role</h1>
+        <p>Upload your resume, paste the job description, and compare the keywords your resume already covers versus the ones you still need to add.</p>
+    </div>
+    <div class="hero-score"><div class="hero-score-num">{% if analyzed %}{{ score }}%{% else %}--{% endif %}</div><div class="hero-score-label">ATS Match</div></div>
+</div>
+
+<div class="analyzer-layout">
+    <div class="card">
+        <div class="card-title">Analyze Resume</div>
+        <div class="card-sub">Use the upload card below for a PDF resume, or paste resume text manually if you prefer.</div>
+        {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="file">Upload resume PDF</label>
+                <div class="upload-box">
+                    <div class="upload-header">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <p>Browse file to upload</p>
+                    </div>
+                    <label for="file" class="upload-footer">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path><path d="M18.153 6h-.009v5.342H23.5v-.002z"></path></svg>
+                        <p id="file-name">{% if uploaded_file_name %}{{ uploaded_file_name }}{% else %}No file selected{% endif %}</p>
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path><path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path><path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path></svg>
+                    </label>
+                    <input id="file" type="file" name="resume_file" accept=".pdf">
+                </div>
+                <div class="upload-note">PDF works best. If you do not have a PDF, paste your resume text in the field below.</div>
             </div>
+            <div class="form-group"><label for="resume_text">Resume text fallback</label><textarea id="resume_text" name="resume_text" placeholder="Paste your resume content here if you are not uploading a PDF.">{{ resume_text }}</textarea></div>
+            <div class="form-group"><label for="job_description">Job description</label><textarea id="job_description" name="job_description" placeholder="Paste the role description, required skills, tools, and keywords here." required>{{ job_description }}</textarea></div>
+            <button type="submit" class="btn-blue">Analyze Resume</button>
+        </form>
+    </div>
+
+    <aside class="card sticky-card">
+        {% if analyzed %}
+        <div class="card-title">Results</div>
+        <div class="card-sub">This panel stays beside the form so the user can compare, edit, and re-run the ATS check without leaving the page.</div>
+        <div class="result-grid">
+            <div class="metric"><div class="metric-label">ATS score</div><div class="metric-value">{{ score }}%</div><div class="metric-copy">{{ score_msg }}</div></div>
+            <div class="metric"><div class="metric-label">Matched keywords</div><div class="metric-value">{{ matched|length }}</div><div class="metric-copy">{{ missing|length }} still missing</div></div>
         </div>
-        <div class="sb-section">Main Menu</div>
-        <a href="/dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="grid-alt" color="currentColor" size="sm"></box-icon></span> Dashboard</a>
-        <a href="/resume/" class="sb-link"><span class="sb-icon"><box-icon name="file" color="currentColor" size="sm"></box-icon></span> Resume Builder</a>
-        <a href="/resume/ats/" class="sb-link active"><span class="sb-icon"><box-icon name="search-alt-2" color="currentColor" size="sm"></box-icon></span> ATS Analyzer</a>
-        <a href="/interview/" class="sb-link"><span class="sb-icon"><box-icon name="target-lock" color="currentColor" size="sm"></box-icon></span> Mock Interview</a>
-        <a href="/assessment/" class="sb-link"><span class="sb-icon"><box-icon name="bar-chart-alt-2" color="currentColor" size="sm"></box-icon></span> Skill Assessment</a>
-        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon"><box-icon name="map" color="currentColor" size="sm"></box-icon></span> Roadmap</a>
-        <div class="sb-section">Account</div>
-        <a href="/accounts/profile/" class="sb-link"><span class="sb-icon"><box-icon name="user" color="currentColor" size="sm"></box-icon></span> Profile</a>
-        {% if request.user.is_superuser %}
-        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="cog" color="currentColor" size="sm"></box-icon></span> Admin Panel</a>
+        <div class="list-card"><h3>Matched keywords</h3><div class="keyword-list">{% for keyword in matched %}<span class="tag tag-good">{{ keyword }}</span>{% empty %}<span>No matching keywords found yet.</span>{% endfor %}</div></div>
+        <div class="list-card"><h3>Missing keywords</h3><div class="keyword-list">{% for keyword in missing %}<span class="tag tag-miss">{{ keyword }}</span>{% empty %}<span>No missing keywords detected.</span>{% endfor %}</div></div>
+        {% else %}
+        <div class="empty-state">
+            <strong>Results will appear here</strong>
+            <p>Upload your resume and add a job description to see your ATS score, matched keywords, and missing keywords on this page.</p>
+        </div>
+        <div class="helper-list">
+            <div class="helper-item"><strong>Tip 1</strong>Add exact skills from the job description like `Django`, `REST API`, or `MySQL`.</div>
+            <div class="helper-item"><strong>Tip 2</strong>Use action-based project bullets so the analyzer can match both tools and impact.</div>
+            <div class="helper-item"><strong>Tip 3</strong>Keep role-specific keywords in your summary, skills, and projects for a stronger score.</div>
+        </div>
         {% endif %}
-        <div class="sb-bottom">
-            {% include 'partials/sidebar_logout_button.html' %}
-        </div>
-    </div>
-
-    <div class="main">
-        <div class="topbar">
-            <div class="topbar-title">Resume Analysis</div>
-        </div>
-
-        <div class="content">
-            <div class="hero">
-                <div>
-                    <h1>Check how your resume matches the role</h1>
-                    <p>Upload your resume, paste the job description, and compare the keywords your resume already covers versus the ones you still need to add.</p>
-                </div>
-                <div class="hero-score">
-                    <div class="hero-score-num">{% if analyzed %}{{ score }}%{% else %}--{% endif %}</div>
-                    <div class="hero-score-label">ATS Match</div>
-                </div>
-            </div>
-
-            <div class="analyzer-layout">
-                <div class="card">
-                    <div class="card-title">Analyze resume</div>
-                    <div class="card-sub">Use the upload card below for a PDF resume, or paste resume text manually if you prefer.</div>
-
-                    {% if error %}
-                    <div class="alert alert-error">{{ error }}</div>
-                    {% endif %}
-
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-
-                        <div class="form-group">
-                            <label for="file">Upload resume PDF</label>
-                            <div class="upload-box">
-                                <div class="upload-header">
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <p>Browse file to upload</p>
-                                </div>
-                                <label for="file" class="upload-footer">
-                                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path>
-                                        <path d="M18.153 6h-.009v5.342H23.5v-.002z"></path>
-                                    </svg>
-                                    <p id="file-name">{% if uploaded_file_name %}{{ uploaded_file_name }}{% else %}No file selected{% endif %}</p>
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path>
-                                        <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
-                                        <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path>
-                                    </svg>
-                                </label>
-                                <input id="file" type="file" name="resume_file" accept=".pdf">
-                            </div>
-                            <div class="upload-note">PDF works best. If you do not have a PDF, paste your resume text in the field below.</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resume_text">Resume text fallback</label>
-                            <textarea id="resume_text" name="resume_text" placeholder="Paste your resume content here if you are not uploading a PDF.">{{ resume_text }}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="job_description">Job description</label>
-                            <textarea id="job_description" name="job_description" placeholder="Paste the role description, required skills, tools, and keywords here." required>{{ job_description }}</textarea>
-                        </div>
-
-                        <button type="submit" class="btn-blue">Analyze Resume</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    {% if analyzed %}
-                    <div class="card-title">Analysis result</div>
-                    <div class="card-sub">These keywords are generated from the submitted job description and compared against your resume content.</div>
-
-                    <div class="result-grid">
-                        <div class="metric">
-                            <div class="metric-label">ATS score</div>
-                            <div class="metric-value">{{ score }}%</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-label">Matched keywords</div>
-                            <div class="metric-value">{{ matched|length }}</div>
-                        </div>
-                    </div>
-
-                    <div class="list-card">
-                        <h3>Matched keywords</h3>
-                        <div class="keyword-list">
-                            {% for keyword in matched %}
-                            <span class="tag tag-good">{{ keyword }}</span>
-                            {% empty %}
-                            <span>No matching keywords found yet.</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="list-card">
-                        <h3>Missing keywords</h3>
-                        <div class="keyword-list">
-                            {% for keyword in missing %}
-                            <span class="tag tag-miss">{{ keyword }}</span>
-                            {% empty %}
-                            <span>No missing keywords detected.</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="empty-state">
-                        <strong>Results will appear here</strong>
-                        <p>Upload your resume and add a job description to see your ATS score, matched keywords, and missing keywords on this page.</p>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+    </aside>
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
+{% block page_js %}
 document.addEventListener('DOMContentLoaded', function () {
   var fileInput = document.getElementById('file');
   var fileName = document.getElementById('file-name');
-
-  if (!fileInput || !fileName) {
-    return;
-  }
-
+  if (!fileInput || !fileName) return;
   fileInput.addEventListener('change', function () {
     fileName.textContent = fileInput.files.length ? fileInput.files[0].name : 'No file selected';
   });
 });
-</script>
-{% include 'partials/sidebar_logout_button_js.html' %}
 {% endblock %}

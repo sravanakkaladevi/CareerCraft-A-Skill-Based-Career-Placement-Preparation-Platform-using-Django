@@ -1,229 +1,81 @@
-{% extends 'base.html' %}
+{% extends 'base_sidebar.html' %}
 {% block title %}Skill Assessment{% endblock %}
+{% block nav_assessment %}active{% endblock %}
+{% block page_title %}Skill Assessment{% endblock %}
 
-{% block extra_css %}
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f6fb;min-height:100vh;}
-.app{display:flex;min-height:100vh;}
-.sidebar{width:230px;background:#185FA5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:fixed;top:0;left:0;z-index:100;}
-.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-logo-text{font-size:17px;font-weight:600;color:#fff;}
-.sb-logo-text span{color:#B5D4F4;}
-.sb-logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
-.sb-user{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:#0C447C;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#B5D4F4;flex-shrink:0;text-transform:uppercase;}
-.sb-username{font-size:13px;color:#fff;font-weight:500;}
-.sb-role{font-size:10px;color:rgba(255,255,255,0.45);}
-.sb-section{padding:14px 20px 6px;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;}
-.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;border-left:3px solid transparent;transition:.15s;}
-.sb-link:hover,.sb-link.active{background:rgba(255,255,255,0.1);color:#fff;border-left-color:#B5D4F4;}
-.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0;}
-.sb-bottom{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);}
-.main{flex:1;margin-left:230px;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:0.5px solid #e2e8f0;position:sticky;top:0;z-index:50;}
-.topbar-title{font-size:16px;font-weight:600;color:#1e293b;}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.topbar-badge{font-size:11px;background:#E6F1FB;color:#0C447C;padding:4px 10px;border-radius:20px;font-weight:500;}
-.admin-link{font-size:11px;background:#0C447C;color:#fff;padding:4px 10px;border-radius:20px;text-decoration:none;}
-.content{padding:24px 28px;}
-.hero{background:linear-gradient(135deg,#185FA5,#0C447C);border-radius:18px;padding:24px 28px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:18px;}
-.hero h2{font-size:22px;color:#fff;margin-bottom:6px;}
-.hero p{font-size:13px;color:rgba(255,255,255,0.72);max-width:560px;line-height:1.7;}
+{% block page_css %}
+.hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:22px;padding:24px 28px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:18px;color:#fff;}
+.hero h2{font-size:24px;color:#fff;margin-bottom:6px;}
+.hero p{font-size:13px;color:rgba(255,255,255,.74);max-width:560px;line-height:1.7;}
 .hero-badges{display:flex;gap:12px;}
-.hero-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;text-align:center;min-width:96px;}
+.hero-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 18px;text-align:center;min-width:96px;}
 .hero-badge-num{font-size:22px;font-weight:700;color:#fff;}
-.hero-badge-label{font-size:10px;color:rgba(255,255,255,0.62);margin-top:4px;}
-.section-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;}
-.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.topic-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;transition:.18s;}
-.topic-card:hover{transform:translateY(-2px);border-color:#185FA5;box-shadow:0 10px 26px rgba(12,68,124,0.08);}
+.hero-badge-label{font-size:10px;color:rgba(255,255,255,0.62);margin-top:4px;text-transform:uppercase;letter-spacing:.6px;}
+.section-title{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px;}
+.topics-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+.topic-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;transition:.18s;box-shadow:0 14px 34px rgba(15,23,42,.05);}
+.topic-card:hover{transform:translateY(-2px);border-color:var(--blue);}
 .topic-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
-.topic-icon{width:46px;height:46px;border-radius:14px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:20px;color:#185FA5;}
-.topic-score{font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;}
+.topic-icon{width:46px;height:46px;border-radius:14px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--blue);}
+.topic-score{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;}
 .topic-score.good{background:#dcfce7;color:#166534;}
 .topic-score.avg{background:#fef3c7;color:#92400e;}
 .topic-score.poor{background:#fee2e2;color:#991b1b;}
 .topic-score.empty{background:#e2e8f0;color:#475569;}
-.topic-name{font-size:15px;font-weight:600;color:#1e293b;margin-bottom:5px;}
+.topic-name{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:5px;}
 .topic-sub{font-size:12px;color:#64748b;margin-bottom:14px;}
 .prog-bar{height:6px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-bottom:14px;}
 .prog-fill{height:100%;border-radius:999px;transition:width .8s ease;}
 .topic-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .topic-last{font-size:11px;color:#94a3b8;}
-.btn-start{background:#185FA5;color:#fff;border:none;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;display:inline-block;transition:.15s;}
-.btn-start:hover{background:#0C447C;}
+.btn-start{background:var(--blue);color:#fff;border:none;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;display:inline-block;transition:.15s;}
+.btn-start:hover{background:var(--blue-dark);}
 .btn-muted{background:#f1f5f9;color:#94a3b8;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:500;}
 .empty-card{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:36px;text-align:center;color:#94a3b8;font-size:14px;grid-column:1/-1;}
-.logoutButton{--figure-duration:100;--transform-figure:none;--walking-duration:100;--transform-arm1:none;--transform-wrist1:none;--transform-arm2:none;--transform-wrist2:none;--transform-leg1:none;--transform-calf1:none;--transform-leg2:none;--transform-calf2:none;background:none;border:0;cursor:pointer;display:block;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;height:40px;outline:none;padding:0 0 0 20px;perspective:100px;position:relative;text-align:left;width:130px;}
-.logoutButton::before{background:rgba(255,255,255,0.1);border-radius:5px;content:"";display:block;height:100%;left:0;position:absolute;top:0;transition:transform 50ms ease;width:100%;z-index:2;}
-.logoutButton:hover::before{background:rgba(255,255,255,0.2);}
-.logoutButton:hover .door{transform:rotateY(20deg);}
-.logoutButton.clicked .door{transform:rotateY(35deg);}
-.logoutButton.door-slammed .door{transform:none;transition:transform 100ms ease-in 250ms;}
-.logoutButton.falling{animation:shake 200ms linear;}
-.logoutButton.falling .bang{animation:flash 300ms linear;}
-.logoutButton.falling .figure{animation:spin 1000ms infinite linear;bottom:-1080px;opacity:0;right:1px;transition:transform calc(var(--figure-duration) * 1ms) linear,bottom calc(var(--figure-duration) * 1ms) cubic-bezier(0.7,0.1,1,1) 100ms,opacity calc(var(--figure-duration) * 0.25ms) linear calc(var(--figure-duration) * 0.75ms);z-index:1;}
-.logoutButton--light .button-text{color:#fff;}
-.logoutButton--light .door,.logoutButton--light .doorway{fill:#185FA5;}
-.button-text{color:#fff;font-weight:500;position:relative;z-index:10;}
-.logoutButton svg{display:block;position:absolute;}
-.figure{bottom:5px;fill:#B5D4F4;right:18px;transform:var(--transform-figure);transition:transform calc(var(--figure-duration) * 1ms) cubic-bezier(0.2,0.1,0.8,0.9);width:30px;z-index:4;}
-.door,.doorway{bottom:4px;fill:#185FA5;right:12px;width:32px;}
-.door{transform:rotateY(0deg);transform-origin:100% 50%;transform-style:preserve-3d;transition:transform 200ms ease;z-index:5;}
-.door path{fill:#B5D4F4;stroke:#B5D4F4;stroke-width:4;}
-.doorway{z-index:3;}
-.bang{opacity:0;}
-.arm1,.wrist1,.arm2,.wrist2,.leg1,.calf1,.leg2,.calf2{transition:transform calc(var(--walking-duration) * 1ms) ease-in-out;}
-.arm1{transform:var(--transform-arm1);transform-origin:52% 45%;}
-.wrist1{transform:var(--transform-wrist1);transform-origin:59% 55%;}
-.arm2{transform:var(--transform-arm2);transform-origin:47% 43%;}
-.wrist2{transform:var(--transform-wrist2);transform-origin:35% 47%;}
-.leg1{transform:var(--transform-leg1);transform-origin:47% 64.5%;}
-.calf1{transform:var(--transform-calf1);transform-origin:55.5% 71.5%;}
-.leg2{transform:var(--transform-leg2);transform-origin:43% 63%;}
-.calf2{transform:var(--transform-calf2);transform-origin:41.5% 73%;}
-@keyframes spin{from{transform:rotate(0deg) scale(0.94);}to{transform:rotate(359deg) scale(0.94);}}
-@keyframes shake{0%{transform:rotate(-1deg);}50%{transform:rotate(2deg);}100%{transform:rotate(-1deg);}}
-@keyframes flash{0%{opacity:0.4;}100%{opacity:0;}}
 @media (max-width:1100px){.hero{flex-direction:column;align-items:flex-start;}.topics-grid{grid-template-columns:1fr 1fr;}}
 @media (max-width:760px){.topics-grid{grid-template-columns:1fr;}}
-</style>
 {% endblock %}
 
-{% block content %}
-<div class="app">
-    <div class="sidebar">
-        <div class="sb-logo">
-            <div class="sb-logo-text">Career<span>Craft</span></div>
-            <div class="sb-logo-sub">Placement Prep Platform</div>
-        </div>
-        <div class="sb-user">
-            <div class="sb-avatar">{{ request.user.username|first }}</div>
-            <div>
-                <div class="sb-username">{{ request.user.username }}</div>
-                <div class="sb-role">{% if request.user.is_superuser %}Admin{% else %}Student{% endif %}</div>
-            </div>
-        </div>
-        <div class="sb-section">Main Menu</div>
-        <a href="/dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="grid-alt" color="currentColor" size="sm"></box-icon></span> Dashboard</a>
-        <a href="/resume/" class="sb-link"><span class="sb-icon"><box-icon name="file" color="currentColor" size="sm"></box-icon></span> Resume Builder</a>
-        <a href="/resume/ats/" class="sb-link"><span class="sb-icon"><box-icon name="search-alt-2" color="currentColor" size="sm"></box-icon></span> ATS Analyzer</a>
-        <a href="/interview/" class="sb-link"><span class="sb-icon"><box-icon name="target-lock" color="currentColor" size="sm"></box-icon></span> Mock Interview</a>
-        <a href="/assessment/" class="sb-link active"><span class="sb-icon"><box-icon name="bar-chart-alt-2" color="currentColor" size="sm"></box-icon></span> Skill Assessment</a>
-        <a href="/dashboard/roadmap/" class="sb-link"><span class="sb-icon"><box-icon name="map" color="currentColor" size="sm"></box-icon></span> Roadmap</a>
-        <div class="sb-section">Account</div>
-        <a href="/accounts/profile/" class="sb-link"><span class="sb-icon"><box-icon name="user" color="currentColor" size="sm"></box-icon></span> Profile</a>
-        {% if request.user.is_superuser %}
-        <a href="/dashboard/admin-dashboard/" class="sb-link"><span class="sb-icon"><box-icon name="cog" color="currentColor" size="sm"></box-icon></span> Admin Panel</a>
-        {% endif %}
-        <div class="sb-bottom">
-            <button class="logoutButton logoutButton--light" id="logoutBtn">
-                <svg class="doorway" viewBox="0 0 100 100"><path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z"/><path class="bang" d="M40.5 43.7L26.6 31.4l-2.5 6.7zM41.9 50.4l-19.5-4-1.4 6.3zM40 57.4l-17.7 3.9 3.9 5.7z"/></svg>
-                <svg class="figure" viewBox="0 0 100 100"><circle cx="52.1" cy="32.4" r="6.4"/><path d="M50.7 62.8c-1.2 2.5-3.6 5-7.2 4-3.2-.9-4.9-3.5-4-7.8.7-3.4 3.1-13.8 4.1-15.8 1.7-3.4 1.6-4.6 7-3.7 4.3.7 4.6 2.5 4.3 5.4-.4 3.7-2.8 15.1-4.2 17.9z"/><g class="arm1"><path d="M55.5 56.5l-6-9.5c-1-1.5-.6-3.5.9-4.4 1.5-1 3.7-1.1 4.6.4l6.1 10c1 1.5.3 3.5-1.1 4.4-1.5.9-3.5.5-4.5-.9z"/><path class="wrist1" d="M69.4 59.9L58.1 58c-1.7-.3-2.9-1.9-2.6-3.7.3-1.7 1.9-2.9 3.7-2.6l11.4 1.9c1.7.3 2.9 1.9 2.6 3.7-.4 1.7-2 2.9-3.8 2.6z"/></g><g class="arm2"><path d="M34.2 43.6L45 40.3c1.7-.6 3.5.3 4 2 .6 1.7-.3 4-2 4.5l-10.8 2.8c-1.7.6-3.5-.3-4-2-.6-1.6.3-3.4 2-4z"/><path class="wrist2" d="M27.1 56.2L32 45.7c.7-1.6 2.6-2.3 4.2-1.6 1.6.7 2.3 2.6 1.6 4.2L33 58.8c-.7 1.6-2.6 2.3-4.2 1.6-1.7-.7-2.4-2.6-1.7-4.2z"/></g><g class="leg1"><path d="M52.1 73.2s-7-5.7-7.9-6.5c-.9-.9-1.2-3.5-.1-4.9 1.1-1.4 3.8-1.9 5.2-.9l7.9 7c1.4 1.1 1.7 3.5.7 4.9-1.1 1.4-4.4 1.5-5.8.4z"/><path class="calf1" d="M52.6 84.4l-1-12.8c-.1-1.9 1.5-3.6 3.5-3.7 2-.1 3.7 1.4 3.8 3.4l1 12.8c.1 1.9-1.5 3.6-3.5 3.7-2 0-3.7-1.5-3.8-3.4z"/></g><g class="leg2"><path d="M37.8 72.7s1.3-10.2 1.6-11.4 2.4-2.8 4.1-2.6c1.7.2 3.6 2.3 3.4 4l-1.8 11.1c-.2 1.7-1.7 3.3-3.4 3.1-1.8-.2-4.1-2.4-3.9-4.2z"/><path class="calf2" d="M29.5 82.3l9.6-10.9c1.3-1.4 3.6-1.5 5.1-.1 1.5 1.4.4 4.9-.9 6.3l-8.5 9.6c-1.3 1.4-3.6 1.5-5.1.1-1.4-1.3-1.5-3.5-.2-5z"/></g></svg>
-                <svg class="door" viewBox="0 0 100 100"><path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z"/><circle cx="66" cy="50" r="3.7"/></svg>
-                <span class="button-text">Log Out</span>
-            </button>
-        </div>
+{% block page_content %}
+<div class="hero">
+    <div>
+        <h2>Measure your topic-wise strength</h2>
+        <p>Take focused assessments, compare your latest scores, and keep improving weak areas before interviews and placement rounds.</p>
     </div>
-
-    <div class="main">
-        <div class="topbar">
-            <div class="topbar-title">Skill Assessment</div>
-            <div class="topbar-right">
-                <div class="topbar-badge">Placement Practice</div>
-                {% if request.user.is_superuser %}
-                <a href="/dashboard/admin-dashboard/" class="admin-link">Admin Panel</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="content">
-            <div class="hero">
-                <div>
-                    <h2>Measure your topic-wise strength</h2>
-                    <p>Take focused assessments, compare your latest scores, and keep improving weak areas before interviews and placement rounds.</p>
-                </div>
-                <div class="hero-badges">
-                    <div class="hero-badge">
-                        <div class="hero-badge-num">{{ topics|length }}</div>
-                        <div class="hero-badge-label">Topics</div>
-                    </div>
-                    <div class="hero-badge">
-                        <div class="hero-badge-num">10</div>
-                        <div class="hero-badge-label">Q per test</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-title">Assessment Topics</div>
-            <div class="topics-grid">
-                {% for item in latest_scores %}
-                {% with topic=item.topic score=item.score %}
-                <div class="topic-card">
-                    <div class="topic-head">
-                        <div class="topic-icon">{{ topic.icon }}</div>
-                        {% if score %}
-                        <div class="topic-score {% if score.percentage >= 70 %}good{% elif score.percentage >= 40 %}avg{% else %}poor{% endif %}">{{ score.percentage }}%</div>
-                        {% else %}
-                        <div class="topic-score empty">Not taken</div>
-                        {% endif %}
-                    </div>
-                    <div class="topic-name">{{ topic.name }}</div>
-                    <div class="topic-sub">{{ topic.skillquestion_set.count }} questions available</div>
-                    <div class="prog-bar">
-                        <div class="prog-fill" style="width:{% if score %}{{ score.percentage }}{% else %}0{% endif %}%;background:{% if score %}{% if score.percentage >= 70 %}#16a34a{% elif score.percentage >= 40 %}#d97706{% else %}#dc2626{% endif %}{% else %}#cbd5e1{% endif %};"></div>
-                    </div>
-                    <div class="topic-footer">
-                        <div class="topic-last">{% if score %}Last: {{ score.assessed_at|date:"d M" }}{% else %}Not assessed yet{% endif %}</div>
-                        {% if topic.skillquestion_set.count >= 5 %}
-                        <a href="/assessment/start/{{ topic.id }}/" class="btn-start">{% if score %}Retake{% else %}Start{% endif %}</a>
-                        {% else %}
-                        <span class="btn-muted">Coming soon</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endwith %}
-                {% empty %}
-                <div class="empty-card">No topics available yet.</div>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="hero-badges">
+        <div class="hero-badge"><div class="hero-badge-num">{{ ready_topics }}</div><div class="hero-badge-label">Ready topics</div></div>
+        <div class="hero-badge"><div class="hero-badge-num">10</div><div class="hero-badge-label">Q per test</div></div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
-<script>
-const btn = document.getElementById('logoutBtn');
-if(btn){
-    btn.state='default';
-    const S={
-        'default':{'--figure-duration':'100','--transform-figure':'none','--walking-duration':'100','--transform-arm1':'none','--transform-wrist1':'none','--transform-arm2':'none','--transform-wrist2':'none','--transform-leg1':'none','--transform-calf1':'none','--transform-leg2':'none','--transform-calf2':'none'},
-        'hover':{'--figure-duration':'100','--transform-figure':'translateX(1.5px)','--walking-duration':'100','--transform-arm1':'rotate(-5deg)','--transform-wrist1':'rotate(-15deg)','--transform-arm2':'rotate(5deg)','--transform-wrist2':'rotate(6deg)','--transform-leg1':'rotate(-10deg)','--transform-calf1':'rotate(5deg)','--transform-leg2':'rotate(20deg)','--transform-calf2':'rotate(-20deg)'},
-        'walking1':{'--figure-duration':'300','--transform-figure':'translateX(11px)','--walking-duration':'300','--transform-arm1':'translateX(-4px) translateY(-2px) rotate(120deg)','--transform-wrist1':'rotate(-5deg)','--transform-arm2':'translateX(4px) rotate(-110deg)','--transform-wrist2':'rotate(-5deg)','--transform-leg1':'translateX(-3px) rotate(80deg)','--transform-calf1':'rotate(-30deg)','--transform-leg2':'translateX(4px) rotate(-60deg)','--transform-calf2':'rotate(20deg)'},
-        'walking2':{'--figure-duration':'400','--transform-figure':'translateX(17px)','--walking-duration':'300','--transform-arm1':'rotate(60deg)','--transform-wrist1':'rotate(-15deg)','--transform-arm2':'rotate(-45deg)','--transform-wrist2':'rotate(6deg)','--transform-leg1':'rotate(-5deg)','--transform-calf1':'rotate(10deg)','--transform-leg2':'rotate(10deg)','--transform-calf2':'rotate(-20deg)'},
-        'falling1':{'--figure-duration':'1600','--walking-duration':'400','--transform-arm1':'rotate(-60deg)','--transform-wrist1':'none','--transform-arm2':'rotate(30deg)','--transform-wrist2':'rotate(120deg)','--transform-leg1':'rotate(-30deg)','--transform-calf1':'rotate(-20deg)','--transform-leg2':'rotate(20deg)'},
-        'falling2':{'--walking-duration':'300','--transform-arm1':'rotate(-100deg)','--transform-arm2':'rotate(-60deg)','--transform-wrist2':'rotate(60deg)','--transform-leg1':'rotate(80deg)','--transform-calf1':'rotate(20deg)','--transform-leg2':'rotate(-60deg)'},
-        'falling3':{'--walking-duration':'500','--transform-arm1':'rotate(-30deg)','--transform-wrist1':'rotate(40deg)','--transform-arm2':'rotate(50deg)','--transform-wrist2':'none','--transform-leg1':'rotate(-30deg)','--transform-leg2':'rotate(20deg)','--transform-calf2':'none'}
-    };
-    function upd(s){if(S[s]){btn.state=s;for(let k in S[s])btn.style.setProperty(k,S[s][k]);}}
-    btn.addEventListener('mouseenter',()=>{if(btn.state==='default')upd('hover');});
-    btn.addEventListener('mouseleave',()=>{if(btn.state==='hover')upd('default');});
-    btn.addEventListener('click',(e)=>{
-        e.preventDefault();
-        if(btn.state==='default'||btn.state==='hover'){
-            btn.classList.add('clicked');upd('walking1');
-            setTimeout(()=>{btn.classList.add('door-slammed');upd('walking2');
-                setTimeout(()=>{btn.classList.add('falling');upd('falling1');
-                    setTimeout(()=>{upd('falling2');
-                        setTimeout(()=>{upd('falling3');
-                            setTimeout(()=>{window.location='/accounts/logout/';},1000);
-                        },S['falling2']['--walking-duration']);
-                    },S['falling1']['--walking-duration']);
-                },S['walking2']['--figure-duration']);
-            },S['walking1']['--figure-duration']);
-        }
-    });
-}
-</script>
+<div class="section-title">Assessment Topics</div>
+<div class="topics-grid">
+    {% for item in latest_scores %}
+    {% with topic=item.topic score=item.score %}
+    <div class="topic-card">
+        <div class="topic-head">
+            <div class="topic-icon">{{ topic.icon }}</div>
+            {% if score %}
+            <div class="topic-score {% if score.percentage >= 70 %}good{% elif score.percentage >= 40 %}avg{% else %}poor{% endif %}">{{ score.percentage }}%</div>
+            {% else %}
+            <div class="topic-score empty">Not taken</div>
+            {% endif %}
+        </div>
+        <div class="topic-name">{{ topic.name }}</div>
+        <div class="topic-sub">{{ topic.skillquestion_set.count }} questions available</div>
+        <div class="prog-bar"><div class="prog-fill" style="width:{% if score %}{{ score.percentage }}{% else %}0{% endif %}%;background:{% if score %}{% if score.percentage >= 70 %}#16a34a{% elif score.percentage >= 40 %}#d97706{% else %}#dc2626{% endif %}{% else %}#cbd5e1{% endif %};"></div></div>
+        <div class="topic-footer">
+            <div class="topic-last">{% if score %}Last: {{ score.assessed_at|date:"d M" }}{% else %}Not assessed yet{% endif %}</div>
+            {% if topic.skillquestion_set.count >= 5 %}
+            <a href="/assessment/start/{{ topic.id }}/" class="btn-start">{% if score %}Retake{% else %}Start{% endif %}</a>
+            {% else %}
+            <span class="btn-muted">Coming soon</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endwith %}
+    {% empty %}
+    <div class="empty-card">No topics available yet.{% if request.user.is_superuser %}<div style="margin-top:10px;"><a href="/admin/assessment/skilltopic/add/" class="btn-start">Add Topic</a></div>{% endif %}</div>
+    {% endfor %}
+</div>
 {% endblock %}

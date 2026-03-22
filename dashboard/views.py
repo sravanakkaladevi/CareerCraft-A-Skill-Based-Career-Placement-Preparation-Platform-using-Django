@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from interview.models import MockResult, Category
+from assessment.models import SkillScore, SkillTopic
+from learn.models import BlogPost
+from .models import SiteBranding
 from .roadmap import build_user_roadmap
 
 
@@ -53,10 +56,22 @@ def admin_dashboard(request):
     total_users = User.objects.filter(is_superuser=False).count()
     recent_users = User.objects.filter(is_superuser=False).order_by('-date_joined')[:10]
     total_tests = MockResult.objects.count()
+    total_assessments = SkillScore.objects.count()
+    total_categories = Category.objects.count()
+    total_questions = sum(category.question_count() for category in Category.objects.all())
+    total_topics = SkillTopic.objects.count()
+    total_blog_posts = BlogPost.objects.count()
+    branding = SiteBranding.get_solo()
     context = {
         'total_users': total_users,
         'recent_users': recent_users,
         'total_tests': total_tests,
+        'total_assessments': total_assessments,
+        'total_categories': total_categories,
+        'total_questions': total_questions,
+        'total_topics': total_topics,
+        'total_blog_posts': total_blog_posts,
+        'branding': branding,
     }
     return render(request, 'dashboard/admin_dashboard.html', context)
 
