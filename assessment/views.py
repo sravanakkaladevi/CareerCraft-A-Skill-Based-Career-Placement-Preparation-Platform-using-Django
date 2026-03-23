@@ -1,122 +1,369 @@
-import random
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import SkillTopic, SkillQuestion, SkillScore
+from django.shortcuts import redirect, render
+
+
+PROJECT_DOMAINS = [
+    {
+        "name": "Web",
+        "description": "Full-stack web products that are easier to demo in placements, internships, and final-year reviews.",
+        "ideas": [
+            {
+                "name": "AI-Powered E-Commerce with Recommendation Engine",
+                "subdomain": "Full-Stack",
+                "language": "Python",
+                "tools": "Django, React, Redis, Celery, Stripe API, ElasticSearch",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/justdjango/django-react-ecommerce",
+            },
+            {
+                "name": "Multi-Tenant SaaS Project Management Tool (Jira Clone)",
+                "subdomain": "Full-Stack",
+                "language": "JavaScript",
+                "tools": "Next.js, Node.js, GraphQL, WebSocket, Docker",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/makeplane/plane",
+            },
+            {
+                "name": "Real-Time Collaborative Document Editor (Notion Clone)",
+                "subdomain": "Full-Stack",
+                "language": "JavaScript",
+                "tools": "Next.js, Yjs CRDT, WebSocket, Tiptap Editor",
+                "database": "MongoDB",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/steven-tey/novel",
+            },
+        ],
+    },
+    {
+        "name": "AI/ML",
+        "description": "Resume-strong AI ideas with modern LLM, RAG, and product-oriented workflows.",
+        "ideas": [
+            {
+                "name": "LLM-Powered Personal Research Assistant",
+                "subdomain": "LLM / RAG",
+                "language": "Python",
+                "tools": "LangChain, OpenAI, ChromaDB, FastAPI, React",
+                "database": "ChromaDB",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/langchain-ai/langchain",
+            },
+            {
+                "name": "Document Q&A using RAG (PDF Chat)",
+                "subdomain": "LLM / RAG",
+                "language": "Python",
+                "tools": "LangChain, OpenAI, FAISS, Streamlit",
+                "database": "FAISS",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/rag-pdf-chat",
+            },
+            {
+                "name": "AI Code Generation & Explanation Tool",
+                "subdomain": "LLM / Developer Tools",
+                "language": "Python",
+                "tools": "OpenAI API, FastAPI, React, CodeMirror",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/ai-code-generator",
+            },
+        ],
+    },
+    {
+        "name": "Data Science",
+        "description": "Strong analytics and MLOps projects if you want to show data engineering plus model delivery.",
+        "ideas": [
+            {
+                "name": "End-to-End MLOps Pipeline (CI/CD for ML)",
+                "subdomain": "MLOps",
+                "language": "Python",
+                "tools": "MLflow, DVC, FastAPI, Docker, GitHub Actions",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/mlflow/mlflow",
+            },
+            {
+                "name": "Realtime Fraud Detection Pipeline",
+                "subdomain": "Big Data",
+                "language": "Python",
+                "tools": "Kafka, Spark Streaming, Scikit-learn, Grafana",
+                "database": "Cassandra",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/fraud-detection-realtime",
+            },
+            {
+                "name": "Customer 360 Analytics Platform",
+                "subdomain": "Analytics",
+                "language": "Python",
+                "tools": "Pandas, dbt, Airflow, Metabase, Snowflake",
+                "database": "Snowflake",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/customer-analytics",
+            },
+        ],
+    },
+    {
+        "name": "Cloud",
+        "description": "Cloud-native project ideas for DevOps, architecture, deployment, and production-readiness.",
+        "ideas": [
+            {
+                "name": "Serverless Microservices E-Commerce Backend",
+                "subdomain": "Serverless",
+                "language": "Python",
+                "tools": "AWS Lambda, API Gateway, DynamoDB, CDK",
+                "database": "DynamoDB",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/localstack-samples/sample-serverless-shopping-cart-apigateway-lambda-cognito",
+            },
+            {
+                "name": "Multi-Region Fault-Tolerant Web App",
+                "subdomain": "Cloud Architecture",
+                "language": "Java",
+                "tools": "Spring Boot, AWS Route53, RDS Multi-AZ, ELB",
+                "database": "RDS",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/multi-region-aws",
+            },
+            {
+                "name": "Kubernetes-Native CI/CD Platform",
+                "subdomain": "DevOps",
+                "language": "Python",
+                "tools": "K8s, ArgoCD, Helm, GitHub Actions, Prometheus",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/argoproj/argo-cd",
+            },
+        ],
+    },
+    {
+        "name": "Cybersecurity",
+        "description": "High-signal security projects with monitoring, automation, and zero-trust style system design.",
+        "ideas": [
+            {
+                "name": "AI-Powered SIEM System",
+                "subdomain": "SOC / AI",
+                "language": "Python",
+                "tools": "ELK Stack, ML, Kafka, React, Sigma Rules",
+                "database": "Elasticsearch",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/Keyvanhardani/AI-Driven-SIEM-Realtime-Operator-with-Groq-Integration",
+            },
+            {
+                "name": "Zero Trust Network Access Implementation",
+                "subdomain": "Network Security",
+                "language": "Python",
+                "tools": "WireGuard, FastAPI, JWT, React, Docker",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/zero-trust-network",
+            },
+            {
+                "name": "Automated Penetration Testing Framework",
+                "subdomain": "Pen Testing",
+                "language": "Python",
+                "tools": "Nmap, Metasploit API, FastAPI, React",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/automated-pentest",
+            },
+        ],
+    },
+    {
+        "name": "Android",
+        "description": "Modern mobile ideas using AI, AR, and device capabilities that feel stronger than basic CRUD apps.",
+        "ideas": [
+            {
+                "name": "AI-Powered Personal Diary with Emotion Tracking",
+                "subdomain": "Mobile / AI",
+                "language": "Kotlin",
+                "tools": "Jetpack Compose, ML Kit, Room DB, TFLite",
+                "database": "Room DB",
+                "difficulty": "Hard",
+                "impact": "★★★★",
+                "github": "github.com/rektplorer64/ITCS424-PJ_Diaryly",
+            },
+            {
+                "name": "Augmented Reality Campus Navigation",
+                "subdomain": "AR / Mobile",
+                "language": "Kotlin",
+                "tools": "ARCore, Google Maps SDK, Jetpack Compose",
+                "database": "Firebase",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/ar-navigation-android",
+            },
+            {
+                "name": "Real-Time Language Translator with Camera",
+                "subdomain": "Mobile / AI",
+                "language": "Kotlin",
+                "tools": "ML Kit Text Recognition, CameraX, TFLite",
+                "database": "Room DB",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/realtime-translation-android",
+            },
+        ],
+    },
+    {
+        "name": "EdTech",
+        "description": "Education-focused builds that fit your platform theme and are easy to explain in placements.",
+        "ideas": [
+            {
+                "name": "Adaptive Learning Engine for GATE/UPSC",
+                "subdomain": "EdTech AI",
+                "language": "Python",
+                "tools": "IRT, Django, React, Gamification, NLP",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/adaptive-learning",
+            },
+            {
+                "name": "AI-Powered Code Plagiarism Detector",
+                "subdomain": "EdTech AI",
+                "language": "Python",
+                "tools": "AST Comparison, ML, FastAPI, React",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/code-plagiarism-detection",
+            },
+            {
+                "name": "Virtual Lab Simulator for Chemistry/Physics",
+                "subdomain": "EdTech",
+                "language": "JavaScript",
+                "tools": "Three.js, React, Physics Engine, WebGL",
+                "database": "MongoDB",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/virtual-lab",
+            },
+        ],
+    },
+    {
+        "name": "CareerTech",
+        "description": "Projects aligned with resume building, skill mapping, and career planning, which fits CareerCraft especially well.",
+        "ideas": [
+            {
+                "name": "AI Career Path Advisor",
+                "subdomain": "AI / Career",
+                "language": "Python",
+                "tools": "LangChain, OpenAI, FastAPI, React",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/career-advisor-ai",
+            },
+            {
+                "name": "Skill Gap Analyzer for IT Professionals",
+                "subdomain": "Analytics",
+                "language": "Python",
+                "tools": "NLP, Pandas, FastAPI, React, LinkedIn API",
+                "database": "PostgreSQL",
+                "difficulty": "Hard",
+                "impact": "★★★★★",
+                "github": "github.com/topics/skill-gap-analysis",
+            },
+            {
+                "name": "Developer Portfolio Auto-Generator from GitHub",
+                "subdomain": "Full-Stack",
+                "language": "JavaScript",
+                "tools": "GitHub API, Next.js, OpenAI, Vercel",
+                "database": "PostgreSQL",
+                "difficulty": "Medium",
+                "impact": "★★★★★",
+                "github": "github.com/topics/portfolio-generator",
+            },
+        ],
+    },
+]
+
+
+def _github_url(value):
+    if not value:
+        return ""
+    if value.startswith(("http://", "https://")):
+        return value
+    return f"https://{value}"
+
+
+def _idea_summary(idea):
+    return (
+        f"{idea['subdomain']} project using {idea['language']} with {idea['difficulty'].lower()} "
+        f"difficulty and {idea['impact']} resume impact."
+    )
 
 
 @login_required
 def assessment_home(request):
-    topics = SkillTopic.objects.all()
-    latest_scores = SkillScore.get_latest_per_topic(request.user)
-    ready_topics = sum(1 for item in latest_scores if item['topic'].skillquestion_set.count() >= 5)
-    return render(request, 'assessment/assessment.html', {
-        'topics': topics,
-        'latest_scores': latest_scores,
-        'ready_topics': ready_topics,
-    })
+    featured_projects = []
+    total_ideas = 0
+
+    for domain in PROJECT_DOMAINS:
+        for idea in domain["ideas"]:
+            idea["github_url"] = _github_url(idea["github"])
+            idea["summary"] = _idea_summary(idea)
+        total_ideas += len(domain["ideas"])
+        featured_projects.append(
+            {
+                "name": domain["ideas"][0]["name"],
+                "role": f"{domain['name']} Projects",
+                "domain": domain["description"],
+                "summary": domain["ideas"][0]["summary"],
+                "stack": domain["ideas"][0]["tools"],
+                "highlights": [
+                    f"Language: {domain['ideas'][0]['language']}",
+                    f"Database: {domain['ideas'][0]['database']}",
+                ],
+                "references": [
+                    {"label": "GitHub Reference", "url": domain["ideas"][0]["github_url"]},
+                ],
+            }
+        )
+
+    return render(
+        request,
+        "assessment/assessment.html",
+        {
+            "top_projects": featured_projects[:6],
+            "project_domains": PROJECT_DOMAINS,
+            "project_count": total_ideas,
+            "domain_count": len(PROJECT_DOMAINS),
+        },
+    )
 
 
 @login_required
 def start_assessment(request, topic_id):
-    topic = get_object_or_404(SkillTopic, id=topic_id)
-    questions = list(SkillQuestion.objects.filter(topic=topic))
-    if len(questions) < 5:
-        return redirect('assessment_home')
-    selected = random.sample(questions, min(10, len(questions)))
-    request.session['assess_questions'] = [q.id for q in selected]
-    request.session['assess_topic'] = topic_id
-    request.session['assess_answers'] = {}
-    return redirect('assess_question', question_no=1)
+    for key in ["assess_questions", "assess_topic", "assess_answers"]:
+        request.session.pop(key, None)
+    return redirect("assessment_home")
 
 
 @login_required
 def assess_question(request, question_no):
-    question_ids = request.session.get('assess_questions', [])
-    topic_id = request.session.get('assess_topic')
-    if not question_ids:
-        return redirect('assessment_home')
-    total = len(question_ids)
-    if question_no < 1 or question_no > total:
-        return redirect('assess_result')
-    if request.method == 'POST':
-        selected = request.POST.get('answer', '')
-        answers = request.session.get('assess_answers', {})
-        answers[str(question_no)] = selected
-        request.session['assess_answers'] = answers
-        request.session.modified = True
-        if question_no < total:
-            return redirect('assess_question', question_no=question_no+1)
-        else:
-            return redirect('assess_result')
-    question = get_object_or_404(SkillQuestion, id=question_ids[question_no-1])
-    saved_answer = request.session.get('assess_answers', {}).get(str(question_no), '')
-    return render(request, 'assessment/assess_quiz.html', {
-        'question': question,
-        'question_no': question_no,
-        'total': total,
-        'progress': int((question_no / total) * 100),
-        'saved_answer': saved_answer,
-        'question_range': list(range(1, total + 1)),
-    })
+    for key in ["assess_questions", "assess_topic", "assess_answers"]:
+        request.session.pop(key, None)
+    return redirect("assessment_home")
 
 
 @login_required
 def assess_result(request):
-    question_ids = request.session.get('assess_questions', [])
-    topic_id = request.session.get('assess_topic')
-    answers = request.session.get('assess_answers', {})
-    if not question_ids or not topic_id:
-        return redirect('assessment_home')
-    questions = SkillQuestion.objects.filter(id__in=question_ids)
-    q_map = {q.id: q for q in questions}
-    results = []
-    score = 0
-    for i, qid in enumerate(question_ids, 1):
-        q = q_map.get(qid)
-        if not q:
-            continue
-        user_ans = answers.get(str(i), '')
-        is_correct = user_ans.upper() == q.correct_option.upper() if user_ans else False
-        if is_correct:
-            score += 1
-        results.append({
-            'question': q,
-            'user_answer': user_ans,
-            'is_correct': is_correct,
-            'correct_option': q.correct_option,
-        })
-    total = len(question_ids)
-    percentage = int((score / total) * 100) if total else 0
-    topic = get_object_or_404(SkillTopic, id=topic_id)
-    SkillScore.objects.create(
-        user=request.user,
-        topic=topic,
-        score=score,
-        total=total,
-        percentage=percentage,
-    )
-    for key in ['assess_questions', 'assess_topic', 'assess_answers']:
+    for key in ["assess_questions", "assess_topic", "assess_answers"]:
         request.session.pop(key, None)
-    if percentage >= 80:
-        grade, grade_color = 'Excellent', 'green'
-        suggestion = 'Outstanding! You have strong knowledge in this area.'
-    elif percentage >= 60:
-        grade, grade_color = 'Good', 'blue'
-        suggestion = 'Good understanding. Review weak areas to improve further.'
-    elif percentage >= 40:
-        grade, grade_color = 'Average', 'amber'
-        suggestion = 'Needs improvement. Focus on the topics you got wrong.'
-    else:
-        grade, grade_color = 'Needs Work', 'red'
-        suggestion = 'Significant gaps found. Revise fundamentals before retaking.'
-    return render(request, 'assessment/assess_result.html', {
-        'score': score,
-        'total': total,
-        'percentage': percentage,
-        'grade': grade,
-        'grade_color': grade_color,
-        'suggestion': suggestion,
-        'results': results,
-        'topic': topic,
-        'wrong_count': total - score,
-    })
+    return redirect("assessment_home")

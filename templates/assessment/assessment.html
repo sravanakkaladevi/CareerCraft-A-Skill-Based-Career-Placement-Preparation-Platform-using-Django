@@ -1,90 +1,217 @@
 {% extends 'base_sidebar.html' %}
-{% block title %}Skill Assessment{% endblock %}
+{% block title %}Project Ideas{% endblock %}
 {% block nav_assessment %}active{% endblock %}
-{% block page_title %}Skill Assessment{% endblock %}
+{% block page_title %}Project Ideas{% endblock %}
 
 {% block page_css %}
-.hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:22px;padding:24px 28px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:18px;color:#fff;}
-.hero h2{font-size:24px;color:#fff;margin-bottom:6px;}
-.hero p{font-size:13px;color:rgba(255,255,255,.74);max-width:560px;line-height:1.7;}
-.hero-badges{display:flex;gap:12px;}
-.hero-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 18px;text-align:center;min-width:96px;}
-.hero-badge-num{font-size:22px;font-weight:700;color:#fff;}
-.hero-badge-label{font-size:10px;color:rgba(255,255,255,0.62);margin-top:4px;text-transform:uppercase;letter-spacing:.6px;}
-.section-title{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px;}
-.topics-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-.topic-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;transition:.18s;box-shadow:0 14px 34px rgba(15,23,42,.05);}
-.topic-card:hover{transform:translateY(-2px);border-color:var(--blue);}
-.topic-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
-.topic-icon{width:46px;height:46px;border-radius:14px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--blue);}
-.topic-icon img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;}
-.topic-score{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;}
-.topic-score.good{background:#dcfce7;color:#166534;}
-.topic-score.avg{background:#fef3c7;color:#92400e;}
-.topic-score.poor{background:#fee2e2;color:#991b1b;}
-.topic-score.empty{background:#e2e8f0;color:#475569;}
-.topic-name{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:5px;}
-.topic-sub{font-size:12px;color:#64748b;margin-bottom:14px;}
-.prog-bar{height:6px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-bottom:14px;}
-.prog-fill{height:100%;border-radius:999px;transition:width .8s ease;}
-.topic-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.topic-last{font-size:11px;color:#94a3b8;}
-.btn-start{background:var(--blue);color:#fff;border:none;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;display:inline-block;transition:.15s;}
-.btn-start:hover{background:var(--blue-dark);}
-.btn-muted{background:#f1f5f9;color:#94a3b8;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:500;}
-.empty-card{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:36px;text-align:center;color:#94a3b8;font-size:14px;grid-column:1/-1;}
-@media (max-width:1100px){.hero{flex-direction:column;align-items:flex-start;}.topics-grid{grid-template-columns:1fr 1fr;}}
-@media (max-width:760px){.topics-grid{grid-template-columns:1fr;}}
+.ideas-shell{display:flex;flex-direction:column;gap:18px;}
+.hero{background:linear-gradient(135deg,#0f172a 0%,#123d69 52%,#185FA5 100%);border-radius:24px;padding:28px;position:relative;overflow:hidden;color:#fff;box-shadow:0 24px 48px rgba(15,23,42,.18);}
+.hero::after{content:"";position:absolute;right:-60px;top:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 70%);}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.8fr);gap:18px;align-items:end;position:relative;z-index:1;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 12px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px;}
+.hero h2{font-size:30px;line-height:1.15;color:#fff;margin-bottom:10px;}
+.hero p{font-size:14px;line-height:1.8;color:rgba(255,255,255,.8);max-width:720px;}
+.hero-stats{display:grid;grid-template-columns:1fr;gap:12px;}
+.hero-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:16px;}
+.hero-stat-num{font-size:28px;font-weight:800;color:#fff;}
+.hero-stat-label{font-size:11px;font-weight:700;letter-spacing:.55px;text-transform:uppercase;color:rgba(255,255,255,.64);margin-top:4px;}
+.hero-stat-copy{font-size:12px;color:rgba(255,255,255,.78);margin-top:8px;line-height:1.6;}
+.panel{background:#fff;border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:0 16px 40px rgba(15,23,42,.05);}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.section-title{font-size:18px;font-weight:800;color:#0f172a;}
+.section-sub{font-size:12px;color:#64748b;line-height:1.6;max-width:680px;}
+.guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.guide-card{border:1px solid #e2e8f0;border-radius:18px;padding:16px;background:#f8fafc;}
+.guide-step{font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.55px;margin-bottom:8px;}
+.guide-card h3{font-size:15px;color:#0f172a;margin-bottom:6px;}
+.guide-card p{font-size:12px;color:#64748b;line-height:1.7;}
+.projects-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.project-card{border:1px solid #dbe5ef;border-radius:20px;padding:20px;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);display:flex;flex-direction:column;gap:14px;}
+.project-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.project-name{font-size:18px;font-weight:800;color:#0f172a;line-height:1.3;}
+.project-role{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:10px;font-weight:800;letter-spacing:.55px;text-transform:uppercase;white-space:nowrap;}
+.project-domain{font-size:12px;color:#475569;font-weight:700;}
+.project-summary{font-size:13px;color:#64748b;line-height:1.75;}
+.stack-box{background:#eff6ff;border:1px solid #dbeafe;border-radius:16px;padding:14px;}
+.stack-label{font-size:10px;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.55px;margin-bottom:6px;}
+.stack-copy{font-size:12px;color:#1e3a8a;line-height:1.7;font-weight:600;}
+.bullet-list{display:flex;flex-direction:column;gap:8px;}
+.bullet-item{font-size:12px;color:#475569;line-height:1.7;padding-left:14px;position:relative;}
+.bullet-item::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:#185FA5;}
+.ref-list{display:flex;flex-wrap:wrap;gap:10px;}
+.ref-link{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;text-decoration:none;background:#fff;border:1px solid #dbe5ef;color:#0f172a;font-size:12px;font-weight:700;transition:.18s;}
+.ref-link:hover{transform:translateY(-1px);border-color:#185FA5;color:#185FA5;}
+.domains-shell{display:flex;flex-direction:column;gap:18px;}
+.domain-block{border:1px solid #dbe5ef;border-radius:22px;padding:20px;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);}
+.domain-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:16px;}
+.domain-title{font-size:20px;font-weight:800;color:#0f172a;}
+.domain-copy{font-size:12px;color:#64748b;line-height:1.7;max-width:760px;}
+.domain-count{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+.idea-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.idea-card{border:1px solid #e2e8f0;border-radius:18px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;}
+.idea-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.idea-name{font-size:16px;font-weight:800;color:#0f172a;line-height:1.4;}
+.idea-impact{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#ecfeff;color:#0f766e;font-size:10px;font-weight:800;letter-spacing:.45px;white-space:nowrap;}
+.idea-subdomain{font-size:11px;color:#185FA5;font-weight:800;letter-spacing:.4px;text-transform:uppercase;}
+.idea-summary{font-size:12px;color:#64748b;line-height:1.7;}
+.idea-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+.meta-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:10px;}
+.meta-label{font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.45px;margin-bottom:4px;}
+.meta-value{font-size:12px;color:#0f172a;font-weight:700;line-height:1.5;}
+.github-link{display:inline-flex;align-items:center;justify-content:center;padding:11px 14px;border-radius:14px;background:#0f172a;color:#fff;text-decoration:none;font-size:12px;font-weight:800;transition:.18s;}
+.github-link:hover{transform:translateY(-1px);background:#185FA5;color:#fff;}
+.side-note{background:linear-gradient(135deg,#f8fafc 0%,#eef6ff 100%);border:1px solid #dbe5ef;border-radius:18px;padding:18px;}
+.side-note h3{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:8px;}
+.side-note p{font-size:12px;color:#64748b;line-height:1.75;}
+@media (max-width:1100px){.hero-grid,.guide-grid,.projects-grid,.idea-grid{grid-template-columns:1fr;}.idea-meta{grid-template-columns:1fr 1fr 1fr;}}
+@media (max-width:720px){.hero{padding:22px;}.panel,.domain-block{padding:18px;}.project-top,.domain-head,.idea-top{flex-direction:column;}.idea-meta{grid-template-columns:1fr;}}
 {% endblock %}
 
 {% block page_content %}
-<div class="hero">
-    <div>
-        <h2>Measure your topic-wise strength</h2>
-        <p>Take focused assessments, compare your latest scores, and keep improving weak areas before interviews and placement rounds.</p>
-    </div>
-    <div class="hero-badges">
-        <div class="hero-badge"><div class="hero-badge-num">{{ ready_topics }}</div><div class="hero-badge-label">Ready topics</div></div>
-        <div class="hero-badge"><div class="hero-badge-num">10</div><div class="hero-badge-label">Q per test</div></div>
-    </div>
-</div>
-
-<div class="section-title">Assessment Topics</div>
-<div class="topics-grid">
-    {% for item in latest_scores %}
-    {% with topic=item.topic score=item.score %}
-    <div class="topic-card">
-        <div class="topic-head">
-            <div class="topic-icon">
-                {% if topic.logo_image %}
-                <img src="{{ topic.logo_image.url }}" alt="{{ topic.name }}">
-                {% elif topic.logo_url %}
-                <img src="{{ topic.logo_url }}" alt="{{ topic.name }}">
-                {% else %}
-                {{ topic.icon }}
-                {% endif %}
+<div class="ideas-shell">
+    <div class="hero">
+        <div class="hero-grid">
+            <div>
+                <div class="eyebrow">Assessment Replaced</div>
+                <h2>Project Ideas for roles, domains, and real reference links</h2>
+                <p>This section now focuses on top project ideas instead of quizzes. Pick a project based on the role you want, the domain you like, and the official reference links you can use while building.</p>
             </div>
-            {% if score %}
-            <div class="topic-score {% if score.percentage >= 70 %}good{% elif score.percentage >= 40 %}avg{% else %}poor{% endif %}">{{ score.percentage }}%</div>
-            {% else %}
-            <div class="topic-score empty">Not taken</div>
-            {% endif %}
-        </div>
-        <div class="topic-name">{{ topic.name }}</div>
-        <div class="topic-sub">{{ topic.skillquestion_set.count }} questions available</div>
-        <div class="prog-bar"><div class="prog-fill" style="width:{% if score %}{{ score.percentage }}{% else %}0{% endif %}%;background:{% if score %}{% if score.percentage >= 70 %}#16a34a{% elif score.percentage >= 40 %}#d97706{% else %}#dc2626{% endif %}{% else %}#cbd5e1{% endif %};"></div></div>
-        <div class="topic-footer">
-            <div class="topic-last">{% if score %}Last: {{ score.assessed_at|date:"d M" }}{% else %}Not assessed yet{% endif %}</div>
-            {% if topic.skillquestion_set.count >= 5 %}
-            <a href="/assessment/start/{{ topic.id }}/" class="btn-start">{% if score %}Retake{% else %}Start{% endif %}</a>
-            {% else %}
-            <span class="btn-muted">Coming soon</span>
-            {% endif %}
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-num">{{ project_count }}</div>
+                    <div class="hero-stat-label">Project ideas</div>
+                    <div class="hero-stat-copy">Curated domain-wise ideas with tools, difficulty, database, and GitHub reference links.</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">{{ domain_count }}</div>
+                    <div class="hero-stat-label">Domains covered</div>
+                    <div class="hero-stat-copy">Browse web, AI/ML, data science, cloud, cybersecurity, Android, EdTech, and CareerTech ideas.</div>
+                </div>
+            </div>
         </div>
     </div>
-    {% endwith %}
-    {% empty %}
-    <div class="empty-card">No topics available yet.{% if request.user.is_superuser %}<div style="margin-top:10px;"><a href="/admin/assessment/skilltopic/add/" class="btn-start">Add Topic</a></div>{% endif %}</div>
-    {% endfor %}
+
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <div class="section-title">How to use this page</div>
+                <div class="section-sub">Start with a role, choose a domain that interests you, then open the official references and build one strong project instead of many small unfinished ones.</div>
+            </div>
+        </div>
+        <div class="guide-grid">
+            <div class="guide-card">
+                <div class="guide-step">Step 1</div>
+                <h3>Choose your target role</h3>
+                <p>Pick frontend, backend, full stack, or product-focused work first so your project looks intentional on a resume.</p>
+            </div>
+            <div class="guide-card">
+                <div class="guide-step">Step 2</div>
+                <h3>Select a useful domain</h3>
+                <p>EdTech, analytics, career tools, and dashboards are easier to explain in placements and interviews.</p>
+            </div>
+            <div class="guide-card">
+                <div class="guide-step">Step 3</div>
+                <h3>Use official references</h3>
+                <p>Each project includes trusted links so you can learn from the main product or framework documentation.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <div class="section-title">Featured picks</div>
+                <div class="section-sub">These are quick-start options pulled from the domain catalog so users can spot strong ideas fast.</div>
+            </div>
+        </div>
+        <div class="projects-grid">
+            {% for project in top_projects %}
+            <div class="project-card">
+                <div class="project-top">
+                    <div>
+                        <div class="project-name">{{ project.name }}</div>
+                        <div class="project-domain">{{ project.domain }}</div>
+                    </div>
+                    <div class="project-role">{{ project.role }}</div>
+                </div>
+                <div class="project-summary">{{ project.summary }}</div>
+                <div class="stack-box">
+                    <div class="stack-label">Tools / Stack</div>
+                    <div class="stack-copy">{{ project.stack }}</div>
+                </div>
+                <div class="bullet-list">
+                    {% for point in project.highlights %}
+                    <div class="bullet-item">{{ point }}</div>
+                    {% endfor %}
+                </div>
+                <div class="ref-list">
+                    {% for ref in project.references %}
+                    <a class="ref-link" href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">{{ ref.label }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="section-head">
+            <div>
+                <div class="section-title">Project ideas by domain</div>
+                <div class="section-sub">Every idea below includes the tools used and a GitHub reference from the workbook you shared, grouped by domain for easier browsing.</div>
+            </div>
+        </div>
+        <div class="domains-shell">
+            {% for domain in project_domains %}
+            <div class="domain-block">
+                <div class="domain-head">
+                    <div>
+                        <div class="domain-title">{{ domain.name }}</div>
+                        <div class="domain-copy">{{ domain.description }}</div>
+                    </div>
+                    <div class="domain-count">{{ domain.ideas|length }} ideas</div>
+                </div>
+                <div class="idea-grid">
+                    {% for idea in domain.ideas %}
+                    <div class="idea-card">
+                        <div class="idea-top">
+                            <div>
+                                <div class="idea-subdomain">{{ idea.subdomain }}</div>
+                                <div class="idea-name">{{ idea.name }}</div>
+                            </div>
+                            <div class="idea-impact">{{ idea.impact }}</div>
+                        </div>
+                        <div class="idea-summary">{{ idea.summary }}</div>
+                        <div class="stack-box">
+                            <div class="stack-label">Tools used</div>
+                            <div class="stack-copy">{{ idea.tools }}</div>
+                        </div>
+                        <div class="idea-meta">
+                            <div class="meta-box">
+                                <div class="meta-label">Language</div>
+                                <div class="meta-value">{{ idea.language }}</div>
+                            </div>
+                            <div class="meta-box">
+                                <div class="meta-label">Database</div>
+                                <div class="meta-value">{{ idea.database }}</div>
+                            </div>
+                            <div class="meta-box">
+                                <div class="meta-label">Difficulty</div>
+                                <div class="meta-value">{{ idea.difficulty }}</div>
+                            </div>
+                        </div>
+                        <a class="github-link" href="{{ idea.github_url }}" target="_blank" rel="noopener noreferrer">Open GitHub Reference</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="side-note">
+        <h3>Best approach</h3>
+        <p>One polished project with authentication, clean UI, database design, deployment-ready structure, and clear documentation is usually stronger than multiple simple mini-projects. Keep the project aligned with the role you want to apply for next.</p>
+    </div>
 </div>
 {% endblock %}

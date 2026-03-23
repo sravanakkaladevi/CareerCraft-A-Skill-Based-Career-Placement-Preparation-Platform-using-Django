@@ -1,92 +1,224 @@
 {% extends 'base_sidebar.html' %}
 {% block title %}{{ language.name }} Topics{% endblock %}
 {% block nav_learn %}active{% endblock %}
-{% block page_title %}{{ language.name }} Topics{% endblock %}
+{% block page_title %}{{ language.name }} Course{% endblock %}
 
 {% block page_css %}
-.hero{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:22px;display:flex;justify-content:space-between;gap:16px;align-items:center;}
-.hero-copy h2{font-size:24px;color:var(--text);margin-bottom:8px;}
-.hero-copy p{font-size:13px;color:var(--text-muted);line-height:1.7;max-width:640px;}
-.level-section{margin-bottom:20px;}
-.level-head{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-hint);font-weight:700;margin-bottom:12px;}
-.topic-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;}
-.topic-row{display:flex;justify-content:space-between;gap:14px;align-items:center;}
-.topic-title{font-size:16px;font-weight:600;color:var(--text);}
-.topic-meta{font-size:12px;color:var(--text-muted);margin-top:6px;}
-.resource-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
-.resource-link{font-size:11px;font-weight:700;color:#0f172a;background:#eef6ff;border:1px solid #dbeafe;border-radius:999px;padding:7px 10px;text-decoration:none;}
-.resource-link:hover{background:#dbeafe;}
-.empty-state{background:#fff;border:1px dashed #cbd5e1;border-radius:18px;padding:28px;text-align:center;color:var(--text-muted);}
+.course-shell{display:flex;flex-direction:column;gap:18px;}
+.hero{
+    background:linear-gradient(135deg,#0f172a 0%, color-mix(in srgb, var(--blue) 58%, #0f172a) 48%, color-mix(in srgb, var(--blue) 78%, #ffffff) 100%);
+    border-radius:24px;
+    padding:24px;
+    color:#fff;
+    box-shadow:0 24px 48px rgba(15,23,42,.14);
+}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.hero h2{font-size:30px;color:#fff;margin-bottom:10px;line-height:1.15;}
+.hero p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.85;max-width:760px;}
+.hero-stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.hero-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.14);
+    font-size:11px;
+    font-weight:800;
+}
+.resource-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.resource-link{
+    font-size:11px;
+    font-weight:800;
+    color:#fff;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    padding:8px 12px;
+    text-decoration:none;
+}
+.resource-link:hover{background:rgba(255,255,255,.16);}
+.layout{display:grid;grid-template-columns:minmax(0,1.15fr) 320px;gap:18px;align-items:start;}
+.panel,.side-panel{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 18px 40px rgba(15,23,42,.05);
+}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px;}
+.section-title{font-size:20px;font-weight:800;color:#0f172a;}
+.section-sub{font-size:12px;color:#64748b;line-height:1.75;max-width:680px;margin-top:4px;}
+.section-chip{
+    display:inline-flex;
+    align-items:center;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+.topic-group{margin-bottom:18px;}
+.topic-group:last-child{margin-bottom:0;}
+.group-title{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    color:#94a3b8;
+    margin-bottom:10px;
+}
+.topic-card{
+    border:1px solid #dbe5ef;
+    border-radius:18px;
+    padding:18px;
+    background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    margin-bottom:12px;
+}
+.topic-card:last-child{margin-bottom:0;}
+.topic-cover{
+    width:100%;
+    max-height:220px;
+    object-fit:cover;
+    border-radius:14px;
+    margin-bottom:14px;
+    border:1px solid #e2e8f0;
+    display:block;
+}
+.topic-row{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;}
+.topic-title{font-size:17px;font-weight:800;color:#0f172a;line-height:1.4;}
+.topic-meta{font-size:12px;color:#64748b;margin-top:6px;line-height:1.7;}
+.lesson-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.lesson-tag{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #dbe5ef;
+    color:#334155;
+    font-size:11px;
+    font-weight:700;
+}
+.empty-state{
+    background:#fff;
+    border:1px dashed #cbd5e1;
+    border-radius:18px;
+    padding:28px;
+    text-align:center;
+    color:var(--text-muted);
+}
+.side-panel{position:sticky;top:104px;}
+.side-title{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:12px;}
+.side-copy{font-size:12px;color:#64748b;line-height:1.75;margin-bottom:14px;}
+.start-card{
+    border:1px solid #dbe5ef;
+    border-radius:18px;
+    padding:16px;
+    background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+}
+.start-label{font-size:11px;font-weight:800;letter-spacing:.55px;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+.start-title{font-size:16px;font-weight:800;color:#0f172a;line-height:1.4;}
+.start-meta{font-size:12px;color:#64748b;line-height:1.7;margin:8px 0 14px;}
+@media (max-width:1100px){
+    .layout{grid-template-columns:1fr;}
+    .side-panel{position:static;}
+}
+@media (max-width:720px){
+    .hero,.panel,.side-panel{padding:18px;}
+    .hero-top,.topic-row,.section-head{flex-direction:column;align-items:flex-start;}
+    .hero h2{font-size:26px;}
+}
 {% endblock %}
 
 {% block page_content %}
-<div class="hero">
-    <div class="hero-copy">
-        <h2>{{ language.icon }} {{ language.name }}</h2>
-        <p>{{ language.description|default:"Learn the concepts in a simple order, then move into practice and revision." }}</p>
+<div class="course-shell">
+    <section class="hero">
+        <div class="hero-top">
+            <div>
+                <h2>{{ language.icon }} {{ language.name }} Course</h2>
+                <p>{{ language.description|default:"Learn this language in a structured course format with grouped topics, lesson navigation, and step-by-step reading." }}</p>
+            </div>
+            <a href="/learn/" class="btn btn-outline">All Tracks</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-pill">{{ total_topics }} topic{{ total_topics|pluralize }}</div>
+            <div class="hero-pill">{{ total_lessons }} lesson{{ total_lessons|pluralize }}</div>
+            <div class="hero-pill">Structured learning path</div>
+        </div>
         <div class="resource-row">
-            {% if language.tutorial_url %}<a href="{{ language.tutorial_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">W3Schools Tutorial</a>{% endif %}
+            {% if language.tutorial_url %}<a href="{{ language.tutorial_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Tutorial</a>{% endif %}
             {% if language.cheatsheet_url %}<a href="{{ language.cheatsheet_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Cheat Sheet</a>{% endif %}
-            {% if language.practice_url %}<a href="{{ language.practice_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Practice Programming</a>{% endif %}
+            {% if language.practice_url %}<a href="{{ language.practice_url }}" target="_blank" rel="noopener noreferrer" class="resource-link">Practice</a>{% endif %}
         </div>
-    </div>
-    <a href="/learn/" class="btn btn-outline">All Tracks</a>
-</div>
+    </section>
 
-<div class="level-section">
-    <div class="level-head">Beginner</div>
-    {% for topic in beginner %}
-    <div class="topic-card">
-        <div class="topic-row">
-            <div>
-                <div class="topic-title">{{ topic.title }}</div>
-                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+    <div class="layout">
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <div class="section-title">Course Modules</div>
+                    <div class="section-sub">Each topic acts like a course module. Open any module, then read its lessons inside the new course-style lesson page with left-side navigation.</div>
+                </div>
+                <div class="section-chip">{{ total_topics }} modules</div>
             </div>
-            {% with first_lesson=topic.lesson_set.first %}
-            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
-            {% endwith %}
-        </div>
-    </div>
-    {% empty %}
-    <div class="empty-state">No beginner topics added yet.</div>
-    {% endfor %}
-</div>
 
-<div class="level-section">
-    <div class="level-head">Intermediate</div>
-    {% for topic in intermediate %}
-    <div class="topic-card">
-        <div class="topic-row">
-            <div>
-                <div class="topic-title">{{ topic.title }}</div>
-                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+            {% for group in topic_groups %}
+            <div class="topic-group">
+                <div class="group-title">{{ group.title }}</div>
+                {% for topic in group.items %}
+                <div class="topic-card">
+                    {% if topic.cover_image %}
+                    <img src="{{ topic.cover_image.url }}" alt="{{ topic.title }}" class="topic-cover">
+                    {% endif %}
+                    <div class="topic-row">
+                        <div>
+                            <div class="topic-title">{{ topic.title }}</div>
+                            <div class="topic-meta">
+                                {{ topic.lesson_count }} lesson{{ topic.lesson_count|pluralize }} in this module
+                                {% if topic.summary %}<br>{{ topic.summary }}{% endif %}
+                            </div>
+                        </div>
+                        {% if topic.first_lesson %}
+                        <a href="/learn/lesson/{{ topic.first_lesson.id }}/" class="btn btn-primary">Open Module</a>
+                        {% else %}
+                        <span class="btn btn-outline">Coming Soon</span>
+                        {% endif %}
+                    </div>
+                    {% if topic.lessons %}
+                    <div class="lesson-tags">
+                        {% for lesson in topic.lessons %}
+                        <span class="lesson-tag">{{ forloop.counter }}. {{ lesson.title }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="empty-state">No {{ group.title|lower }} topics added yet.</div>
+                {% endfor %}
             </div>
-            {% with first_lesson=topic.lesson_set.first %}
-            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
-            {% endwith %}
-        </div>
-    </div>
-    {% empty %}
-    <div class="empty-state">No intermediate topics added yet.</div>
-    {% endfor %}
-</div>
+            {% endfor %}
+        </section>
 
-<div class="level-section">
-    <div class="level-head">Advanced</div>
-    {% for topic in advanced %}
-    <div class="topic-card">
-        <div class="topic-row">
-            <div>
-                <div class="topic-title">{{ topic.title }}</div>
-                <div class="topic-meta">{{ topic.lesson_set.count }} lesson{{ topic.lesson_set.count|pluralize }} in this topic</div>
+        <aside class="side-panel">
+            <div class="side-title">Start Here</div>
+            <div class="side-copy">Use the first available lesson to enter the course quickly, then continue reading with the left sidebar navigation inside the lesson page.</div>
+            <div class="start-card">
+                <div class="start-label">Recommended Start</div>
+                {% if first_topic_with_lesson %}
+                <div class="start-title">{{ first_topic_with_lesson.title }}</div>
+                <div class="start-meta">{{ first_topic_with_lesson.lesson_count }} lesson{{ first_topic_with_lesson.lesson_count|pluralize }} in this module.</div>
+                <a href="/learn/lesson/{{ first_topic_with_lesson.first_lesson.id }}/" class="btn btn-primary">Start Learning</a>
+                {% else %}
+                <div class="start-title">No lessons available yet</div>
+                <div class="start-meta">Add lessons in Django admin to activate this course track.</div>
+                <a href="/admin/learn/lesson/add/" class="btn btn-outline">Add Lesson</a>
+                {% endif %}
             </div>
-            {% with first_lesson=topic.lesson_set.first %}
-            {% if first_lesson %}<a href="/learn/lesson/{{ first_lesson.id }}/" class="btn btn-primary">Start Learning</a>{% else %}<span class="btn btn-outline">Coming Soon</span>{% endif %}
-            {% endwith %}
-        </div>
+        </aside>
     </div>
-    {% empty %}
-    <div class="empty-state">No advanced topics added yet.</div>
-    {% endfor %}
 </div>
 {% endblock %}

@@ -26,6 +26,23 @@
 .comment-user{font-size:14px;font-weight:600;color:var(--text);}
 .comment-date{font-size:11px;color:var(--text-hint);}
 .comment-body{font-size:13px;color:var(--text-muted);line-height:1.7;white-space:pre-line;}
+.comment-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.reaction-form{margin:0;}
+.reaction-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:#fff;
+    color:var(--text);
+    padding:7px 12px;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+}
+.reaction-btn.active.like{background:#ecfdf5;border-color:#86efac;color:#166534;}
+.reaction-btn.active.dislike{background:#fef2f2;border-color:#fca5a5;color:#b91c1c;}
 .comment-pending{margin-top:16px;padding-top:16px;border-top:1px dashed #cbd5e1;}
 .comment-empty{font-size:13px;color:var(--text-hint);}
 .related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
@@ -68,7 +85,7 @@
             {% csrf_token %}
             <textarea name="comment" placeholder="Share your thought after reading this post..."></textarea>
             <div style="margin-top:12px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
-                <div class="comment-date">{% if request.user.is_superuser %}Admin comments go live immediately.{% else %}Your comment will appear after admin approval.{% endif %}</div>
+                <div class="comment-date">Comments are published immediately.</div>
                 <button type="submit" class="btn btn-primary">Post Comment</button>
             </div>
         </form>
@@ -80,6 +97,22 @@
                     <div class="comment-date">{{ comment.created_at|date:"d M Y, H:i" }}</div>
                 </div>
                 <div class="comment-body">{{ comment.content }}</div>
+                <div class="comment-actions">
+                    <form method="post" action="/learn/blog/comment/{{ comment.id }}/like/" class="reaction-form">
+                        {% csrf_token %}
+                        <button type="submit" class="reaction-btn like {% if comment.user_reaction == 1 %}active{% endif %}">
+                            Like
+                            <span>{{ comment.like_count }}</span>
+                        </button>
+                    </form>
+                    <form method="post" action="/learn/blog/comment/{{ comment.id }}/dislike/" class="reaction-form">
+                        {% csrf_token %}
+                        <button type="submit" class="reaction-btn dislike {% if comment.user_reaction == -1 %}active{% endif %}">
+                            Dislike
+                            <span>{{ comment.dislike_count }}</span>
+                        </button>
+                    </form>
+                </div>
             </div>
             {% empty %}
             <div class="comment-empty">No comments yet. Be the first one to add a thought.</div>
