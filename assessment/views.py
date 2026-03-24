@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from accounts.models import UserProfile
+from accounts.personalization import filter_project_domains_for_profile, get_profile_summary
+
 
 PROJECT_DOMAINS = [
     {
@@ -311,10 +314,12 @@ def _idea_summary(idea):
 
 @login_required
 def assessment_home(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    personalized_domains = filter_project_domains_for_profile(PROJECT_DOMAINS, profile)
     featured_projects = []
     total_ideas = 0
 
-    for domain in PROJECT_DOMAINS:
+    for domain in personalized_domains:
         for idea in domain["ideas"]:
             idea["github_url"] = _github_url(idea["github"])
             idea["summary"] = _idea_summary(idea)
@@ -341,9 +346,13 @@ def assessment_home(request):
         "assessment/assessment.html",
         {
             "top_projects": featured_projects[:6],
-            "project_domains": PROJECT_DOMAINS,
+            "project_domains": personalized_domains,
             "project_count": total_ideas,
-            "domain_count": len(PROJECT_DOMAINS),
+            "domain_count": len(personalized_domains),
+            "profile_summary": get_profile_summary(profile),
+            "target_role_label": profile.get_target_role_display() if profile.target_role else "Student",
+            "target_domain_label": profile.get_target_domain_display() if profile.target_domain else "All domains",
+            "profile_complete": profile.is_profile_complete,
         },
     )
 

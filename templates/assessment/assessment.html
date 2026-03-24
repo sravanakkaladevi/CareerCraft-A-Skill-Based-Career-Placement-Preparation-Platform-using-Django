@@ -72,9 +72,9 @@
     <div class="hero">
         <div class="hero-grid">
             <div>
-                <div class="eyebrow">Assessment Replaced</div>
-                <h2>Project Ideas for roles, domains, and real reference links</h2>
-                <p>This section now focuses on top project ideas instead of quizzes. Pick a project based on the role you want, the domain you like, and the official reference links you can use while building.</p>
+                <div class="eyebrow">Personalized Projects</div>
+                <h2>{{ target_role_label }} project ideas for {{ target_domain_label }}</h2>
+                <p>{{ profile_summary }}</p>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
@@ -91,11 +91,17 @@
         </div>
     </div>
 
+    {% if not profile_complete %}
+    <div class="panel">
+        <div class="section-sub">Set your role, domain, and experience in <a href="/accounts/profile/">profile</a> to narrow project ideas even more.</div>
+    </div>
+    {% endif %}
+
     <div class="panel">
         <div class="section-head">
             <div>
                 <div class="section-title">How to use this page</div>
-                <div class="section-sub">Start with a role, choose a domain that interests you, then open the official references and build one strong project instead of many small unfinished ones.</div>
+                <div class="section-sub">Start with your target role, choose one strong idea, then use the reference links to build a polished project instead of collecting too many unfinished ones.</div>
             </div>
         </div>
         <div class="guide-grid">

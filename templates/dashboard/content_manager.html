@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+{% block title %}Content Manager{% endblock %}
+
+{% block extra_css %}
+<style>
+:root{
+    --admin-primary: {{ branding.admin_primary_color|default:"#185FA5" }};
+    --admin-accent: {{ branding.admin_accent_color|default:"#378ADD" }};
+    --admin-bg: {{ branding.admin_background_color|default:"#0F172A" }};
+    --admin-surface: {{ branding.admin_surface_color|default:"#1E293B" }};
+    --admin-border: color-mix(in srgb, var(--admin-primary) 28%, rgba(255,255,255,.12));
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:linear-gradient(180deg,color-mix(in srgb, var(--admin-bg) 92%, #000000) 0%, var(--admin-bg) 100%);color:#fff;min-height:100vh;}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:color-mix(in srgb, var(--admin-surface) 82%, #0b1220);border-bottom:1px solid var(--admin-border);gap:18px;}
+.logo{font-size:18px;font-weight:600;color:#fff;display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#f8fbff,#dbe7ff);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+.nav-link{padding:7px 14px;font-size:13px;color:rgba(255,255,255,0.6);border-radius:999px;text-decoration:none;border:1px solid transparent;}
+.nav-link:hover,.nav-link.active{background:color-mix(in srgb, var(--admin-primary) 20%, transparent);color:#fff;border-color:var(--admin-border);}
+.main{padding:28px 32px;display:grid;gap:20px;}
+.hero{background:var(--admin-surface);border:1px solid var(--admin-border);border-radius:16px;padding:22px;}
+.hero h1{font-size:24px;margin-bottom:8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+.card{background:var(--admin-surface);border:1px solid var(--admin-border);border-radius:16px;padding:20px;}
+.card h2{font-size:16px;margin-bottom:6px;}
+.card-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:16px;line-height:1.6;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,0.5);}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 12px;border-radius:12px;border:1px solid color-mix(in srgb, var(--admin-primary) 18%, rgba(148,163,184,.25));background:color-mix(in srgb, var(--admin-bg) 84%, #060b14);color:#fff;outline:none;}
+.form-group textarea{min-height:110px;resize:vertical;}
+.form-group input[type="checkbox"]{width:auto;}
+.check-row{display:flex;align-items:center;gap:10px;padding-top:6px;}
+.btn{border:none;border-radius:12px;padding:11px 16px;background:var(--admin-primary);color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.btn:hover{background:color-mix(in srgb, var(--admin-primary) 86%, #000000);}
+.btn-small{border:none;border-radius:999px;padding:8px 12px;background:#16a34a;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
+.msg{padding:12px 14px;border-radius:12px;font-size:13px;border:1px solid transparent;}
+.msg-success{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:#bbf7d0;}
+.msg-error,.msg-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.35);color:#bfdbfe;}
+.table-wrap{overflow:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.5px;padding:10px 0;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);}
+td{font-size:13px;color:rgba(255,255,255,0.75);padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+.wide{grid-column:1/-1;}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.anchor-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.anchor{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:color-mix(in srgb, var(--admin-primary) 16%, transparent);border:1px solid var(--admin-border);color:#dbeafe;text-decoration:none;font-size:12px;font-weight:700;}
+@media (max-width:1100px){.grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}.wide{grid-column:auto;}.navbar,.main{padding-left:18px;padding-right:18px;}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+    <a href="/dashboard/admin-dashboard/" class="logo">
+        <div class="logo-mark">
+            {% if branding.logo %}
+            <img src="{{ branding.logo.url }}" alt="{{ branding.company_name }}">
+            {% endif %}
+        </div>
+        <div>{{ branding.company_name|default:"CareerCraft" }}</div>
+    </a>
+    <div class="nav-links">
+        <a href="/dashboard/admin-dashboard/" class="nav-link">Admin Home</a>
+        <a href="/dashboard/content-manager/" class="nav-link active">Content Manager</a>
+        <a href="/dashboard/" class="nav-link">User Dashboard</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="hero">
+        <h1>Content Manager</h1>
+        <p>Manage the main platform content from one place instead of jumping into Django admin for every small update.</p>
+        <div class="anchor-row">
+            <a href="#branding" class="anchor">Branding</a>
+            <a href="#interview" class="anchor">Interview</a>
+            <a href="#assessment" class="anchor">Assessment</a>
+            <a href="#blog" class="anchor">Blog</a>
+            <a href="#comments" class="anchor">Comments</a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="msg {% if message.tags == 'success' %}msg-success{% else %}msg-info{% endif %}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="grid">
+        <div class="card wide" id="branding">
+            <div class="section-head">
+                <div>
+                    <h2>Site Branding</h2>
+                    <div class="card-sub">Update name, tagline, and logo without leaving the admin panel.</div>
+                </div>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="save_branding">
+                <div class="form-grid">
+                    {% for field in branding_form %}
+                    <div class="form-group {% if field.name == 'tagline' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Save Branding</button>
+            </form>
+        </div>
+
+        <div class="card" id="interview">
+            <h2>Add Interview Category</h2>
+            <div class="card-sub">Create a new interview category directly in your admin panel.</div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_interview_category">
+                <div class="form-grid">
+                    {% for field in interview_category_form %}
+                    <div class="form-group {% if field.name == 'description' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Create Category</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Add Interview Question</h2>
+            <div class="card-sub">Add question text, options, answer, and explanation without Django admin.</div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_interview_question">
+                <div class="form-grid">
+                    {% for field in interview_question_form %}
+                    <div class="form-group {% if field.name == 'question_text' or field.name == 'explanation' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Create Question</button>
+            </form>
+        </div>
+
+        <div class="card" id="assessment">
+            <h2>Add Assessment Topic</h2>
+            <div class="card-sub">Create a new skill assessment topic from the same content manager.</div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_assessment_topic">
+                <div class="form-grid">
+                    {% for field in assessment_topic_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Create Topic</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Add Assessment Question</h2>
+            <div class="card-sub">Add assessment questions here instead of opening Django admin forms.</div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_assessment_question">
+                <div class="form-grid">
+                    {% for field in assessment_question_form %}
+                    <div class="form-group {% if field.name == 'question_text' or field.name == 'explanation' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Create Assessment Question</button>
+            </form>
+        </div>
+
+        <div class="card wide" id="blog">
+            <h2>Add Blog Post</h2>
+            <div class="card-sub">Publish new blog/news content directly from your branded admin page.</div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_blog_post">
+                <div class="form-grid">
+                    {% for field in blog_post_form %}
+                    <div class="form-group {% if field.name == 'summary' or field.name == 'content' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.name == 'published' %}
+                        <div class="check-row">{{ field }} <span>Publish now</span></div>
+                        {% else %}
+                        {{ field }}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn">Create Blog Post</button>
+            </form>
+        </div>
+
+        <div class="card wide" id="comments">
+            <div class="section-head">
+                <div>
+                    <h2>Pending Blog Comments</h2>
+                    <div class="card-sub">Approve comments from here instead of the Django admin list page.</div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Post</th>
+                            <th>Comment</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comment in pending_comments %}
+                        <tr>
+                            <td>{{ comment.user.username }}</td>
+                            <td>{{ comment.post.title }}</td>
+                            <td>{{ comment.content }}</td>
+                            <td>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="approve_comment">
+                                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                    <button type="submit" class="btn-small">Approve</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4">No pending comments.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card wide">
+            <h2>Recent Content</h2>
+            <div class="card-sub">Quick visibility into what was added recently.</div>
+            <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;">
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th colspan="2">Interview Questions</th></tr></thead>
+                        <tbody>
+                            {% for item in recent_questions %}
+                            <tr><td>{{ item.category.name }}</td><td>{{ item.question_text|truncatechars:90 }}</td></tr>
+                            {% empty %}
+                            <tr><td colspan="2">No interview questions yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th colspan="2">Assessment Questions</th></tr></thead>
+                        <tbody>
+                            {% for item in recent_assessment_questions %}
+                            <tr><td>{{ item.topic.name }}</td><td>{{ item.question_text|truncatechars:90 }}</td></tr>
+                            {% empty %}
+                            <tr><td colspan="2">No assessment questions yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th colspan="2">Interview Categories</th></tr></thead>
+                        <tbody>
+                            {% for item in recent_categories %}
+                            <tr><td>{{ item.name }}</td><td>{{ item.description|default:"-"|truncatechars:80 }}</td></tr>
+                            {% empty %}
+                            <tr><td colspan="2">No categories yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th colspan="2">Assessment Topics</th></tr></thead>
+                        <tbody>
+                            {% for item in recent_topics %}
+                            <tr><td>{{ item.name }}</td><td>{{ item.icon }}</td></tr>
+                            {% empty %}
+                            <tr><td colspan="2">No assessment topics yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-wrap" style="grid-column:1/-1;">
+                    <table>
+                        <thead><tr><th>Blog Post</th><th>Category</th><th>Author</th><th>Status</th></tr></thead>
+                        <tbody>
+                            {% for item in recent_posts %}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.get_category_display }}</td>
+                                <td>{{ item.author.username|default:"-" }}</td>
+                                <td>{% if item.published %}Published{% else %}Draft{% endif %}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4">No blog posts yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

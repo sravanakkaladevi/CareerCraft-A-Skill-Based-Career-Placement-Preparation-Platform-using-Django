@@ -29,6 +29,10 @@
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .section-label{font-size:11px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:12px;}
 .quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+.profile-pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px;}
+.profile-pill{background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:999px;padding:10px 14px;font-size:12px;color:var(--text-muted);box-shadow:0 18px 40px rgba(15,23,42,.05);}
+.setup-note{background:rgba(255,255,255,.92);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:18px;padding:16px 18px;margin-bottom:20px;color:var(--text-muted);line-height:1.7;box-shadow:0 18px 40px rgba(15,23,42,.05);}
+.setup-note a{color:var(--blue);font-weight:700;text-decoration:none;}
 .qa{background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:18px;padding:18px;text-align:left;text-decoration:none;display:block;transition:.18s;box-shadow:0 18px 40px rgba(15,23,42,.05);}
 .qa:hover{border-color:color-mix(in srgb, var(--blue) 30%, #ffffff);transform:translateY(-2px);}
 .qa-icon{width:48px;height:48px;border-radius:14px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
@@ -42,13 +46,26 @@
 <div class="welcome-banner">
     <div class="welcome-text">
         <h2>Good day, {{ request.user.username }}</h2>
-        <p>Your preparation hub is ready. Track skills, keep improving weak topics, and stay consistent with interviews and roadmap progress.</p>
+        <p>{{ profile_summary }}</p>
     </div>
     <div class="welcome-badge">
         <div class="welcome-badge-num">{% if avg_score %}{{ avg_score }}%{% else %}0%{% endif %}</div>
         <div class="welcome-badge-label">Readiness</div>
     </div>
 </div>
+
+<div class="profile-pill-row">
+    <div class="profile-pill">Role: {{ target_role_label }}</div>
+    <div class="profile-pill">Domain: {{ target_domain_label }}</div>
+    <div class="profile-pill">Experience: {{ experience_level_label }}</div>
+</div>
+
+{% if not profile_complete %}
+<div class="setup-note">
+    Complete your profile to make the dashboard more focused for each student.
+    <a href="/accounts/profile/">Update profile</a>
+</div>
+{% endif %}
 
 <div class="stats">
     <div class="stat">
@@ -102,9 +119,8 @@
 
 <div class="section-label">Quick Actions</div>
 <div class="quick">
-    <a href="/resume/" class="qa"><div class="qa-icon"><box-icon name="file" color="{{ active_theme_color|default:'#185FA5' }}"></box-icon></div><div class="qa-label">Resume Builder</div><div class="qa-sub">Build and download a polished PDF resume.</div></a>
-    <a href="/resume/ats/" class="qa"><div class="qa-icon"><box-icon name="search-alt-2" color="{{ active_theme_color|default:'#185FA5' }}"></box-icon></div><div class="qa-label">ATS Analyzer</div><div class="qa-sub">Check how your resume matches job keywords.</div></a>
-    <a href="/interview/" class="qa"><div class="qa-icon"><box-icon name="target-lock" color="{{ active_theme_color|default:'#185FA5' }}"></box-icon></div><div class="qa-label">Mock Interview</div><div class="qa-sub">Practice timed MCQs and review explanations.</div></a>
-    <a href="/assessment/" class="qa"><div class="qa-icon"><box-icon name="bulb" color="{{ active_theme_color|default:'#185FA5' }}"></box-icon></div><div class="qa-label">Project Ideas</div><div class="qa-sub">Explore top projects by role, domain, and official reference links.</div></a>
+    {% for action in quick_actions %}
+    <a href="{{ action.href }}" class="qa"><div class="qa-icon"><box-icon name="{{ action.icon }}" color="{{ active_theme_color|default:'#185FA5' }}"></box-icon></div><div class="qa-label">{{ action.label }}</div><div class="qa-sub">{{ action.subtext }}</div></a>
+    {% endfor %}
 </div>
 {% endblock %}

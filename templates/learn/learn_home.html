@@ -29,8 +29,8 @@
 {% block page_content %}
 <div class="hero">
     <div>
-        <h2>Build skills one topic at a time</h2>
-        <p>Use the Learn Hub for structured language tracks, lesson-wise notes, and quick revision before assessments and interviews.</p>
+        <h2>{{ target_role_label }} learning path</h2>
+        <p>{{ profile_summary }}</p>
     </div>
     <div class="hero-stats">
         <div class="hero-stat"><div class="hero-num">{{ languages|length }}</div><div class="hero-lbl">Tracks</div></div>
@@ -38,7 +38,7 @@
     </div>
 </div>
 <div class="card">
-    <div class="card-title">Available Learning Tracks</div>
+    <div class="card-title">Recommended Learning Tracks</div>
     <div class="lang-grid">
         {% for language in languages %}
         <a href="/learn/language/{{ language.id }}/" class="lang-card">

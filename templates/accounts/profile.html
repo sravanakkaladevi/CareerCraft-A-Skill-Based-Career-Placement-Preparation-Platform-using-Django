@@ -11,6 +11,12 @@
 .profile-name{font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px;}
 .profile-email{font-size:13px;color:var(--text-hint);margin-bottom:16px;}
 .theme-preview{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--blue-dark));margin:16px 0 18px;}
+.admin-theme-preview{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin:10px 0 14px;}
+.admin-theme-panel{border-radius:16px;padding:14px;border:1px solid transparent;min-height:92px;}
+.admin-theme-panel.top{background:color-mix(in srgb, var(--admin-surface-preview) 82%, #0b1220);border-color:color-mix(in srgb, var(--admin-primary-preview) 28%, rgba(255,255,255,.12));}
+.admin-theme-panel.bottom{background:var(--admin-surface-preview);border-color:color-mix(in srgb, var(--admin-primary-preview) 28%, rgba(255,255,255,.12));}
+.swatch-row{display:flex;gap:8px;margin-top:10px;}
+.swatch{width:30px;height:30px;border-radius:10px;border:1px solid rgba(255,255,255,.18);}
 .info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;}
 .info-row:last-child{border:none;}
 .info-label{color:var(--text-hint);}
@@ -18,13 +24,23 @@
 .form-group{margin-bottom:14px;}
 .form-group label{font-size:11px;color:var(--text-muted);display:block;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;}
 .form-group input{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:12px;font-size:13px;color:var(--text);background:#fff;font-family:'Poppins',sans-serif;outline:none;transition:.2s;}
-.form-group input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.08);}
+.form-group select{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:12px;font-size:13px;color:var(--text);background:#fff;font-family:'Poppins',sans-serif;outline:none;transition:.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.08);}
 .form-actions{display:flex;gap:12px;flex-wrap:wrap;}
 .btn-blue{background:var(--blue);color:#fff;border:none;padding:11px 18px;border-radius:12px;font-size:13px;cursor:pointer;font-weight:600;transition:.2s;}
 .btn-blue:hover{background:var(--blue-dark);}
 .hint{font-size:12px;color:var(--text-hint);line-height:1.6;margin-top:4px;}
 .avatar-upload{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
 .theme-color-input{height:48px;padding:6px;}
+.pending-note{margin-top:14px;padding:14px 16px;border-radius:14px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-size:12px;line-height:1.7;}
+.status-card{margin-top:14px;padding:14px 16px;border-radius:14px;font-size:12px;line-height:1.7;border:1px solid transparent;}
+.status-pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
+.status-card.pending{background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a;}
+.status-card.pending .status-pill{background:#dbeafe;color:#1d4ed8;}
+.status-card.accepted{background:#ecfdf3;border-color:#bbf7d0;color:#166534;}
+.status-card.accepted .status-pill{background:#dcfce7;color:#166534;}
+.status-card.rejected{background:#fef2f2;border-color:#fecaca;color:#991b1b;}
+.status-card.rejected .status-pill{background:#fee2e2;color:#b91c1c;}
 @media (max-width:900px){.profile-layout{grid-template-columns:1fr;}}
 {% endblock %}
 
@@ -43,8 +59,39 @@
         <div class="theme-preview"></div>
         <div class="info-row">
             <span class="info-label">Role</span>
-            <span class="info-value">{% if request.user.is_superuser %}Admin{% else %}Student{% endif %}</span>
+            <span class="info-value">
+                {% if request.user.is_superuser %}
+                Admin
+                {% elif user_profile.target_role %}
+                {{ user_profile.get_target_role_display }}
+                {% else %}
+                Student
+                {% endif %}
+            </span>
         </div>
+        <div class="info-row">
+            <span class="info-label">Domain</span>
+            <span class="info-value">{{ user_profile.get_target_domain_display|default:"Not set" }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Experience</span>
+            <span class="info-value">{{ user_profile.get_experience_level_display }}</span>
+        </div>
+        {% if profile_change_status_meta %}
+        <div class="status-card {{ profile_change_status_meta.css }}">
+            <div class="status-pill">{{ profile_change_status_meta.label }}</div>
+            <div>{{ profile_change_status_meta.message }}</div>
+            {% if pending_profile_change_summary %}
+            <div style="margin-top:6px;"><strong>Request:</strong> {{ pending_profile_change_summary }}</div>
+            {% endif %}
+            {% if user_profile.role_change_requested_at %}
+            <div style="margin-top:6px;"><strong>Requested:</strong> {{ user_profile.role_change_requested_at|date:"d M Y, H:i" }}</div>
+            {% endif %}
+            {% if user_profile.role_change_reviewed_at %}
+            <div style="margin-top:4px;"><strong>Reviewed:</strong> {{ user_profile.role_change_reviewed_at|date:"d M Y, H:i" }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
         <div class="info-row">
             <span class="info-label">Joined</span>
             <span class="info-value">{{ request.user.date_joined|date:"d M Y" }}</span>
@@ -90,10 +137,66 @@
                     <input type="email" name="email" value="{{ request.user.email }}">
                 </div>
                 <div class="form-group">
+                    <label>Target role</label>
+                    <select name="target_role" required>
+                        {% for value, label in role_choices %}
+                        <option value="{{ value }}" {% if user_profile.target_role == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="hint">Domain is now selected automatically from the role to avoid confusing combinations.</div>
+                </div>
+                <div class="form-group">
+                    <label>Experience level</label>
+                    <select name="experience_level" required>
+                        {% for value, label in experience_choices %}
+                        <option value="{{ value }}" {% if user_profile.experience_level == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="hint">We use this to decide whether to prioritize fundamentals or higher-level interview topics.</div>
+                </div>
+                <div class="form-group">
                     <label>Theme color</label>
                     <input type="color" name="theme_color" value="{{ user_profile.theme_color|default:'#185FA5' }}" class="theme-color-input">
                     <div class="hint">This color now styles your top navigation and accents across the app.</div>
                 </div>
+                {% if request.user.is_superuser and site_branding %}
+                <div class="form-group" style="--admin-primary-preview: {{ site_branding.admin_primary_color|default:'#185FA5' }}; --admin-surface-preview: {{ site_branding.admin_surface_color|default:'#1E293B' }};">
+                    <label>Admin Theme Customizer</label>
+                    <div class="admin-theme-preview">
+                        <div class="admin-theme-panel top">
+                            <div style="font-size:12px;font-weight:700;color:#fff;">Admin Navbar Preview</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;">Live colors for admin home and content manager.</div>
+                            <div class="swatch-row">
+                                <div class="swatch" style="background:{{ site_branding.admin_primary_color|default:'#185FA5' }};"></div>
+                                <div class="swatch" style="background:{{ site_branding.admin_accent_color|default:'#378ADD' }};"></div>
+                                <div class="swatch" style="background:{{ site_branding.admin_background_color|default:'#0F172A' }};"></div>
+                                <div class="swatch" style="background:{{ site_branding.admin_surface_color|default:'#1E293B' }};"></div>
+                            </div>
+                        </div>
+                        <div class="admin-theme-panel bottom" style="background:{{ site_branding.admin_background_color|default:'#0F172A' }};">
+                            <div style="font-size:12px;font-weight:700;color:#fff;">Background Preview</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;">This controls the admin page shell and card feel.</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Admin primary color</label>
+                        <input type="color" name="admin_primary_color" value="{{ site_branding.admin_primary_color|default:'#185FA5' }}" class="theme-color-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Admin accent color</label>
+                        <input type="color" name="admin_accent_color" value="{{ site_branding.admin_accent_color|default:'#378ADD' }}" class="theme-color-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Admin background color</label>
+                        <input type="color" name="admin_background_color" value="{{ site_branding.admin_background_color|default:'#0F172A' }}" class="theme-color-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Admin surface color</label>
+                        <input type="color" name="admin_surface_color" value="{{ site_branding.admin_surface_color|default:'#1E293B' }}" class="theme-color-input">
+                    </div>
+                    <div class="hint">These colors customize the admin dashboard and content manager theme.</div>
+                </div>
+                {% endif %}
                 <div class="form-actions">
                     <button type="submit" class="btn-blue">Save Profile</button>
                 </div>

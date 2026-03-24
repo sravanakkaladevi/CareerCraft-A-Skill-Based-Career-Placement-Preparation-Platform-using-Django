@@ -42,8 +42,8 @@
 {% block page_content %}
 <div class="hero">
     <div class="hero-text">
-        <h2>Practice makes placement</h2>
-        <p>Choose a topic, answer 20 MCQs with a timer, and get instant feedback with explanations.</p>
+        <h2>{{ target_role_label }} interview practice</h2>
+        <p>{{ profile_summary }}</p>
     </div>
     <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-num">{{ total_tests }}</div><div class="hero-stat-label">Tests taken</div></div>
@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<div class="section-title">Select a category to start</div>
+<div class="section-title">Recommended categories for your profile</div>
 <div class="cat-grid">
     {% for cat in categories %}
     <div class="cat-card">

@@ -387,11 +387,11 @@
                 </div>
                 <div class="hero-eyebrow">
                     <box-icon name="compass" size="16px" color="#ffffff"></box-icon>
-                    Professional Placement Roadmap
+                    {{ target_role_label }} Roadmap
                 </div>
                 <div>
-                    <h2>Your roadmap should look like a product dashboard, not a draft worksheet.</h2>
-                    <p>Track readiness, focus on the next milestone, and explore roadmap tracks in a cleaner, brand-first layout. This version brings stronger visual hierarchy, branded identity, and easier scanning for students and recruiters.</p>
+                    <h2>A cleaner roadmap for your role and placement path.</h2>
+                    <p>{{ profile_summary }}</p>
                 </div>
                 <div class="hero-actions">
                     <a href="/resume/" class="hero-action primary"><box-icon name="file" size="18px" color="#0f172a"></box-icon>Resume Builder</a>
@@ -417,7 +417,7 @@
                     </div>
                 </div>
                 <div class="hero-note">
-                    The roadmap now leads with brand identity, a cleaner metric block, and structured cards so the page feels more professional and presentable during demos.
+                    This roadmap now highlights the tracks that match your role first, so students do not get lost in every category at once.
                 </div>
             </div>
         </div>
@@ -431,7 +431,7 @@
                         <div class="section-icon"><box-icon name="map-alt" color="currentColor"></box-icon></div>
                         <div>
                             <div class="section-title">Roadmap Explorer</div>
-                            <div class="section-sub">Open the most relevant placement tracks first, then use the full catalog only when you want to dive deeper into a stack, framework, or role.</div>
+                            <div class="section-sub">Open the most relevant role-based tracks first, then use the full catalog only when you want to go deeper into your stack.</div>
                         </div>
                     </div>
                     <div class="section-chip">{{ spotlight_paths|length }} quick tracks</div>
@@ -439,7 +439,7 @@
                 <div class="explorer-shell">
                     <div class="explorer-panel">
                         <h3>Recommended starting paths</h3>
-                        <p>The fastest way to make this page useful is to reduce clutter and highlight the tracks that matter most for placement readiness. These spotlight links give users a clean starting point before they open the full roadmap catalog below.</p>
+                        <p>These quick links are filtered to your current role so the roadmap stays focused and easier to follow.</p>
                     </div>
                     <div class="explorer-panel">
                         <div class="spotlight-wrap">
@@ -457,7 +457,7 @@
                         <div class="section-icon"><box-icon name="library" color="currentColor"></box-icon></div>
                         <div>
                             <div class="section-title">Explore Roadmap Categories</div>
-                            <div class="section-sub">The catalog is now arranged inside cleaner expandable cards so users can browse by domain without feeling overwhelmed by too many links at once.</div>
+                            <div class="section-sub">Only the roadmap groups that best match your selected role and domain are shown here.</div>
                         </div>
                     </div>
                     <div class="section-chip">{{ roadmap_catalog|length }} categories</div>

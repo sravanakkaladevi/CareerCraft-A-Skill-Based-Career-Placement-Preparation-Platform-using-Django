@@ -2,14 +2,19 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
+from accounts.models import UserProfile
+from accounts.personalization import filter_languages_for_profile, get_profile_summary
 from .models import Language, Topic, Lesson, BlogPost, BlogComment, BlogCommentReaction
 
 
 @login_required
 def learn_home(request):
-    languages = Language.objects.all()
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    languages = filter_languages_for_profile(Language.objects.all(), profile)
     return render(request, 'learn/learn_home.html', {
         'languages': languages,
+        'profile_summary': get_profile_summary(profile),
+        'target_role_label': profile.get_target_role_display() if profile.target_role else 'Student',
     })
 
 

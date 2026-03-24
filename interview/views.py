@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.safestring import mark_safe
 
+from accounts.models import UserProfile
+from accounts.personalization import filter_categories_for_profile, get_profile_summary
+
 from .models import Category, MockResult, Question
 
 
@@ -49,7 +52,8 @@ def _display_icon(category_or_icon, name=None):
 
 @login_required
 def interview_home(request):
-    categories = Category.objects.all()
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    categories = filter_categories_for_profile(Category.objects.all(), profile)
     recent_results = MockResult.objects.filter(user=request.user)[:5]
     total_tests = MockResult.objects.filter(user=request.user).count()
     for category in categories:
@@ -63,12 +67,18 @@ def interview_home(request):
             "categories": categories,
             "recent_results": recent_results,
             "total_tests": total_tests,
+            "profile_summary": get_profile_summary(profile),
+            "target_role_label": profile.get_target_role_display() if profile.target_role else "Student",
         },
     )
 
 
 @login_required
 def start_test(request, category_id):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    allowed_ids = {category.id for category in filter_categories_for_profile(Category.objects.all(), profile)}
+    if category_id not in allowed_ids:
+        return redirect("interview_home")
     category = get_object_or_404(Category, id=category_id)
     questions = list(Question.objects.filter(category=category))
     if len(questions) < 5:

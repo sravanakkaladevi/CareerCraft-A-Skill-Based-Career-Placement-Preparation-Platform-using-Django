@@ -8,6 +8,10 @@ class SiteBranding(models.Model):
         default="Skill-Based Placement Prep Platform",
     )
     logo = models.ImageField(upload_to="branding/", blank=True, null=True)
+    admin_primary_color = models.CharField(max_length=7, default="#185FA5")
+    admin_accent_color = models.CharField(max_length=7, default="#378ADD")
+    admin_background_color = models.CharField(max_length=7, default="#0F172A")
+    admin_surface_color = models.CharField(max_length=7, default="#1E293B")
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -26,5 +30,9 @@ class SiteBranding(models.Model):
         defaults = {
             "company_name": "CareerCraft",
             "tagline": "Skill-Based Placement Prep Platform",
+            "admin_primary_color": "#185FA5",
+            "admin_accent_color": "#378ADD",
+            "admin_background_color": "#0F172A",
+            "admin_surface_color": "#1E293B",
         }
         return cls.objects.get_or_create(pk=1, defaults=defaults)[0]

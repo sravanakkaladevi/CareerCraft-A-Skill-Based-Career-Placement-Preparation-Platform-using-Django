@@ -1,5 +1,12 @@
 from django.db.models import Count
 
+from accounts.personalization import (
+    filter_categories_for_profile,
+    filter_languages_for_profile,
+    filter_roadmap_catalog_for_profile,
+    filter_spotlight_paths_for_profile,
+    get_profile_summary,
+)
 from interview.models import Category, MockResult
 from learn.models import Language, Topic
 
@@ -28,15 +35,16 @@ def _roadmap_item(title, slug, badge="Roadmap"):
     }
 
 
-def build_user_roadmap(user, resume_built=False):
+def build_user_roadmap(user, resume_built=False, profile=None):
     results = MockResult.objects.filter(user=user).select_related("category")
     total_tests = results.count()
     avg_score = int(sum(r.percentage for r in results) / total_tests) if total_tests else 0
     strong_scores = results.filter(percentage__gte=70).count()
+    category_pool = filter_categories_for_profile(Category.objects.all(), profile) if profile else list(Category.objects.all())
 
     skill_cards = []
     weak_skills = []
-    for category in Category.objects.all():
+    for category in category_pool:
         category_results = results.filter(category=category)
         attempts = category_results.count()
         avg = int(sum(r.percentage for r in category_results) / attempts) if attempts else 0
@@ -144,10 +152,11 @@ def build_user_roadmap(user, resume_built=False):
         next_steps.append("Keep taking mock tests weekly to maintain momentum.")
 
     learning_tracks = []
-    languages = Language.objects.annotate(
+    language_queryset = Language.objects.annotate(
         topic_count=Count("topic", distinct=True),
         lesson_count=Count("topic__lesson", distinct=True),
     ).order_by("order", "name")
+    languages = filter_languages_for_profile(language_queryset, profile) if profile else list(language_queryset)
 
     for language in languages:
         topics = list(
@@ -168,11 +177,11 @@ def build_user_roadmap(user, resume_built=False):
             }
         )
 
-    featured_topics = list(
-        Topic.objects.select_related("language")
-        .annotate(lesson_count=Count("lesson", distinct=True))
-        .order_by("language__order", "order", "title")[:8]
-    )
+    featured_topics_queryset = Topic.objects.select_related("language").annotate(lesson_count=Count("lesson", distinct=True))
+    if profile:
+        allowed_language_ids = {language.id for language in languages}
+        featured_topics_queryset = featured_topics_queryset.filter(language_id__in=allowed_language_ids)
+    featured_topics = list(featured_topics_queryset.order_by("language__order", "order", "title")[:8])
 
     if featured_topics and total_tests < 2:
         next_steps.insert(
@@ -367,6 +376,9 @@ def build_user_roadmap(user, resume_built=False):
         _roadmap_item("DevOps Foundation", "devops", "Recommended"),
         _roadmap_item("AI Engineer Track", "ai-engineer", "Recommended"),
     ]
+    if profile:
+        roadmap_catalog = filter_roadmap_catalog_for_profile(roadmap_catalog, profile)
+        spotlight_paths = filter_spotlight_paths_for_profile(spotlight_paths, profile)
 
     return {
         "overall_ready": overall_ready,
@@ -382,4 +394,6 @@ def build_user_roadmap(user, resume_built=False):
         "featured_topics": featured_topics,
         "roadmap_catalog": roadmap_catalog,
         "spotlight_paths": spotlight_paths,
+        "profile_summary": get_profile_summary(profile) if profile else "",
+        "target_role_label": profile.get_target_role_display() if profile and profile.target_role else "Student",
     }

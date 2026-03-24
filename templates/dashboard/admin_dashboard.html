@@ -3,9 +3,16 @@
 
 {% block extra_css %}
 <style>
+:root{
+    --admin-primary: {{ branding.admin_primary_color|default:"#185FA5" }};
+    --admin-accent: {{ branding.admin_accent_color|default:"#378ADD" }};
+    --admin-bg: {{ branding.admin_background_color|default:"#0F172A" }};
+    --admin-surface: {{ branding.admin_surface_color|default:"#1E293B" }};
+    --admin-border: color-mix(in srgb, var(--admin-primary) 28%, rgba(255,255,255,.12));
+}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0f172a;color:#fff;min-height:100vh;}
-.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#111827;border-bottom:1px solid rgba(24,95,165,0.3);gap:18px;}
+body{background:linear-gradient(180deg,color-mix(in srgb, var(--admin-bg) 92%, #000000) 0%, var(--admin-bg) 100%);color:#fff;min-height:100vh;}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:color-mix(in srgb, var(--admin-surface) 82%, #0b1220);border-bottom:1px solid var(--admin-border);gap:18px;}
 .logo{font-size:18px;font-weight:600;color:#fff;display:flex;align-items:center;gap:12px;min-width:0;}
 .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#f8fbff,#dbe7ff);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
 .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -16,40 +23,47 @@ body{background:#0f172a;color:#fff;min-height:100vh;}
 .logo-sub{font-size:11px;color:rgba(255,255,255,0.35);}
 .nav-links{display:flex;gap:4px;flex-wrap:wrap;}
 .nav-link{padding:7px 14px;font-size:13px;color:rgba(255,255,255,0.6);border-radius:999px;text-decoration:none;border:1px solid transparent;}
-.nav-link:hover,.nav-link.active{background:rgba(24,95,165,0.2);color:#fff;border-color:rgba(24,95,165,0.3);}
+.nav-link:hover,.nav-link.active{background:color-mix(in srgb, var(--admin-primary) 20%, transparent);color:#fff;border-color:var(--admin-border);}
 .nav-right{display:flex;align-items:center;gap:12px;}
-.avatar{width:34px;height:34px;border-radius:50%;background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
-.badge-admin{font-size:11px;background:rgba(24,95,165,0.3);color:#378ADD;padding:3px 10px;border-radius:20px;border:1px solid rgba(24,95,165,0.4);}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--admin-primary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+.badge-admin{font-size:11px;background:color-mix(in srgb, var(--admin-primary) 28%, transparent);color:var(--admin-accent);padding:3px 10px;border-radius:20px;border:1px solid var(--admin-border);}
 .admin-logout{width:130px;flex-shrink:0;}
 {% include 'partials/sidebar_logout_button_css.html' %}
 .main{padding:28px 32px;}
 .page-title{font-size:20px;font-weight:600;margin-bottom:4px;}
 .page-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
-.stat{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:18px;}
+.stat{background:var(--admin-surface);border:1px solid var(--admin-border);border-radius:10px;padding:18px;}
 .stat-label{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;}
 .stat-val{font-size:28px;font-weight:600;}
-.blue{color:#378ADD;}
+.blue{color:var(--admin-accent);}
 .green{color:#4ade80;}
 .amber{color:#fbbf24;}
 .red{color:#f87171;}
-.card{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:20px;margin-bottom:20px;}
+.card{background:var(--admin-surface);border:1px solid var(--admin-border);border-radius:10px;padding:20px;margin-bottom:20px;}
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .card-title{font-size:15px;font-weight:600;color:rgba(255,255,255,0.9);}
-.card-badge{font-size:11px;background:rgba(24,95,165,0.2);color:#378ADD;padding:3px 10px;border-radius:20px;}
+.card-badge{font-size:11px;background:color-mix(in srgb, var(--admin-primary) 20%, transparent);color:var(--admin-accent);padding:3px 10px;border-radius:20px;}
 table{width:100%;border-collapse:collapse;}
 th{font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.5px;padding:8px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);}
 td{font-size:13px;color:rgba(255,255,255,0.7);padding:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
 tr:last-child td{border:none;}
-tr:hover td{background:rgba(24,95,165,0.05);}
+tr:hover td{background:color-mix(in srgb, var(--admin-primary) 10%, transparent);}
 .status-active{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-right:6px;}
 .quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
-.ql{background:#1e293b;border:1px solid rgba(24,95,165,0.2);border-radius:10px;padding:16px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:.2s;}
-.ql:hover{border-color:#185FA5;background:rgba(24,95,165,0.1);}
-.ql-icon{width:40px;height:40px;border-radius:8px;background:rgba(24,95,165,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ql{background:var(--admin-surface);border:1px solid var(--admin-border);border-radius:10px;padding:16px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:.2s;}
+.ql:hover{border-color:var(--admin-primary);background:color-mix(in srgb, var(--admin-primary) 12%, var(--admin-surface));}
+.ql-icon{width:40px;height:40px;border-radius:8px;background:color-mix(in srgb, var(--admin-primary) 20%, transparent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .ql-label{font-size:13px;font-weight:600;color:#fff;}
 .ql-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;}
 .divider{font-size:12px;color:rgba(255,255,255,0.2);margin:20px 0 16px;text-transform:uppercase;letter-spacing:1px;}
+.msg{padding:12px 14px;border-radius:12px;font-size:13px;margin-bottom:16px;border:1px solid transparent;}
+.msg-success{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:#bbf7d0;}
+.msg-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.35);color:#bfdbfe;}
+.request-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-mini{border:none;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;}
+.btn-approve{background:#16a34a;color:#fff;}
+.btn-reject{background:#334155;color:#fff;}
 @media (max-width:1100px){
     .navbar{flex-wrap:wrap;padding:14px 18px;}
     .stats,.quick-links{grid-template-columns:1fr 1fr;}
@@ -92,8 +106,8 @@ tr:hover td{background:rgba(24,95,165,0.05);}
         <a href="/dashboard/" class="nav-link">User Dashboard</a>
         <a href="/learn/" class="nav-link">Learn</a>
         <a href="/learn/blog/" class="nav-link">Blog</a>
-        <a href="/admin/" class="nav-link">Django Admin</a>
-        <a href="/admin/learn/blogpost/" class="nav-link">Content Manager</a>
+        <a href="/dashboard/content-manager/" class="nav-link">Content Manager</a>
+        <a href="/admin/" class="nav-link">Advanced Admin</a>
     </div>
     <div class="nav-right">
         <div class="badge-admin">Superuser</div>
@@ -107,6 +121,12 @@ tr:hover td{background:rgba(24,95,165,0.05);}
 <div class="main">
     <div class="page-title">Admin Dashboard</div>
     <div class="page-sub">Platform overview for {{ branding.company_name|default:"CareerCraft" }}</div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="msg {% if message.tags == 'success' %}msg-success{% else %}msg-info{% endif %}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <div class="stats">
         <div class="stat">
@@ -127,65 +147,116 @@ tr:hover td{background:rgba(24,95,165,0.05);}
         </div>
     </div>
 
+    <div class="divider">Pending profile changes</div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Role approval requests</div>
+            <div class="card-badge">{{ pending_profile_requests|length }} pending</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Current</th>
+                    <th>Requested</th>
+                    <th>Requested at</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in pending_profile_requests %}
+                <tr>
+                    <td>{{ item.profile.user.username }}</td>
+                    <td>{{ item.profile.get_target_role_display }} / {{ item.profile.get_target_domain_display }} / {{ item.profile.get_experience_level_display }}</td>
+                    <td>{{ item.summary }}</td>
+                    <td>{{ item.profile.role_change_requested_at|date:"d M Y, H:i" }}</td>
+                    <td>
+                        <div class="request-actions">
+                            <form method="post" action="/dashboard/admin-dashboard/">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="approve_profile_change">
+                                <input type="hidden" name="profile_id" value="{{ item.profile.id }}">
+                                <button type="submit" class="btn-mini btn-approve">Approve</button>
+                            </form>
+                            <form method="post" action="/dashboard/admin-dashboard/">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="reject_profile_change">
+                                <input type="hidden" name="profile_id" value="{{ item.profile.id }}">
+                                <button type="submit" class="btn-mini btn-reject">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;color:rgba(255,255,255,0.3);padding:24px;">
+                        No pending role changes
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <div class="divider">Quick actions</div>
     <div class="quick-links">
         <a href="/admin/auth/user/add/" class="ql">
             <div class="ql-icon"><box-icon name="user-plus" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Add user</div><div class="ql-sub">Create new account</div></div>
         </a>
-        <a href="/admin/dashboard/sitebranding/" class="ql">
+        <a href="/dashboard/content-manager/#branding" class="ql">
             <div class="ql-icon"><box-icon name="paint" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Site branding</div><div class="ql-sub">Change logo, name, tagline</div></div>
         </a>
-        <a href="/admin/" class="ql">
+        <a href="/dashboard/content-manager/" class="ql">
             <div class="ql-icon"><box-icon name="cog" color="#378ADD"></box-icon></div>
-            <div><div class="ql-label">Django admin</div><div class="ql-sub">Advanced model tools</div></div>
+            <div><div class="ql-label">Content manager</div><div class="ql-sub">Manage core content here</div></div>
         </a>
     </div>
 
     <div class="divider">Content management</div>
     <div class="quick-links">
-        <a href="/admin/interview/category/add/" class="ql">
+        <a href="/dashboard/content-manager/#interview" class="ql">
             <div class="ql-icon"><box-icon name="folder-plus" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">New interview category</div><div class="ql-sub">Create a topic like Python or DBMS</div></div>
         </a>
-        <a href="/admin/interview/question/add/" class="ql">
+        <a href="/dashboard/content-manager/#interview" class="ql">
             <div class="ql-icon"><box-icon name="message-square-add" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">New interview question</div><div class="ql-sub">Add question, options, answer, explanation</div></div>
         </a>
-        <a href="/admin/interview/category/" class="ql">
+        <a href="/dashboard/content-manager/#interview" class="ql">
             <div class="ql-icon"><box-icon name="collection" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Interview categories</div><div class="ql-sub">{{ total_categories }} categories</div></div>
         </a>
-        <a href="/admin/assessment/skilltopic/" class="ql">
+        <a href="/dashboard/content-manager/#assessment" class="ql">
             <div class="ql-icon"><box-icon name="bar-chart-alt-2" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Assessment topics</div><div class="ql-sub">{{ total_topics }} topics</div></div>
         </a>
     </div>
     <div class="quick-links">
-        <a href="/admin/interview/question/" class="ql">
+        <a href="/dashboard/content-manager/#interview" class="ql">
             <div class="ql-icon"><box-icon name="help-circle" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Interview Q&A</div><div class="ql-sub">{{ total_questions }} questions</div></div>
         </a>
-        <a href="/admin/assessment/skillquestion/" class="ql">
+        <a href="/dashboard/content-manager/#assessment" class="ql">
             <div class="ql-icon"><box-icon name="list-check" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Assessment Q&A</div><div class="ql-sub">Manage topic questions</div></div>
         </a>
-        <a href="/admin/learn/blogpost/" class="ql">
+        <a href="/dashboard/content-manager/#blog" class="ql">
             <div class="ql-icon"><box-icon name="news" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Blog & News</div><div class="ql-sub">{{ total_blog_posts }} posts</div></div>
         </a>
-        <a href="/admin/learn/blogcomment/" class="ql">
+        <a href="/dashboard/content-manager/#comments" class="ql">
             <div class="ql-icon"><box-icon name="message-rounded-dots" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Blog comments</div><div class="ql-sub">Approve reader comments</div></div>
         </a>
     </div>
     <div class="quick-links">
-        <a href="/admin/learn/blogpost/add/" class="ql">
+        <a href="/dashboard/content-manager/#blog" class="ql">
             <div class="ql-icon"><box-icon name="image-add" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">New blog post</div><div class="ql-sub">Title, image, content</div></div>
         </a>
-        <a href="/admin/dashboard/sitebranding/" class="ql">
+        <a href="/dashboard/content-manager/#branding" class="ql">
             <div class="ql-icon"><box-icon name="image" color="#378ADD"></box-icon></div>
             <div><div class="ql-label">Logo settings</div><div class="ql-sub">Upload company logo</div></div>
         </a>
